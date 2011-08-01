@@ -1,0 +1,1047 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dissertacao de Mestrado / Dept Fisica, CFM, UFSC              %
+% Natalia@UFSC - 2006                                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Cid corrigiu a seção das máscaras e devolveu em Feb/21/2006
+% Cid corrigindo versao final ... Mar/12/2006
+
+
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::%
+%                                                               %
+%                          Capítulo 4                           %
+%                                                               %
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::%
+
+%***************************************************************%
+%                                                               %
+%                            SLOAN                              %
+%                                                               %
+%***************************************************************%
+
+\chapter{Sloan Digital Sky Survey}
+\label{sec:SLOAN}
+
+
+Este capítulo trata da síntese espectral de populações estelares para
+uma amostra de 354992 galáxias da base dados do Sloan Digital Sky
+Survey (\SDSS).  Na Seção \ref{sec:SLOAN:masks}, apresentamos o
+processo de automatização para mascarar regiões espectrais,
+respeitando as particularidades de cada objeto.  O nosso objetivo não
+é simplesmente remover regiões problemáticas, pois estas já são
+rotuladas como tal pelo \SDSS; estamos mais interessados, na verdade,
+em detectar linhas de emissão.  Como vimos no estudo do tripleto do
+cálcio, o cuidado com as máscaras individuais é muito importante para
+obtermos um melhor ajuste da contribuição estelar para o espectro
+galáctico.  Modelos mais confiáveis são duplamente vantajosos:
+permitem tanto um estudo mais preciso, obviamente, das populações
+estelares, quanto o da cinemática do gás na galáxia, através do
+espectro nebular residual.  Na Seção \ref{sec:SLOAN:mar_de_info},
+discutimos os pormenores dos ajustes e a recuperação de parâmetros
+para a nossa amostra.  A partir dessas medidas, abre-se um grande
+leque de estudos em potencial sobre a história de evolução e a
+composição de galáxias no universo local.  Apresentamos aqui alguns
+resultados preliminares da história de formação estelar em galáxias
+como função da massa galáctica e da posição no diagrama diagnóstico.
+
+
+%***************************************************************%
+%                                                               %
+%                       SLOAN - máscaras                        %
+%                                                               %
+%***************************************************************%
+
+\section{Confecção de máscaras}
+\label{sec:SLOAN:masks}
+
+Uma preocupação constante na aplicação do código \starlight\ é
+quantificar o efeito que a escolha das máscaras provoca no ajuste de
+um modelo.  Conforme vimos na Seção \ref{sec:CaT:DFM:masks}, uma
+máscara geral, construída de acordo com as características
+fundamentais de um conjunto de objetos, já é um bom começo para se
+obterem resultados razoáveis.  O refinamento dos ajustes, no entanto,
+pede máscaras feitas sob medida para cada objeto.
+
+O problema de construir máscaras individuais para a vasta quantidade
+de objetos do \SDSS\ exige que revisemos e adaptemos os métodos usados
+anteriormente, coisa bastante recorrente ao se lidar com grandes bases
+de dados. Não é viável, muito menos produtivo, construir máscaras
+individuais por inspeção visual para as centenas de milhares de
+galáxias presentes no \SDSS.  Restou-nos apenas procurar uma solução
+computacional para automatizar a produção de máscaras em série.
+
+Existe, porém, uma distinção bem clara entre as preocupações que
+norteiam a construção de máscaras para o tripleto do CaII e para a
+base do \SDSS.  A primeira divergência é quanto a regiões de baixa
+qualidade espectral, raios cósmicos, pixeis ruins e resíduos do céu: a
+maioria desses problemas já é dectada pelo processo de redução de
+dados do \SDSS\ e recebe um rótulo facilmente identificável.  Ou seja,
+parte da máscara já está pronta.  A outra parte, mais complicada, diz
+respeito à exclusão de linhas de emissão.  Como estamos usando uma
+base de comparação de populações estelares simples, não podemos
+esperar ajustar linhas de emissão criadas nas regiões nebulares de uma
+galáxia; disso nasce a necessidade de não incluir tais linhas no
+ajuste.
+
+Nas seções seguintes, discutirei o método que desenvolvemos para
+mascarar as linhas de emissão e o efeito de usarmos máscaras
+personalizadas para cada objeto do \SDSS.
+
+
+%***************************************************************%
+%                                                               %
+%              SLOAN - máscaras - linhas de emissão             %
+%                                                               %
+%***************************************************************%
+
+\subsection{Mascarando linhas de emissão}
+\label{sec:SLOAN:masks:em_lines}
+
+Linhas de emissão e linhas de absorção estelares de um mesmo
+íon, se estiverem presentes em um espectro galáctico, deverão ser
+vistas em comprimentos de onda coincidentes ou muito próximos. Por
+isso, ao se subtraírem as linhas de absorção do espectro de uma
+galáxia, muitas vezes podem ser vistas mais claramente as linhas de
+emissão ``escondidas'' dentro das linhas de absorção.  Isso é
+especialmente importante para as linhas de emissão mais fracas, às
+vezes só reveladas após essa subtração.
+
+O mais sensato a se fazer, portanto, é medir linhas de emissão após a
+subtração da contribuição estelar para o espectro galáctico.  Se o
+algoritmo \starlight\ reproduz com certa fidelidade esses a
+contribuição estelar para um espectro galáctico, pode-se usar o
+espectro residual $R_\lambda = (O_\lambda - M_\lambda)$ para as
+medidas das linhas de emissão.
+
+Além disso, para que a síntese espectral seja razoável, é necessário
+mascarar características espectrais não-estelares, não contempladas na
+base.  Apenas dessa maneira podemos (a) derivar um espectro sintético
+confiável, que reflita razoavelmente bem as propriedades galácticas e
+as populações estelares, e (b) obter um espectro residual de emissão
+nebular ``pura''.
+
+O primeiro passo para construir máscaras individuais para os objetos
+do \SDSS\ é ajustar os espectros utilizando uma máscara geral,
+conveniente a todo o conjunto de dados.  O compromisso encontrado ao
+inspecionar uma subamostra dos dados foi eliminar as linhas de emissão
+mais fortes.  Foram mascaradas também duas regiões problemáticas da
+base de populações estelares de \citet{BC03}, devido a efeitos
+telúricos, em 6845--6945 (neste trabalho, deslocada 5 \AA\ para o
+azul) e 7550--7725 \AA.  Ainda decidimos remover a região de
+7165--7210 \AA, que apresenta resíduos sistemáticos.  Esta máscara
+geral é detalhada na tabela \ref{tab:SDSS_gm2}.
+
+%---------------------- Tabela -------------------------
+\begin{table}
+  \caption{Máscara geral para a base de dados do \SDSS.}
+  \input{tabelas/SDSS_gm2}
+  \label{tab:SDSS_gm2}
+\end{table}
+%---------------------- Tabela -------------------------
+
+O ajuste inicial dos objetos é feito com a base N, que consiste de 45
+populações estelares simples, com 15 idades diferentes, entre $\E{6}$
+e $1.3 \ET{10}$ anos, e 3 metalicidades, $Z = 0.2$, 1 e 2.5 $Z_\odot$
+(a mesma base utilizada em \citealp{SEAGal1Cid}).  Derivamos então,
+com a base N e a máscara geral, o espectro residual $R_\lambda$ para
+cada objeto.
+
+Neste ajuste inicial, os diversos parâmetros técnicos que controlam a
+velocidade e convergência das cadeias de Markov foram ajustados de
+modo a minimizar o tempo de computação, mas ainda assim produzir um
+bom ajuste, no qual as linhas de emissão mais fortes sejam bem
+definidas no espectro residual. O tempo médio de CPU por galáxia nesta
+``configuração rápida'' é de 40 s, bem menor do que os $\sim 15$ min
+com a base S e a configuração mais exigente utilizada para os ajustes
+finais.
+
+Medimos nesses espectros residuais as linhas de emissão listadas na
+Tabela \ref{tab:lines_Abilio}, com o programa desenvolvido por
+A. Mateus.  O procedimento é idêntico ao de \citet{SEAGal1Cid}.  As
+linhas de emissão são tratadas como gaussianas com três parâmetros:
+largura à meia altura, fluxo integrado total e deslocamento em relação
+ao referencial de repouso.  Assumimos, como vínculos físicos, que
+linhas provenientes dos mesmos íons deveriam ter largura e fluxo
+iguais.  Além disso, impusemos as seguintes restrições à razão entre
+os fluxos: \oiii$\lambda5007$/\oiii$\lambda4959 = 2.97$ e
+\nii$\lambda6584$/\nii$\lambda6548 = 3$, provenientes da física
+atômica (\citealp{Osterbrock}).  Uma linha é considerada detectada se
+a sua razão sinal-ruído for maior do que 3.
+
+%---------------------- Tabela -------------------------
+\begin{table}
+  \caption{Linhas de emissão medidas pelo programa de A. Mateus.}
+  \input{tabelas/SDSS_lines_Abilio}
+  \label{tab:lines_Abilio}
+\end{table}
+%---------------------- Tabela -------------------------
+
+Finalmente, os resultados do programa para medir linhas de emissão são
+passados para o nosso algoritmo de automatização das máscaras.  Como o
+nosso objetivo é mascarar mesmo linhas de emissão fracas, compilamos
+uma lista mais completa de linhas encontradas na região espectral dos
+objetos do \SDSS.  Baseamo-nos nos trabalhos de \citet{Rosa95},
+\citet{Pastoriza93}, \citet{Benjamin99} (linhas do \Hei),
+\citet{Zhang05}, e nos comprimentos de onda no ar de transições
+nebulares de \citet{AtomicLineList}.  A revisão desta lista de linhas
+pela Dra.\ G. Stasi\'nska foi de fundamental importância para termos
+um conjunto o mais completo possível de linhas nebulares.  Ainda
+assim, muitas linhas foram excluídas por serem fracas demais; outras,
+por estarem misturadas com linhas adjacentes mais fortes.  A lista
+completa de linhas de emissão procuradas pelo programa de máscaras
+está na Tabela \ref{tab:lines_Grazyna}.
+
+%---------------------- Tabela -------------------------
+\input{tabelas/SDSS_lines_Grazyna}
+%\label{tab:lines_Grazyna}
+%---------------------- Tabela -------------------------
+
+Para cada uma das linhas da nossa extensa lista, tentamos modelar uma
+gaussiana 
+
+$$
+G_\lambda = A \, e^{- \frac{(v-v_0)^2}{2 \sigma^2_{\rm gas}}},
+$$
+
+\noindent cujo único parâmetro livre é a amplitude $A$.  A vantagem de
+termos apenas um parâmetro livre é a simplicidade computacional para a
+minimização do $\chi^2$, de tal forma que a amplitude $A$ pode ser
+encontrada analiticamente:
+
+\begin{equation}
+\label{eq:EL_chi2}
+\chi^2 =
+   \sum_{\lambda}
+   \left[
+   \left(R_\lambda - G_\lambda \right) w_\lambda
+   \right]^2 =
+   \sum_{\lambda}
+   \left[
+   \left(R_\lambda - A \, e^{- \frac{(v-v_0)^2}{2 \sigma_{\rm gas}}} 
+   \right) w_\lambda
+   \right]^2
+\end{equation}
+\begin{equation}
+  \frac{\partial \chi^2}{\partial A} = 0 = 
+  \sum_{\lambda}
+  \left[
+    -2 \, \left(
+    R_\lambda - A \, e^{- \frac{(v-v_0)^2}{2 \sigma_{\rm gas}}}
+    \right) \,
+    e^{- \frac{(v-v_0)^2}{2 \sigma_{\rm gas}}} w_\lambda^2
+  \right]
+\end{equation}
+\begin{equation}
+\label{eq:EL_amp_gaussian}
+  A = \cfrac
+      { \displaystyle\sum_{\lambda} w_\lambda^2 \, 
+	e^{- \frac{(v-v_0)^2}{2 \sigma_{\rm gas}}} R_\lambda }
+      { \displaystyle\sum_{\lambda} w_\lambda^2 \, 
+	e^{- 2 \frac{(v-v_0)^2}{2 \sigma_{\rm gas}}} }
+\end{equation}
+
+Como não temos interesse em obter medidas precisas das linhas de
+emissão (pelo menos não neste ajuste inicial), mas apenas em mascarar
+as que forem necessárias, o ajuste apenas da amplitude da gaussiana
+mostra-se simples e eficiente para esse propósito.  No entanto,
+precisamos de estimativas boas o suficiente para a largura $v_0$ e o
+deslocamento $\sigma_{\rm gas}$ da linhas.  Aqui então é que usamos os
+resultados do programa de A. Mateus.
+
+A nossa estratégia é tentar detectar todas as linhas possíveis, mesmo
+as que não foram medidas ou detectadas pelo programa de
+A. Mateus. Desse modo, usamos os seguintes critérios para as
+estimativas de $v_0$ e $\sigma_{\rm gas}$:
+
+\begin{enumerate}
+
+\item O caso mais simples é quando uma linha de emissão foi detectada
+  pelo programa de A. Mateus.  Neste caso, simplesmente usamos o $v_0$
+  e $\sigma_{\rm gas}$ medidos.
+
+\item Caso o programa de A. Mateus não tenha detectado uma linha, ou
+  porque ela é muito fraca ou porque não consta na lista de linhas
+  procuradas por ele, usamos uma estimativa de $v_0$ e
+  $\sigma_{\rm gas}$ para o mesmo íon.  Por exemplo, podemos usar os
+  resultados de \oiii$\lambda5007$ para tentar detectar
+  \oiii$\lambda4959$.  Determinamos no máximo dois íons alternativos
+  para essas estimativas, rotulados como ``plano A'' e ``plano B'',
+  listados na Tabela \ref{tab:lines_Grazyna}.
+
+\item Caso o critério anterior falhe em achar $v_0$ e $\sigma_{\rm gas}$,
+  usam-se os valores encontrados para \Ha.
+
+\item Se \Ha\ não foi detectado no programa dectado no programa de
+  A. Mateus, usamos então o $\sigma_{\rm gas}$ médio para todas as linhas que
+  ele detectou e assumimos $v_0 = 0$ \kms.
+
+\item Se não houver nenhuma linha detectada pelo código de A. Mateus,
+  então usamos os valores típicos $v_0 = 0$ \kms\ e $\sigma_{\rm gas}
+  = 100$ \kms.
+
+\end{enumerate}
+
+Com essas estimativas para $v_0$ e $\sigma_{\rm gas}$ para cada linha,
+podemos calcular a amplitude $A$ da gaussiana de acordo com
+\ref{eq:EL_amp_gaussian}, no espaço de velocidades.  A Figura
+\ref{fig:SDSS_masks_gaussianas} mostra o ajuste de gaussianas e a
+definição de máscaras para as linhas \Hei$\lambda6678$,
+\sii$\lambda6716$ e \sii$\lambda6730$.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.8\textwidth]
+		    {figuras/test.eps}
+    \caption[Ajuste de gaussianas e definição de máscaras para as
+      linhas \Hei$\lambda6678$, \sii$\lambda6716$ e \sii$\lambda6730$]
+      {Espectro residual da galáxia SDSS J102542.14+004546.96 na
+      região das linhas \Hei$\lambda6678$, \sii$\lambda6716$ e
+      \sii$\lambda6730$.  Em linhas vermelhas pontilhadas estão
+      desenhadas as gaussianas ajustadas às três linhas de emissão.
+      As regiões do espectro residual desenhadas em azul e com pontos
+      grandes vermelhos são as regiões mascaradas pelo programa de
+      confecção de máscaras.}
+\label{fig:SDSS_masks_gaussianas}
+\end{figure}
+%---------------------- Figura -------------------------
+
+Calculamos então o ruído residual ao redor da cada linha, com o qual
+possamos comparar o fluxo da gaussiana ajustada.  Definimos o ruído
+residual como a mediana de $R_\lambda$ em uma região de 40 \AA\ ao
+redor da gaussiana. São tomados apenas dados que não estejam rotulados
+como pixeis ruins pelo \SDSS\ e que não sejam uma possível linha de
+emissão.  Com sorte, as janelas nas quais calculamos o ruído residual
+são simétricas em relação à linha de emissão que queremos detectar,
+embora isso não seja exatamente necessário.  Também não é necessário
+que as janelas contenham dados consecutivos.  Queremos apenas
+determinar a ordem de grandeza do ruído ao redor da região da linha de
+emissão.
+
+Comparamos então o fluxo total da gaussiana ajustada com o ruído
+residual calculado ao redor da linha em potencial.  De forma geral, se
+o fluxo da gaussiana for maior do que um fator $f_t$ vezes o ruído,
+devemos mascarar a linha.  Por inspeção visual, decidimos que $f_t =
+1.0$ servia bem aos nossos propósitos.
+
+Outro parâmetro que ajustamos por inspeção visual foi o da extensão da
+máscara.  Se a linha é detectada pelo critério anterior, precisamos
+estipular uma janela adequada para mascará-la.  Definimos as
+fronteiras dessa janela como os comprimentos de onda nos quais a
+gaussiana cai a $f_c = 0.5$ vezes o ruído residual ao redor da linha.
+
+Observamos, contudo, que em alguns casos o perfil da linha era um
+pouco mais complexo do que uma simples gaussiana -- na maioria das
+vezes, devido a ruído ou efeitos espúrios, que criavam um falso duplo
+pico.  Por isso, resolvemos implementar um controle extra e verificar
+se a janela da máscara deveria ser estendida.  Para isso, verificamos
+o comportamento do espectro residual ao redor da nossa máscara, até
+300~\kms para o azul e para o vermelho.  Se o fluxo de $R_\lambda$
+for porventura maior do que o ruído residual em algum desses pontos
+analisados, a máscara é redefinida de modo a englobar essa região
+problemática.
+
+Após essa análise, também aplicamos vínculos forçados para algumas
+linhas.  Isto significa que, se uma das linhas de cada grupo for
+mascarada, as outras também serão, independente de terem passado pelos
+critérios de detecção detalhados anteriormente.  Esses vínculos são
+entre as linhas:
+
+\begin{itemize}
+
+\item \nii$\lambda6548$, \nii$\lambda6583$ e \Ha.
+
+\item \sii$\lambda6716$ e \nii$\lambda6731$.
+
+\item \oiii$\lambda5007$ e \oiii$\lambda4959$.
+
+\item Se \Ha, \Hb, \Hg\ e \Hd\ são detectadas, mas \Heps, não, então
+  também mascaramos \Heps.
+
+\item Se \Ha, \Hb\ e \Hg\ são detectadas, mas \Hd, não, então também
+  mascaramos \Hd.
+
+\item Se \Ha\ e \Hb\ são detectadas, mas \Hg, não, então também
+  mascaramos \Hg.
+
+\item Se \Ha\ é detectada, mas \Hb, não, então também mascaramos \Hb.
+
+\end{itemize}
+
+Como medida de segurança, algumas máscaras são sempre estendidas.
+\Hg, \Hb, \Ha, \oiii$\lambda5007$, \oiii$\lambda4959$
+\nii$\lambda6548$, \nii$\lambda6583$ e \Hei$\lambda5876$ recebem
+$d\lambda = 3$ \AA\ extras em cada extremo; \Hd, \Heps,
+\neiii$\lambda3968$, \oii$\lambda3726$ e \oii$\lambda3729$, $d\lambda
+= 2$ \AA.
+
+Além disso, excluimos também as seguintes janelas para todos os
+objetos:
+
+\begin{itemize}
+
+\item 6845--6945 \AA: Região problemática em \citet{BC03}, deslocada 5
+\AA\ para o azul.
+
+\item 7165--7210 \AA: Resíduos sistemáticos, possível região
+  problemática em \citet{BC03}.
+
+\item 7550--7725 \AA: Região problemática em \citet{BC03}.
+
+\item 5880--5906 \AA: NaD $\lambda\lambda5890$ \& 5896, linhas de
+absorção que têm uma importante componente do meio interestelar.
+
+\item 9059--9079 \AA: \siii$\lambda9069$.
+
+\end{itemize}
+
+O nosso programa cria, por fim, um arquivo de máscaras individuais
+para cada galáxia.  A comparação entre as máscaras individuais e a
+máscara geral é apresentada na próxima seção.
+
+
+%***************************************************************%
+%                                                               %
+%                   SLOAN - máscaras - efeito                   %
+%                                                               %
+%***************************************************************%
+
+\subsection{O efeito das máscaras}
+\label{sec:SLOAN:masks:efeito}
+
+No estudo do tripleto do cálcio, a motivação para construir máscaras
+individuais é eliminar regiões complexas do espectro, como pixeis
+ruins, resíduos do céu e contaminação por linhas de emissão, como
+explicado na Seção \ref{sec:CaT:DFM:masks}.  Isto é, por causa da
+sensibilidade do ajuste a esses artefatos, procuramos trabalhar com as
+partes mais limpas dos espectros.  Verificamos que, naquele estudo,
+máscaras individuais podem melhorar substancialmente a confiabilidade
+dos modelos.
+
+A motivação para a confecção de máscaras individuais no estudo da
+base de dados do \SDSS, no entanto, não é exatamente eliminar regiões
+complexas dos espectros.  Como mencionamos nas seções anteriores, os
+espectros do \SDSS\ já têm rótulos que identificam pixeis ruins e
+raios cósmicos.  Além disso, a máscara geral que utilizamos na análise
+cobre as principais linhas de emissão na região espectral dos objetos
+do \SDSS.  Outras eventuais regiões ruidosas isoladas não devem ter
+muita influência no ajuste do modelo: o programa de síntese
+automaticamente elimina partes do espectro que estejam dois sigma
+acima do ruído.  Com todas essas precauções, as principais causas de
+problemas nos espectros observados são eliminadas no primeiro ajuste,
+em contraste com o que acontece no estudo do tripleto de cálcio.
+
+Tanta diligência, contudo, pode ter o efeito colateral de esconder
+regiões espectrais importantes.  Certas estruturas espectrais, como a
+largura equivalente de algumas linhas de absorção, são
+tradicionalmente usadas como indicadores de idade, por exemplo.  A
+nossa principal preocupação com as máscaras individuais para os
+objetos do \SDSS, portanto, é deixá-las o menos restritivas possível.
+Intuitivamente, esperamos que, quanto mais dados estiverem disponíveis
+para o programa de síntese, mais confiável devem ser o ajuste e a
+recuperação de propriedades galácticas.
+
+A Figura \ref{fig:SDSS_mask_linhosa_Hbeta} mostra a comparação entre
+as máscaras individual e geral ao redor de \Hb$\lambda4861$ para uma
+galáxia {\em late-type}.  Para esta linha, neste caso em especial, a
+máscara geral é boa o suficiente, apesar de eliminar uma região
+ligeiramente maior do que a necessária.  Já para a maioria das
+galáxias elípticas, como a da Figura
+\ref{fig:SDSS_mask_eliptica_Hbeta}, mascarar a região de \Hb\ é
+completamente desnecessário, porque não existe linha de emissão \Hb.
+Veja, então, que a máscara individual não elimina essa região,
+permitindo que esta janela espectral, frequentemente usada como
+indicadora de idade em sistemas estelares velhos, não seja
+denecessariamente ignorada nos ajustes.
+
+Nosso algoritmo de máscaras também identifica linhas que raramente
+estão presentes, e portanto não estão incluídas em nossa máscara
+geral, mas que eventualmemte podem ser relativamente fortes.  Um bom
+exemplo é a linha \Heii$\lambda4686$, encontrada apenas em objetos
+onde o fluxo ionizante é suficientemente duro, como em galáxias
+Seyfert e algumas galáxias HII.  A Figura
+\ref{fig:SDSS_mask_linhosa_HeII} mostra um exemplo.
+
+Como mostramos nas figuras desta seção, a confecção de máscaras
+individuais é importante para o estudo objeto a objeto.  No entanto,
+para propriedades gerais de grandes subamostras da base de dados do
+\SDSS, esse efeito pode ser quase imperceptível.  Em todo caso, é de
+grande valia termos um método automatizado para a confecção de
+máscaras individuais.  Em trabalhos futuros, com outras grandes bases
+de dados, este processo pode vir a ser uma parte essencial da análise,
+e não apenas um refinamento para objetos individuais.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Efeito das máscaras para o \SDSS: galáxia {\em
+	late-type}, região da linha \Hb.] {Diferença entre a máscara
+	geral e a máscara individual da galáxia {\em late-type} SDSS
+	J103924.39-002321.44 na região da linha \Hb. Os painéis
+	superiores mostram, em linha mais grossa, o espectro
+	observado; em linha pontilhada, o espectro modelado.  O
+	espectro residual é desenhado nos painéis inferiores.  Em azul
+	(linha mais clara), são graficadas as regiões mascaradas.  Em
+	verde (linha bem clara), mostramos as regiões eliminadas do
+	ajuste pelo código de síntese. A linha tracejada marca o
+	comprimento de onda de \Hb.}
+\label{fig:SDSS_mask_linhosa_Hbeta}
+\end{figure}
+%---------------------- Figura -------------------------
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Efeito das máscaras para o \SDSS: galáxia {\em
+	early-type}, região da linha \Hb.] {Como a Figura
+	\ref{fig:SDSS_mask_linhosa_Hbeta}, mas para a galáxia {\em
+	early-type} SDSS J105209.97+005333.30.}
+\label{fig:SDSS_mask_eliptica_Hbeta}
+\end{figure}
+%---------------------- Figura -------------------------
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Efeito das máscaras para o \SDSS: galáxia {\em
+	late-type}, região da linha \Heii$\lambda4686$.] {Como a
+	Figura \ref{fig:SDSS_mask_linhosa_Hbeta}, mas para para a
+	região da linha \Heii$\lambda4686$.}
+\label{fig:SDSS_mask_linhosa_HeII}
+\end{figure}
+%---------------------- Figura -------------------------
+
+
+%***************************************************************%
+%                                                               %
+%                       SLOAN - Mar de info                     %
+%                                                               %
+%***************************************************************%
+
+\section{Aplicações do Starlight ao SDSS}
+\label{sec:SLOAN:mar_de_info}
+
+Apresentamos nesta seção a aplicação da síntese espectral a um
+conjunto de dados do \SDSS, os principais parâmetros recuperados e
+alguns resultados preliminares sobre a história de formação estelar em
+galáxias.
+
+
+%***************************************************************%
+%                                                               %
+%                  SLOAN - Mar de info - Ajustes                %
+%                                                               %
+%***************************************************************%
+
+\subsection{Ajustes}
+\label{sec:SLOAN:mar_de_info:ajustes}
+
+Utilizamos neste trabalho uma amostra limitada em fluxo de 354992
+objetos, extraídos da {\em main galaxy sample} do Data Release 4 do
+\SDSS\ (\citealp{DR4}).  Os objetos foram selecionados de modo que a
+suas magnitudes Petrosianas na banda $r$, corrigidas por
+avermelhamento, fossem $r \leq 17.77$.  É importante lembrar que o
+próprio \SDSS\ define um corte para objetos de baixa razão sinal/ruído
+($S/N$) e, assim, os espectros da nossa amostra têm $S/N > 5$ nas
+bandas $g$, $r$ e $i$.
+
+Modelamos as $\sim 355$ mil galáxias com a base S, que consiste de 150
+populações estelares simples de 25 diferentes idades, entre $1 \ET{6}$
+e $18 \ET{9}$ anos, e 6 metalicidades, entre $Z = 0.005$ e 2.5
+$Z_\odot$.  Esta é a mesma base utilizada em \citealp{SEAGal2Abilio},
+mas aplicada para uma quantidade muito maior de galáxias.  O ajuste de
+cada modelo demora em média 15 minutos, o que significa que foram
+$354992$ objetos $\times 15$ min = 3698 dias ou 10 anos de CPU.  Para
+dar conta de todo esse processamento, utilizamos cerca de 100 máquinas
+espalhadas mundo afora: no Brasil, no México, na Espanha, na França e
+nos Estados Unidos.  Toda a logística para a distribuição desses
+processamentos foi coordenada por W. Schoenell.
+
+As Figuras \ref{fig:base_BS1} e \ref{fig:base_BS2} mostram a base S.
+Os espectros das populações estelares simples (SSPs) foram calculados
+de acordo com as recomendações de \citet{BC03}, com a biblioteca de
+atmosferas STELIB (\citet{LeBorgne03}), modelos de Padova-1994 e
+função inicial de massa de \citet{Chabrier03}.  Apesar de incluirmos
+tantos parâmetros no ajuste, não temos a ilusão quanto ao fato de
+existirem incontáveis degenerescências matemáticas, estatísticas e
+astrofísicas que impedem a determinação dos 150 parâmetros.  Por isso,
+reduzimos a dimensão de parâmetros {\em a posteriori}, descrevendo os
+resultados em termos de quantidades mais robustas
+(\citealp{SEAGal1Cid,Jean05}), em geral combinações de parâmetros.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+  \includegraphics[width=\textwidth]{figuras/test.eps}
+  \caption[Espectros das populações estelares de menor metalicidade da
+  base S.]{Espectros das populações estelares de menor metalicidade da
+  base S. Esta base consiste de 150 populações de 6 diferentes
+  metalidades, $Z = 0.005, 0.02, 0.2, 0.4, 1$ e $2.5 Z_\odot$, e 25
+  idades, $t = 0.001$, 0.00316, 0.00501, 0.00661, 0.00871, 0.01,
+  0.01445, 0.02512, 0.04, 0.055, 0.10152, 0.1609, 0.28612, 0.5088,
+  0.90479, 1.27805, 1.434, 2.5, 4.25, 6.25, 7.5, 10, 13, 15 e 18
+  bilhões de anos. Todas as SSPs estão normalizadas por $1 M_\odot$ em
+  $t = 0$.}
+\label{fig:base_BS1}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{figuras/test.eps}
+\caption[Espectros das populações estelares de menor metalicidade da
+  base S.]{O mesmo que a figura \ref{fig:base_BS2}, mas para as SSPs
+  de maior metalicidade.}
+\label{fig:base_BS2}
+\end{figure}
+%---------------------- Figura -------------------------
+
+As Figuras \ref{fig:SDSS_exSFH_inicio} a \ref{fig:SDSS_exSFH_fim}
+mostram algums exemplos dos ajustes, espectros residuais e SFHs
+derivadas. Eventualmente disponibilizaremos todos os nossos resultados
+na internet, no endereço
+http://www.astro.iag.usp.br/\~{}abilio/seagal/.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=\textwidth]
+		    {figuras/test.eps}
+    \caption[Examplo de ajuste obtido com o \starlight\ para uma
+	    galáxia hospedeira de AGN.]  {Examplo de ajuste obtido com
+	    o \starlight\ para uma galáxia hospedeira de AGN.  No
+	    painel superior à esquerda, em preto, está o espectro
+	    observado. Em vermelho (linha mais suave), mostramos o
+	    espectro modelado.  O painel inferior traz o espectro
+	    residual $R_\lambda$.  As partes desenhadas em violeta
+	    (tom levemente mais claro) estão mascaradas e não foram
+	    consideradas no ajuste.  As linhas em verde (tom claro)
+	    são as regiões rotuladas como problemáticas pelo \SDSS\ e
+	    também não foram consideradas no ajuste.  Os paineis à
+	    direita mostram as frações de fluxo e de massa como função
+	    da idade.  Acima destes painéis estão algumas propriedades
+	    galácticas derivadas pelo programa de síntese.}
+\label{fig:SDSS_exSFH_inicio}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]
+		    {figuras/test.eps}
+    \caption[Examplo de ajuste obtido com o \starlight\ para uma
+	    galáxia normal com formação estelar.]{O mesmo que a Figura
+	    \ref{fig:SDSS_exSFH_inicio}, mas para uma galáxia normal
+	    com formação estelar.}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]
+		    {figuras/test.eps}
+    \caption[Examplo de ajuste obtido com o \starlight\ para uma
+	    galáxia passiva.]{O mesmo que a Figura
+	    \ref{fig:SDSS_exSFH_inicio}, mas para uma galáxia
+	    passiva.}
+\label{fig:SDSS_exSFH_fim}
+\end{figure}
+%---------------------- Figura -------------------------
+
+
+%***************************************************************%
+%                                                               %
+%                  SLOAN - Mar de info - Parametros             %
+%                                                               %
+%***************************************************************%
+
+\subsection{Parâmetros recuperados}
+\label{sec:SLOAN:mar_de_info:parametros}
+
+Para cada galáxia, o \starlight\ fornece:
+
+\begin{itemize}
+
+\item Vetores de populações estelares por fração de luz ($\vec{x}$) e
+  por fração de massa ($\vec{\mu}$).
+% full light (x) & mass-pop-vectors (\mu)
+
+\item Momentos de ordem 1 das distribuições na idade $t_\star$ e na
+  metalicidade $Z_\star$: a idade estelar média ponderada pela luz
+  ($\langle \log t_\star \rangle_L$) e pela massa ($\langle \log
+  t_\star \rangle_M$), e a metalicidade estela média também ponderada
+  pela luz ($\log \langle Z_\star \rangle_L$) e pela massa ($\log
+  \langle Z_\star \rangle_M$).
+
+% Outros momentos: sigmas ...
+
+\item A massa total em estrelas dentro da fibra corrigida por extinção
+  por poeira; a massa total em estrelas ($M_\star$) corrigida pela
+  fração da luz fora da fibra; e a massa total convertida em estrelas
+  pela galáxia.
+% Mret
+
+\item Parâmetros cinéticos: a dispersão de velocidades
+  ($\sigma_\star$) e a velocidade na linha de visada ($v_\star$).
+
+\item A extinção por poeira na banda $V$ ($A_V^\star$).
+
+\end{itemize}
+
+Do espectro residual, $R_\lambda = O_\lambda - M_\lambda$, medimos
+linhas de emissão com o programa de A. Mateus descrito na Seção
+\ref{sec:SLOAN:masks:em_lines}.  Obtemos as seguintes medidas diretas
+e sub-produtos:
+
+\begin{itemize}
+
+\item Fluxo total integrado da linha ($F$), largura equivalente ($W$),
+  sinal-ruído ($S/N$), dispersão de velocidades ($\sigma_{\rm gas}$) e
+  deslocamento do centro da linha ($v_0$) para as linhas de emissão
+  listadas na tabela \ref{tab:lines_Abilio}.
+
+\item A extinção de Balmer (\citealp{Grazyna04}), dada por:
+
+$$
+  A_V^{\rm Balmer} = 6.31 \log \left[
+    \frac{F({\rm H}\alpha)/F({\rm
+	H}\beta)}{2.86} \right]
+$$
+
+\item As abundâncias nebulares, calculadas por diferentes métodos
+(\citealp{DTT,Tremonti04}).
+
+\item Classificação em galáxias normais com formação estelar (NSFG),
+  núcleos ativos (AGN), híbridas e passivas.
+
+\end{itemize}
+
+Além disso, obtemos diretamente do \SDSS\ algumas informações
+espectrais e fotométricas, dentre elas:
+
+%      lick-indices Mz, ... CI, SB, petro-radii... redshift... S/N
+
+\begin{itemize}
+
+\item Índices de linha espectrais análogos aos índices de Lick.
+
+\item A magnitude nas bandas $u$, $g$, $r$, $i$ e $z$.
+
+\item A relação sinal-ruído ($S/N$) para as cinco bandas fotométricas.
+
+\item O raio Petrosiano para as cinco bandas fotométricas.
+
+\item O índice de concentração $CI = R_{90} / R_{50}$, onde $R_{90}$ e
+  $R_{50}$ são os raios que delimitam respectivamente 90 e 50 por
+  cento da luminosidade Petrosiana da galáxia na banda $r$.
+  \citet{Shimasaku01} e \citet{Strateva01} mostraram que existem uma
+  boa correlação entre $CI$ e a classificação morfológica do diagrama
+  de Hubble.  Em geral, assume-se que galáxias com $CI > 2.63$ são do
+  tipo {\em early} e galáxias com $CI < 2.63$ são do tipo {\em late}.
+
+\item O {\em redshift}.
+
+\end{itemize}
+
+Em resumo, a quantidade de informações é tão grande que é até difícil
+decidir por onde começar a explorá-las.  Nas seções seguintes,
+apresentamos uma pequena amostra de estudos recém iniciados.
+
+
+%***************************************************************%
+%                                                               %
+%                  SLOAN - Mar de info - BPT                    %
+%                                                               %
+%***************************************************************%
+
+\subsection{Resultados preliminares: Diagrama de diagnóstico}
+\label{sec:SLOAN:mar_de_info:BPT}
+
+As linhas de emissão de uma galáxia são geradas por átomos e íons
+excitados em um gás.  Em galáxias normais com formação estelar
+(NSFGs), essas linhas são produzidas em regiões H~{\sc ii} iluminadas
+por estrelas jovens e massivas. As linhas de recombinação (H$\alpha$,
+H$\beta$, \ldots) dependem apenas da quantidade de fótons ionizantes
+($h\nu > 13.6$ eV). Já as linhas colisionais (\oiii, \oii, \nii,
+\ldots) dependem essencialmente da temperatura eletrônica do gás, que
+por sua vez depende da energia dos foto-elétrons liberados por
+fotoionização.  Deste modo, existe um limite superior para a razão
+entre as intensidades de linhas excitadas por colisão e das linhas de
+recombinação, determinado pela forma do espectro ionizante.  A energia
+típica de um fóton ionizante em NSFGs é ditada pela temperatura das
+estrelas O e B.  Em galáxias hospedeiras de núcleos ativos (AGNs), a
+atividade não-estelar, que é uma fonte de energia com espectro bem
+mais duro do que estrelas massivas, faz com que as linhas excitadas
+por colisão sejam bem mais intensas em relação a linhas de
+recombinação.
+
+A idéia por trás dos diagramas de diagnóstico é exatamente aproveitar
+as diferenças entre as linhas de emissão produzidas em diferentes
+tipos de galáxias.  Os diagramas clássicos são \oiii/\Hb\ contra
+\oii/\Hb, \oiii/\Hb\ contra \nii/\Ha\ (introduzido pela primeira vez
+por Baldwin, Phillips \& Terlevich 1981, e, por isso, aqui chamado de
+diagrama BPT), \oiii/\Hb\ contra \sii/\Ha\ e \oiii/\Hb\ contra
+\oi/\Ha.  Dentre esses, o diagrama BPT é o mais utilizado para a
+classificação de galáxias, primeiro por envolver linhas mais fortes, e
+segundo porque a distinção entre AGNs e galáxias NSFGs é bastante
+clara nesse plano.  A seqüência de AGNs separa-se da seqüência de
+NSFGs, migrando para regiões superiores do diagrama, de modo que o
+desenho formado lembra as asas de uma gaivota.
+
+A Figura \ref{fig:BPT}a mostra o diagrama BPT para todas as 190119
+galáxias da nossa amostra nas quais detectamos as linhas \oiii, \Hb,
+\nii\ e \Ha.  A Figura \ref{fig:BPT}b mostra o mesmo diagrama para
+24509 galáxias filtradas de acordo com a qualidade ($S/N > 20$ 
+nas quatro linhas).  Como é de se esperar, esse segundo diagrama
+mostra asas bem mais definidas, principalmente a asa direita.
+
+As NSFGs moram na asa esquerda da gaivota.  Temos evidências
+observacionais que essa asa é uma seqüência em metalicidade, de forma
+que as galáxias na ponta da asa são pobres em metal e, à medida em que
+a seqüência de NSFs desce, mais ricas em metal.  Na verdade, essa
+seqüência deveria depender de três parâmetros: a metalicidade, a
+temperatura efetiva média e o parâmetro de ionização ($U$).  No
+entanto, como observamos uma linha bem estreita nos diagrama
+diagnósticos, essas três propriedades devem estar conectadas de alguma
+forma, embora ainda não se entenda muito bem por quê
+(\citealp{SEAGal3Grazyna}).
+
+Na asa direita do diagrama, para as hospedeiras de AGNs, outros
+fenômenos entram em cena.  Esta dedução decorre do simples fato do
+diagrama se quebrar em duas asas.  A mistura de AGNs e regiões HII,
+efeitos de densidade, variações no espectro ionizante e no parâmetro
+de ionização são alguns dos fatores que devem ser considerados ao se
+estudar AGNs.  Por esse motivo, a asa das AGNs é bem mais difusa do
+que a de NSFGs e, na verdade, só se revelou uma ``asa'' de verdade a
+partir de estudos com a base de dados do \SDSS.
+
+Na Figura \ref{fig:BPT}c, construímos caixas rotuladas de A a M ao
+longo do diagrama BPT.  Os espectros totais e residuais médios em cada
+caixa são mostrados respectivamente nas Figuras \ref{fig:BoxesSpectra}
+e \ref{fig:BoxesResSpecs}.  As estatísticas são feitas pixel a pixel,
+ignorando pixeis problemáticos (isto é, rotulados como tal pelo \SDSS\
+ou pelo código de síntese).  Os cálculos trabalham com os espectros
+normalizados em 4020 \AA, tomando como parâmetro de normalização o
+fluxo do espectro sintético nesse comprimento de onda.  Para os
+espectros médios da asa das NSFGs, vemos, de A até G, uma diminuição
+na intensidade das linhas de emissão. Pode-se notar isso, por exemplo,
+nas linhas de \Hei$\lambda5876$, \oi$\lambda6300$ e
+\siii$\lambda6312$.  Subindo a asa dos AGNs, de H até M, vê-se um
+aumento tímido das linhas de emissão; a de \Hei$\lambda5876$, por
+exemplo, não aparenta ter variações significativas.
+
+Uma inspenção mais cuidadosa nos espectros médios traz boas e más
+notícias.  As más são os resíduos sistemáticos em certas bandas,
+devido ao enriquecimento $\alpha/$Fe ou outros efeitos ainda não
+compreendidos.  Apenas em médias espectrais como estas podemos
+perceber com clareza esses problemas que ficam escondidos pelo ruído
+em espectros individuais. Será importante estudar cuidadosamente tais
+resíduos, pois eles podem revelar deficiências sistemáticas nos
+modelos de \citet{BC03}, associados aos traços evolutivos e/ou à
+biblioteca de espectros. {\bf \ojo AKI INTRODUZIR COMENTARIO SOBRE OS
+``CUCURUTOS DO CHARLOT'' como exemplo de que residuos medios revelam
+os podres!!}. As boas novas são que, ao combinar espectros
+individuais, evidenciam-se algumas linhas de emissão fracas (por
+exemplo, \ariii$\lambda7136$ e \siii$\lambda6312$; ver Figura
+\ref{fig:zoomResSpec}), que podem ser importantes em estudos de
+abundância química.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Diagrama BPT.]{(a) Diagrama BPT para todas as 190119
+      galáxias da nossa amostra nas quais detectamos as linhas \oiii,
+      \Hb, \nii\ e \Ha.  A linha central, em vermelho, é a mediana dos
+      pontos. As linhas azuis abaixo e acima dessa representam,
+      respectivamente, as linhas que delimitam 5 e 95 por cento dos
+      dados.  A curva tracejada é a proposta por
+      \citet{SEAGal3Grazyna} para distingüir NSFGs e AGNs: $y =
+      (-30.787 + 1.1358 x + 0.27297 x^2) \tanh(5.7409 x) - 31.093$,
+      onde $y = \log$\oiii/\Hb, e $x = \log$\nii/\Ha.  (b) O mesmo
+      diagrama para 24509 galáxias filtradas de acordo com a qualidade
+      ($S/N > 20$ nas quatro linhas).  (c) Divisão do diagrama em
+      caixas. O número de pontos em cada caixa é mostrado à direita.}
+\label{fig:BPT}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Espectros médios para as caixas do diagrama
+    BPT.]{Espectros médios para as caixas do diagrama BPT. Plotamos em
+    preto o espectro observado e em vermelho o modelo.}
+\label{fig:BoxesSpectra}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Espectros residuais médios para as caixas do diagrama
+    BPT.]{Espectros residuais médios para as caixas do diagrama
+    BPT. As linhas em amarelo marcam $F_\lambda = 0$.}
+\label{fig:BoxesResSpecs}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Detalhes do espectro residual da caixa A.]{Detalhes do
+    espectro residual da caixa A.  Marcamos algumas das linhas de
+    emissão fracas que detectamos.}
+\label{fig:zoomResSpec}
+\end{figure}
+%---------------------- Figura -------------------------
+
+Na Figura \ref{fig:BPTxMass}, mostramos o diagrama BPT para diferentes
+faixas de massa.  As de menor massa têm uma tendência de se concentrar
+no corpo da gaivota e na asa de NSFGs.  Contudo, não vemos uma
+tendência muito clara de segregação das galáxias.
+
+Por outro lado, a Figura \ref{fig:BPTxLO3} mostra o diagrama BPT para
+para diferentes faixas de luminosidade em \oiii, no qual vemos que as
+galáxias mais luminosas em \oiii\ estão preferencialmente na asa de
+AGNs e, em menor medida, na parte superior da asa de NSFGs, de baixa
+metalicidade.  Este resultado está de acordo com o encontrado por
+\citet{Kauffmann03c}.
+
+A Figura \ref{fig:BPTxCI} mostra o digrama BPT para diferentes índices
+de concentração $CI$.  A divisória entre os tipos morfológicos é de
+$CI \sim 2.6$, o que implica que nos quatro painéis superiores estão
+representadas galáxias do tipo {\em late}, e, nos inferiores, do tipo
+{\em early}.  Vemos aqui também uma clara separação entre os objetos.
+A parte de alta metalicidade das NSFGs é populada por galáxias com
+$CI$ extremos.  A asa das AGNs é composta principalmente por objetos
+com maior índice de concentração.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption{Diagrama BPT para diferentes faixas de massa estelar (em
+    unidades de M$_\odot$).}
+\label{fig:BPTxMass}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption{Diagrama BPT para diferentes faixas de luminosidade em
+    \oiii\ (em unidades de L$_\odot$).}
+\label{fig:BPTxLO3}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption{Diagrama BPT para diferentes faixas de índices de
+    concentração.}
+\label{fig:BPTxCI}
+\end{figure}
+%---------------------- Figura -------------------------
+
+
+%***************************************************************%
+%                                                               %
+%                  SLOAN - Mar de info - SFH                    %
+%                                                               %
+%***************************************************************%
+
+\subsection{Resultados preliminares: Histórias de Formação Estelar}
+\label{sec:SLOAN:mar_de_info:SFH}
+
+A nossa síntese espectral nos permite estudar minuciosamente a
+história de formação estelar (SFH, do inglês {\em star formation
+history}), o que não é possível com análises baseadas em índices
+espectrais (por exemplo, \citealp{Kauffmann03a}).  O grupo que
+desenvolveu o método do \moped\ já apresentou estudos desse tipo
+(\citealp{MopedNature}).  No entanto, temos razões para acreditar que
+os nossos modelos permitem um maior grau de detalhes.  Em primeiro
+lugar, os nossos espectros têm uma resolução de $\Delta \lambda \sim
+2$ \AA, enquanto \citet{MopedNature} os degradam para $\Delta \lambda
+\sim 20$ \AA.  Além disso, ao contrário do \moped, o \starlight\ não
+comprime os dados {\em a priori}.  A compressão de parâmetros,
+necessária para uma descrição mais robusta das propriedades
+galácticas, é feita posteriormente aos ajustes.
+
+Para estudar a SFH, primeiro suavizamos os nossos resultados
+marginalizando sobre as diferentes metalicidades da base, isto é,
+focalizando na idade $t_\star$ e fazendo as diferentes $Z_\star$ serem
+indistingüíveis.  Aplicamos então um filtro gaussiano de largura à
+meia altura FWHM$ = 0.5$~dex na distribuiçao de idades descritas pelos
+vetores de populações $\vec{x}$ e $\vec{\mu}$. Esta suavização é
+apenas outra maneira de comprimir os resutados da síntese.  Na
+prática, isto tem o efeito de converter a nossa descrição discreta e
+super-detalhada em uma descrição contínua, mais robusta e menos
+degenerada.  Outra vantagem de proceder assim é podermos derivar essas
+funções e obter taxas de formação estelar (SFR, do inglês {\em star
+formation rate}), que são bastante importantes para verificar os
+diferentes cenários da evolução de galáxias.
+
+Nas Figuras \ref{fig:SFR_AGN} (para AGNs) e \ref{fig:SFR_NSF} (para
+NSFGs), mostramos a evolução com a idade estelar de quatro funções: a
+taxa de formação estelar; a taxa de formação estelar específica
+(SSFR), ou seja, a SFR ponderada pela massa total em estrelas
+($M_\star^{-1}dM/dt$); o vetor de populações estelares por fração de
+massa ($\vec{\mu}$); e a massa estelar ($M$) contida em cada
+população.  As médias são efetuadas em diferentes faixas de massa
+estelar. Percebe-se o comportamento anti-hierárquico ({\em
+downsizing}) com clareza, principalmente na variação da SSFR.  Pode-se
+entender a anti-hierarquia de de duas maneiras: as galáxias de menor
+massa estão formando estrelas a uma taxa muito maior do que as mais
+massivas, portanto, as galáxias menos massivas se consomem mais
+rápido; ou, ainda, as galáxias mais massivas começaram a formar
+estrelas em tempos mais remotos, muito antes das galáxias menos
+massivas.  Esse nosso resultado está de acordo com o encontrado por
+\citet{MopedNature}.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Evolução da taxa de formação estelar para AGNs de
+      diferentes massas.]{História de formação estelar para AGNs de
+      diferentes massas. No painel inferior à direita, mostramos a
+      evolução da taxa de formação estelar para galáxias hospedeiras
+      de AGNs de diferentes faixas de massa.  O painel superior à
+      esquerda grafica a variação da taxa de formação estelar
+      específica (SSFR), isto é, SFR ponderada pela massa total em
+      estrelas.  No painel inferior esquerdo graficamos a SFR média
+      sem tal ponderação. O painel superior à direita mostra o vetor de
+      populações estelares por fração de massa ($\vec{\mu}$). O painel
+      inferior à direita grafica a evolução da massa estelar ($M$)
+      contida em cada população.}
+\label{fig:SFR_AGN}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figuras/test.eps}
+    \caption[Evolução da taxa de formação estelar para NSFGs de
+      diferentes massas.]{O mesmo que a Figura \ref{fig:SFR_AGN}, mas
+      para NSFGs.}
+\label{fig:SFR_NSF}
+\end{figure}
+%---------------------- Figura -------------------------
+
+A Figura \ref{fig:tXmass} traz uma forma alternativa de ver o {\em
+downsizing}.  Selecionamos as NSFGs de melhor qualidade, e mostramos o
+comportamento da idade estelar média ponderada pela luz ($\langle \log
+t_\star \rangle_L$) com a massa estelar total ($M_\star$).  Vê-se que
+uma população mais velha domina a luminosidade de galáxias mais
+massivas, e que a contribuição para luminosidade de populações mais
+jovens é maior para galáxias menos massivas.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.7\textwidth]{figuras/test.eps}
+    \caption{Comportamento da idade estelar média ponderada pela luz
+      com a massa estelar total.}
+\label{fig:tXmass}
+\end{figure}
+%---------------------- Figura -------------------------
+
+Devemos enfatizar que esses resultados são ainda preliminares.  Há
+muitos detalhes que devemos considerar, como efeitos de incompleteza
+da amostra (ou seja, devemos pesar os nossos resultados pelo volume
+máximo de detecção de galáxias de diferentes luminosidades, como
+\citealp{Kauffmann03a} e outros estudos). Precisamos também converter
+as escalas de tempo da escala da síntese (idade estelar) para a escala
+cosmológica, levando em conta o {\em redshift} de cada galáxia.  Além
+disso, estamos ajustando novos modelos com uma base de populações
+estelares simples que não contém populações de baixíssima metalicidade
+($Z = 1/200 \: {\rm e } \: 1/50 \: Z_\odot$).  Essas populações têm um
+grande efeito em parâmetros como a razão massa/luminosidade. No
+entanto, essas SSPs foram computadas com uma biblioteca pequena e
+utilizando estrelas de maior metalicidade, por isso a nossa
+preocupação em quantificar o seu efeito.  De qualquer maneira, mesmo
+sem todos esses cuidados, já podemos observar alguns resultados
+bastante relevantes quanto à natureza e evolução de galáxias no
+universo local.
+
+% End of this chapter

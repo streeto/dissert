@@ -1,0 +1,6 @@
+glob:*~
+doc/tmp
+doc/texput.log
+.metadata
+.DS_Store
+.smhist

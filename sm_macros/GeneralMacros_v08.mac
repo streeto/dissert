@@ -1,0 +1,2219 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+	#@@		     GENERAL-USE MACROS FOR SDSS WORK		  @@#
+	#@@		         Cid@Lagoa - March/20/2008		  @@#
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+	# These are general purpose macros to handle the SDSS data.
+	# It accompanies the ROT_* macros define elsewhere (ReadOurTables*.mac)
+	#
+   	# Main macros in this file:
+	#
+	# GM_film_check_fits_and_SFH 15
+	# GM_film_check_fits_SFH_and_images 15      (uses get_SDSS_image.sh!)
+	# GM_plot_fits_and_SFH 12
+
+	# GM_curplot_xyz 18
+	# 	GM_cp 					      (internal use!)
+	# 	GM_dev1					      (internal use!)
+	# 	GM_dev1					      (internal use!)
+	#
+	# GM_plot_xyz 18
+	# GM_resplot 14
+	# 	GM_plot_xy_and_resid 4    (internal use)
+	# GM_implot 19
+	#
+	# GM_CalcMedAndPercentiles 8
+	# GM_ols_bisector_fit 4
+	# GM_Mark_lambda_color 2
+	# GM_add_colors
+	# GM_plot_ranges 13
+	# GM_Lagoa_plot_ranges 13
+	#
+	# GM_Calc_SpectralStats 13
+	# GM_Calc_WeightedSpectralStats 14
+	# GM_plot_SpectralStats 13
+	# GM_plot_SpectralStats_SN 13
+	# GM_Read_SpectralStats 1
+	#
+	# GM_CalcLogLineRatio 5
+	#
+	# GM_locwin 4  (added on 20/March/2008)
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+
+
+	###################################################################
+GM_ReadMe
+	# Macro to list macros in this file!
+	# Cid@Lagoa - 29/April/2007 .... 20/March/2008
+	echo -------------------------------------------------------------------
+	echo [GM_ReadMe] These are the ROT_* macros:
+	echo 
+	echo [GM_ReadMe] GM_film_check_fits_and_SFH 15
+	echo [GM_ReadMe] GM_film_check_fits_SFH_and_images 15      (uses get_SDSS_image.sh!)
+	echo [GM_ReadMe] GM_plot_fits_and_SFH 12
+	echo 
+	echo [GM_ReadMe] GM_curplot_xyz 18
+	echo [GM_ReadMe] 	GM_cp 					      (internal use!)
+	echo [GM_ReadMe]  	GM_dev1					      (internal use!)
+	echo [GM_ReadMe]  	GM_dev1					      (internal use!)
+	echo 
+	echo [GM_ReadMe] GM_plot_xyz 18
+	echo [GM_ReadMe] GM_resplot 14
+	echo [GM_ReadMe]  	GM_plot_xy_and_resid 4                        (internal use!)
+	echo [GM_ReadMe] GM_implot 19
+	echo [GM_ReadMe] 
+
+	echo [GM_ReadMe] GM_CalcMedAndPercentiles 8
+	echo [GM_ReadMe] GM_ols_bisector_fit 4
+	echo [GM_ReadMe] GM_Mark_lambda_color 2
+	echo [GM_ReadMe] GM_add_colors
+	echo [GM_ReadMe] GM_plot_ranges 13
+	echo [GM_ReadMe] GM_Lagoa_plot_ranges 13
+	echo [GM_ReadMe] 
+	echo [GM_ReadMe] GM_Calc_SpectralStats 13
+	echo [GM_ReadMe] GM_Calc_WeightedSpectralStats 14
+	echo [GM_ReadMe] GM_plot_SpectralStats 13
+	echo [GM_ReadMe] GM_plot_SpectralStats_SN 13
+	echo [GM_ReadMe] GM_Read_SpectralStats 1
+
+	echo [GM_ReadMe] GM_CalcLogLineRatio 5
+
+	echo [GM_ReadMe] GM_locwin 4
+	echo -------------------------------------------------------------------
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#	     START OF PLOT FITS + SFH + IMAGE BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	#####################################################################
+	# Plays a movie of spectral fits, optionally sorting galaxies
+	# by $3 & selecting those satisfying a flag ($4) >= 1 condition
+	# and defining limits yourself (if $5 is given).
+	#
+	# The movie starts with galaxy number $1 & goes in steps of $2 galaxies.
+	# $1 & $2 are mandatory args. $3--$5 are optional
+	#
+	# Example-usage: set flag = (flagAGN == 0)
+	# 	         GM_film_check_fits_and_SFH 1 100 at_flux flag
+	#
+	# To set plot limits yourself define llow lupp flow fupp freslow & fresupp
+	# and call this macro with something (whatever!) as a 5h argument, as in
+	#
+	#                GM_film_check_fits_and_SFH 1 100 at_flux flag 1234
+	#
+	# Cid@Lagoa - 28/Feb/2007
+
+GM_film_check_fits_and_SFH 15
+	# Define aux_flag, aux_xsort & aux_file arrays
+	set aux_flag = AV * 0 + 1
+	if ($?4) {set aux_flag = $4}
+
+	# Introduced auxiliar galaxy-index ... [to use w/smoothed SFH vectors..]
+	set aux_Index = 1,dimen(AV)
+	set aux_GalIndex = aux_Index if (aux_flag >= 1)
+	set aux_sfile    = sfile     if (aux_flag >= 1)
+	set aux_xsort    = at_flux   if (aux_flag >= 1)
+	if ($?3) {set aux_xsort = $3 if (aux_flag >= 1)}
+
+	# Sort files according to aux_xsort.
+	sort {aux_xsort aux_sfile aux_GalIndex}
+	define N_files (dimen(aux_sfile))
+	echo [GM_film_check_fits_and_SFH] @@> There are $N_files fits to be plotted.
+
+	# Check the N_files spectral fits, plotting "SFR(t)"
+	# Start from file number $1 & go in steps of $2 galaxies.
+	do i_file=$1,$N_files,$2 {
+		erase
+		define arq (aux_sfile[$i_file-1])
+		define aux (aux_xsort[$i_file-1])
+		define GalIndex (aux_GalIndex[$i_file-1])
+
+		window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 
+		define lab_aux (sprintf('%.5g',float($aux)))
+		if ($?3) {
+			label {($i_file/$N_files) $arq | $3 = $lab_aux}
+			} else {
+			label {($i_file/$N_files) $arq | order = $lab_aux}
+			}
+
+		if ($?5) {
+			GM_plot_fits_and_SFH $arq $5
+			} else {
+			GM_plot_fits_and_SFH $arq
+			}
+		define lixo ('Return goes to next') define lixo ?
+		}
+	#####################################################################
+
+
+	#####################################################################
+	# As GM_film_check_fits_and_SFH, but also download and display the
+	# SDSS image (using William's get_SDSS_image.sh)!
+	# OBS: check if your get_image script is Ok! 
+	#
+	# If jpgs_dir is defined, read image from disk directly!
+	# Cid@Lagoa - 27/April/2008
+
+GM_film_check_fits_SFH_and_images 15
+	# Define aux_flag, aux_xsort & aux_file arrays
+	set aux_flag = AV * 0 + 1
+	if ($?4) {set aux_flag = $4}
+
+	# Introduced auxiliar galaxy-index ... [to use w/smoothed SFH vectors..]
+	set aux_Index = 1,dimen(AV)
+	set aux_GalIndex = aux_Index if (aux_flag >= 1)
+	set aux_sfile    = sfile     if (aux_flag >= 1)
+	set aux_xsort    = at_flux   if (aux_flag >= 1)
+	if ($?3) {set aux_xsort = $3 if (aux_flag >= 1)}
+
+	# Sort files according to aux_xsort.
+	sort {aux_xsort aux_sfile aux_GalIndex}
+	define N_files (dimen(aux_sfile))
+	echo [GM_film_check_fits_and_SFH_and_images] @@> There are $N_files fits to be plotted.
+
+	# Check the N_files spectral fits, plotting "SFR(t)"
+	# Start from file # $1 & go in steps of $2 galaxies.
+	do i_file=$1,$N_files,$2 {
+		erase
+		define arq (aux_sfile[$i_file-1])
+		define aux (aux_xsort[$i_file-1])
+		define GalIndex (aux_GalIndex[$i_file-1])
+
+		window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 
+		define lab_aux (sprintf('%.5g',float($aux)))
+		if ($?3) {
+			label {($i_file/$N_files) $arq | $3 = $lab_aux}
+			} else {
+			label {($i_file/$N_files) $arq | order = $lab_aux}
+			}
+
+		if ($?5) {
+			GM_plot_fits_and_SFH $arq $5
+			} else {
+			GM_plot_fits_and_SFH $arq
+			}
+
+		# get image!
+	  	!killall display
+		if ($?jpgs_dir) {
+			echo [GM_film_check_fits_and_SFH_and_images] @@> Reading image from $jpgs_dir...
+			!display $jpgs_dir''$(aid[$GalIndex-1]).jpg &
+		} else {
+			echo [GM_film_check_fits_and_SFH_and_images] @@> Running William's get_SDSS_image.sh ...
+		  	!./get_SDSS_image.sh $arq.jpg GLS 0.1 1> /dev/null &
+		}
+
+
+		# echo some info 
+		echo
+		echo @@> Galaxy     = $arq
+		echo @@> redshift   = $(redshift[$GalIndex-1])
+		echo @@> Mr         = $(Mr[$GalIndex-1])
+		echo @@> petroR50_z = $(petroR50_z[$GalIndex-1]) arcsec = $(petroR50_z_kpc[$GalIndex-1]) kpc
+		echo @@> Mcor_gal   = $(Mcor_gal[$GalIndex-1])
+		echo @@> at_flux    = $(at_flux[$GalIndex-1])
+		echo @@> am_mass    = $(am_mass[$GalIndex-1])
+
+		define lixo ('Wait for SDSS image ...') define lixo ?
+		}
+	#####################################################################
+
+
+	###################################################################
+	# Macro to plot the observed & fitted spectrum + SFH
+	# The spectrum will be read from FitsDir.
+	# The 2nd optional argument may have **whatever** value. If it exists,
+	# the lambda and flux limits (llow lupp flow fupp freslow & fresupp) are 
+	# NOT define here (unless these variables are not defined, in which 
+	# case we use default values). Hence define your limits yourself and
+	# call GM_plot_fits_and_SFH with any shit as 2nd arg to keep your chosen
+	# limits.
+	#
+	# Cid@Lagoa - 28/Feb/2007
+
+GM_plot_fits_and_SFH 12
+	# Read stuff
+	ROT_Read_Output_of_Starlight $1
+
+	define exp_factor (0.8)
+        expand $exp_factor
+	lw 1
+
+	# Define plot limits. If $2 exists then use present values of llow, lupp ...
+	# otherwise use default values.
+	if ($?2) {
+		if (!$?llow | !$?lupp | !$?flow | !$?fupp | !$?freslow | !$?fresupp) {
+			echo [GM_plot_fits_and_SFH]> * To use this feature you must define
+			echo                         llow lupp flow fupp freslow & fresupp
+ 			echo                         yourself but they are NOT defined!
+ 			echo                         ... Will use default limits!!
+			define llow    ($l_ini-20)	define lupp    ($l_fin+20)
+			define flow    (-0.11)    	define fupp    (3.99)
+			define freslow (-0.29)    	define fresupp (0.99)
+			} else {
+			echo [GM_plot_fits_and_SFH]> * Limits for spectral plots:
+			echo                         llow    = $llow  -->  lupp    = $lupp
+			echo                         flow    = $flow  -->  fupp    = $fupp
+			echo                         freslow = $freslow  -->  fresupp = $fresupp
+			}
+		} else {
+			echo [GM_plot_fits_and_SFH]> Using default limits for spectral plots...
+			define llow    ($l_ini-20)	define lupp    ($l_fin+20)
+			define flow    (-0.11)    	define fupp    (3.99)
+			define freslow (-0.29)    	define fresupp (0.99)
+		}
+
+	# plot f_obs X f_syn spectrum (both in normalized units)
+	ticksize 0 0 0 0
+	window 5 -5 1:3 3:5 lim $llow $lupp $flow $fupp box 0 2
+		ylabel {F_\lambda  [normalized]}
+		con l_obs f_obs
+		ctype red    con l_obs f_syn
+		ctype yellow con l_obs (1/(f_wei + 1e-10))
+		ctype green  con l_obs (1/(f_wei + 1e-10)) if (f_wei > 0)
+		ctype default
+
+	# plot residual spectrum, indicating masks & clipped points
+	set res = f_obs - f_syn
+	window 5 -5 1:3 1:2 lim $llow $lupp $freslow $fresupp box
+		ylabel {Residual spectrum}
+		xlabel {\lambda  [\AA]}
+
+		ctype yellow  	con l_obs res 
+		ctype default 	con l_obs res if (f_wei > 0)
+		ctype magenta 	con l_obs res if (f_wei == 0)
+		ptype 4 1
+		ctype red 	poi l_obs res if (f_wei == -1)
+		ptype 10 0
+		ctype green 	poi l_obs res if (f_wei == -2)
+		 		con l_obs res if (f_wei == -2)
+		lty 2 ctype blue  rel 1000 0 draw 10000 0
+		lty 0 ctype default
+
+
+	# Plot "Star-Formation History": x_j and mu_j versus age ...
+	# OBS: Macro ROT_BuildAgeBinnedArrays defined elsewhere!!
+	ROT_BuildAgeBinnedArrays
+
+	# light-fraction x versus age
+	set xx = lg(popage_base)
+	set yy = popx
+	set zz = popZ_base
+
+	# New way to do histogram - non-misleading (constant width), and with colors for Zs!
+	ticksize 0.25 1 5 25
+	window 5 -40 4:5 18:32 lim (lg(age_bin)) -5 99.99 box 0 2
+		define lix (int($l_norm))
+		ylabel {x_j [%] @ \lambda = $lix \AA}
+
+		# Find smallest separation in log age to define width of vertical bars
+		set lix = lg(age_bin)
+		define _dx (1e30)
+		do _i=0,$n_ages-2 {
+			define _lix (0.48 * (lix[$_i+1] - lix[$_i]))
+			if ($_lix < $_dx) {define _dx (0.45 * $_lix)}
+			}
+
+		# Coloured "histogram"
+		lw 3 
+		set _Zcolor  = {magenta cyan blue green default red magenta cyan blue green default red}
+		set _y       = 0 * age_bin
+		set _ycumul  = 0 * age_bin
+		set _x       = lg(age_bin)
+		do _iZ=0,$n_Zs-1 {
+			ctype $(_Zcolor[$_iZ])
+			set _y = popx if (popZ_base == Z_bin[$_iZ])
+			set _y = _y + _ycumul
+			do _i=0,dimen(_x)-1 {shade_box 1 $(_x[$_i]-$_dx) $(_ycumul[$_i]) $(_x[$_i]+$_dx) $(_y[$_i])}
+			set _ycumul = _y
+			}
+		lw 2 ctype default
+		ctype default
+
+		# OLD 6 Zs color-table (Cid@INAOE - 28/June/2005)
+		#	ptype  3 0  ctype magenta	poi xx yy if (zz < 0.0004 & yy > 0)
+		#	ptype  3 1  ctype cyan   	poi xx yy if (zz < 0.004 & zz > 0.00011 & yy > 0)
+		#	ptype  4 0  ctype blue   	poi xx yy if (zz == 0.004 & yy > 0)
+		#	ptype  4 1  ctype green  	poi xx yy if (zz == 0.008 & yy > 0)
+		#	ptype  5 0  ctype yellow 	poi xx yy if (zz == 0.02 & yy > 0)
+		#	ptype  5 3  ctype red    	poi xx yy if (zz == 0.05 & yy > 0)
+		#	ctype default
+
+	# Mark base ages ("bar-code" panel)
+	window 5 -40 4:5 16:17 lim (lg(age_bin)) 0 1 box 3 3 3 3
+		set _x = lg(age_bin)
+		lw 1 ctype dgreen
+		do _i=0,dimen(_x)-1 {rel $(_x[$_i]) 0 draw $(_x[$_i]) 1}
+		lw 2 ctype default
+
+	# mass-fraction mu_cor versus age
+	set yy = lg(popmu_cor + 1e-10)
+	ticksize 0.25 1 0.2 1
+	window 5 -40 4:5 1:15 lim (lg(age_bin)) -1.99 2.1 box
+		xlabel {log age [yr]}
+		ylabel {log \mu_j [%]}
+
+		# Coloured "histogram"
+		lw 3 
+		set _Zcolor  = {magenta cyan blue green default red magenta cyan blue green default red}
+		set _y       = 0 * age_bin
+		set _ycumul  = 0 * age_bin
+		set _x       = lg(age_bin)
+		do _iZ=0,$n_Zs-1 {
+			ctype $(_Zcolor[$_iZ])
+			set _y      = popmu_cor if (popZ_base == Z_bin[$_iZ])
+			set _y      = _y + _ycumul
+			set _z      = lg(_y + 1e-30)
+			set _zcumul = lg(_ycumul + 1e-30)
+			do _i=0,dimen(_x)-1 {shade_box 1 $(_x[$_i]-$_dx) $(_zcumul[$_i]) $(_x[$_i]+$_dx) $(_z[$_i])}
+			set _ycumul = _y
+			}
+		lw 2 ctype default
+		ctype default
+
+		# OLD 6 Zs color-table (Cid@INAOE - 28/June/2005)
+		#	ptype  3 0  ctype magenta	poi xx yy if (zz < 0.0004)
+		#	ptype  3 1  ctype cyan   	poi xx yy if (zz < 0.004 & zz > 0.00011)
+		#	ptype  4 0  ctype blue   	poi xx yy if (zz == 0.004)
+		#	ptype  4 1  ctype green  	poi xx yy if (zz == 0.008)
+		#	ptype  5 0  ctype yellow 	poi xx yy if (zz == 0.02)
+		#	ptype  5 3  ctype red    	poi xx yy if (zz == 0.05)
+		#	ctype default
+
+	# label fit info
+	define chi2_tot (int($chi2 * $Nl_eff))
+	define lab_chi2          (sprintf('%.4g',float($chi2)))
+	define lab_adev          (sprintf('%.4g',float($adev)))
+	define lab_SN_normwin    (sprintf('%.3g',float($SN_normwin)))
+	define lab_A_V           (sprintf('%.4g',float($A_V)))
+	define lab_v_d           (sprintf('%.3g',float($v_d)))
+	define lab_v_0           (sprintf('%.3g',float($v_0)))
+	define lab_lix_inv_adev  (sprintf('%.3g',float(100/$adev)))
+
+	window 5 -5 4:5 5 lim 0 1 0 1 
+        expand 0.7
+	rel 0 0.9 label {\chi^2_\lambda  = $lab_chi2   ($chi2_tot)}
+	rel 0 0.7 label {adev = $lab_adev % = 1/$lab_lix_inv_adev}
+	rel 0 0.5 label {S/N = $lab_SN_normwin}
+	rel 0 0.3 label {A_V = $lab_A_V}
+
+	#(ext-law=$red_law_option)}
+	rel 0 0.1 label {\sigma_\ast = $lab_v_d & v_\ast = $lab_v_0 km s^{-1}}
+        expand $exp_factor
+
+	# Restore limits of spectrum-window in case I wanna use the cursor...
+	ticksize 0 0 0 0
+	window 5 -5 1:3 1:2 lim $llow $lupp $freslow $fresupp
+	#####################################################################
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#	       END OF PLOT FITS + SFH + IMAGES BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		START OF CURSOR-PLOT-FANCY-MACRO BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	###################################################################
+	# Super-Macro-do-Cid! Plots x againts y color-coding by z, and
+	# plotting only points for which a flag is >= 1.
+	#
+	# usage: GM_curplot_xyz x y z x1 x2 y1 y2 flag
+	# where: x = x, y = y, x = z. x1/x2/y1/y2 are OPTIONAL plots limits.
+	#        flag is an optional flag which you must define externally.
+	# 	For instance: 
+	#	set flag = (flagAGN ==0) ? flagAGN*0 + 1 : flagAGN * 0
+	#
+	# To see the spectra use 'p'. To quit position the cursor outside the
+	# plot boundaries (eg, in one of the histograms) 7 press 'p'.
+	# Keep your finger crossed all the way...
+	#
+	# Use mr check Read_tables before anything!
+	#
+	# Do not define devices yourself!
+
+
+	# Updated to include the 2nd optional argument to GM_plot_fits_and_SFH ...
+	# which is $9 here.
+	#
+	# Cid@Lagoa - 02/Mar/2007
+
+
+GM_curplot_xyz 19
+	GM_dev1 
+	erase
+
+	# Repeat main plot ...
+	define _repeat (1)
+	while {$_repeat != 0} {
+
+	GM_dev1
+	expand 1
+	ptype 1 1 
+	ticksize 0 0 0 0
+
+	# Store $1 $2 & $3 onto _x, _y & _z. Clean -999 entries.
+	# If a flag-array (parameter 8) is given then select objects
+	# for which this flag is >= 1!
+	if ($?8) {
+		set _x = $1 if ($8 >= 1)
+		set _y = $2 if ($8 >= 1)
+		set _z = $3 if ($8 >= 1)
+		set _sfile = sfile if ($8 >= 1)
+		define _nlix (dimen(_x))
+		echo **> $_nlix objects satisfy flag(8) >= 1!
+	} else {
+		set _x = $1 if ($1 > -999 & $2 > -999)
+		set _y = $2 if ($1 > -999 & $2 > -999)
+		set _z = $3 if ($1 > -999 & $2 > -999)
+		set _sfile = sfile if ($1 > -999 & $2 > -999)
+		define _nlix (dimen(_x)) 
+		echo **> $_nlix objects satisfy x & y > -999!
+	}
+
+	# Define z-values for color boundaries: 1/5-th in each of 5 colors.
+	# ATT: Still uses oldish 5-color/stupid/non-elegant z-binning scheme
+	set _lix = _z
+	sort {_lix}
+	define _i1 (int(1 * dimen(_lix) / 5))	define _z1 (_lix[$_i1])
+	define _i2 (int(2 * dimen(_lix) / 5))	define _z2 (_lix[$_i2])
+	define _i3 (int(3 * dimen(_lix) / 5))	define _z3 (_lix[$_i3])
+	define _i4 (int(4 * dimen(_lix) / 5))	define _z4 (_lix[$_i4])
+
+	# Define plot-limits. Authomatic or optional-input values.
+	define xlow (0)	define xupp (0) define ylow (0) define yupp (0)
+	if ($?4) {define xlow ($4)}
+	if ($?5) {define xupp ($5)}
+	if ($?6) {define ylow ($6)}
+	if ($?7) {define yupp ($7)}
+	if ($xlow == $xupp) {
+		vecminmax _x _xlow _xupp
+		define xlow ($_xlow - 0.05 * ($_xupp - $_xlow))
+		define xupp ($_xupp + 0.05 * ($_xupp - $_xlow))
+		}
+	if ($ylow == $yupp) {
+		vecminmax _y _ylow _yupp
+		define ylow ($_ylow - 0.05 * ($_yupp - $_ylow))
+		define yupp ($_yupp + 0.05 * ($_yupp - $_ylow))
+		}
+
+	# Main x-y-z plot
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp box 
+		xlabel {$1}
+		ylabel {$2}
+		ctype magenta poi _x _y if (_z <= $_z1)
+			echo @@> Magenta: $3  <= $_z1
+		ctype blue    poi _x _y if (_z > $_z1 & _z <= $_z2)
+			echo @@> Blue   : $3 in $_z1  ==>  $_z2
+		ctype green   poi _x _y if (_z > $_z2 & _z <= $_z3)
+			echo @@> Green  : $3 in $_z2  ==>  $_z3
+		ctype yellow  poi _x _y if (_z > $_z3 & _z <= $_z4)
+			echo @@> Yellow : $3 in $_z3  ==>  $_z4
+		ctype red     poi _x _y if (_z > $_z4)
+			echo @@> Red    : $3  > $_z4
+		ctype default
+
+	# Projected Histograms
+	define Nx_bin (100)
+	define dx_bin (($xupp - $xlow) / ($Nx_bin - 1))
+	set x_bin = $xlow,$xupp,$dx_bin
+	set hx = histogram(_x:x_bin)
+	window -5 -5 1:4 5 lim $xlow $xupp hx box 0 2
+		hist x_bin hx
+
+	define Ny_bin (100)
+	define dy_bin (($yupp - $ylow) / ($Ny_bin - 1))
+	set y_bin = $ylow,$yupp,$dy_bin
+	set hy = histogram(_y:y_bin)
+	window -5 -5 5 1:4 lim hy $ylow $yupp box 0 0 1 0
+		hist hy y_bin 
+
+	# Reset to main window to use the cursor
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+
+	# Go for cursor plot routine...
+	echo @@> PRESS 'p' (or the mouse middle button) to select an object
+	echo @@> PRESS 'p' in one of the histograms to quit...
+	GM_cp
+	}
+
+	echo 
+	echo Done:)
+
+
+GM_cp
+	# Select an object with the cursor & plot its spectrum 
+	# (or something else) in GM_dev2. Somewhat unstable routine...
+	# Throghout we use the filenames stored in _sfile!
+
+	# Read cursor position
+	set _xx = -999
+	set _yy = -999
+	cursor _xx _yy
+	define _nlast (dimen(_xx) - 1)
+
+	# Define last point marked (with 'p') with the cursor.
+	define _xx0 ($xlow - 999)
+	define _yy0 ($ylow - 999)
+	if ($_nlast >= 0) {
+		define _xx0 (_xx[$_nlast])
+		define _yy0 (_yy[$_nlast])
+		} 
+
+	# If last point is outside plot boundaries than the loop will be
+	# aborted. Otherwise plot something for the selected object.
+	if ($_xx0<$xlow | $_yy0<$ylow | $_xx0>$xupp | $_yy0>$yupp | $_nlast < 0) {
+		define _repeat (0)
+	} else {
+		# Find object closest to cursor. (Uncomment your 
+		# favorite definition of "distance" below!)
+		set _xx = _x
+		set _yy = _y
+		set _ssfile = _sfile
+		#set _dist = sqrt((_x - $_xx0)**2 + (_y - $_yy0)**2)
+		set _dist = sqrt(((_x-$_xx0)/($xupp-$xlow))**2 + ((_y-$_yy0)/($yupp-$ylow))**2)
+		sort {_dist _ssfile _xx _yy}
+
+		define arq  (_ssfile[0])
+		define _xx0 (_xx[0])	
+		define _yy0 (_yy[0])
+		ptype 10 0 ctype cyan rel $_xx0 $_yy0 dot ctype default
+		echo Galaxy = $arq  -  x = $_xx0  & y = $_yy0
+
+		# Plot object in GM_dev2. (If $9 exists then limits are pre-defined...)
+		GM_dev2
+		erase
+		if ($?9) {
+			GM_plot_fits_and_SFH $arq blabla
+			} else {
+			GM_plot_fits_and_SFH $arq blabla
+			}
+		window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 
+		label {SDSS $arq  -  x = $_xx0  & y = $_yy0}
+	}
+
+
+GM_dev1
+	device x11 -bg black -fg white -kbdfocus -geometry 512x512+500+0 -ndevice 2 -device 1
+GM_dev2
+	device x11 -bg black -fg white -kbdfocus -geometry 512x512+0+0 -ndevice 2 -device 2
+	###################################################################
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		 END OF CURSOR-PLOT-FANCY-MACRO BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		    START OF PLOT x-y-z & resids BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	###################################################################
+	# Plots x vs y color coding by z, optionally defining limits &
+	# applying flag. Only points with valid x, y & z (!= -999) are
+	# plotted.
+	# Cid@INAOE - 25/June/2005 + adaptacoes ao longo do tempo...
+	#
+	# Adapted to case when $3 is a number, in which case no color coding 
+	# is done, and the color is $3.
+
+GM_plot_xyz 18
+	expand 0.7
+	ptype 1 1 
+	lw 1
+	ticksize 0 0 0 0
+
+	# Select points to be plotted: xx, yy & zz
+	if (whatis($3) == 41) {
+		set _lix = ($1 > -999 & $2 > -999 & $3 > -999)
+		} else {
+		set _lix = ($1 > -999 & $2 > -999)
+		}
+	set aux_flag = _lix
+	if ($?8) {set aux_flag = ($8 & _lix)}
+
+	set xx = $1 if (aux_flag >= 1)
+	set yy = $2 if (aux_flag >= 1)
+	if (whatis($3) == 41) {set zz = $3 if (aux_flag >= 1)}
+	define _nlix (dimen(xx))
+	echo **> $_nlix objects satisfy  x & y & z > -999 & flag (par8) >= 1!
+
+	# Define plot-limits. Authomatic or optional-input values.
+	foreach var (xlow xupp ylow yupp) {define $var (0)}
+	if ($?4) {define xlow ($4)}
+	if ($?5) {define xupp ($5)}
+	if ($?6) {define ylow ($6)}
+	if ($?7) {define yupp ($7)}
+	if ($xlow == $xupp) {
+		vecminmax xx _xlow _xupp
+		define xlow ($_xlow - 0.05 * ($_xupp - $_xlow))
+		define xupp ($_xupp + 0.05 * ($_xupp - $_xlow))
+		}
+	if ($ylow == $yupp) {
+		vecminmax yy _ylow _yupp
+		define ylow ($_ylow - 0.05 * ($_yupp - $_ylow))
+		define yupp ($_yupp + 0.05 * ($_yupp - $_ylow))
+		}
+
+	# Define z-values for color boundaries: 1/7-th in each of 7 colors.
+	# OBS: Adapted to case when $3 is a number, in which case
+	#	no color coding is done, and the color is $3
+	define _ncolors (7)
+	if (whatis($3) == 41) {
+		set _lix = zz
+		sort {_lix}
+			do _i=1,$_ncolors{
+			define _iaux (int($_i * dimen(_lix) / $_ncolors) - 1)
+			define zz$_i (_lix[$_iaux])
+			}
+		} else {
+			do _i=1,$_ncolors{define zz$_i (-999)}
+		}
+
+	# Plot x-y-z
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+	lim $xlow $xupp $ylow $yupp box 
+		xlabel {$1}
+		ylabel {$2}
+		if (whatis($3) == 41) {
+			ctype magenta poi xx yy if (zz <= $zz1)
+			ctype blue    poi xx yy if (zz > $zz1 & zz <= $zz2)
+			ctype dgreen  poi xx yy if (zz > $zz2 & zz <= $zz3)
+			ctype green   poi xx yy if (zz > $zz3 & zz <= $zz4)
+			ctype yellow  poi xx yy if (zz > $zz4 & zz <= $zz5)
+			ctype orange  poi xx yy if (zz > $zz5 & zz <= $zz6)
+			ctype red     poi xx yy if (zz > $zz6)
+			} else {
+			ctype $3 poi xx yy
+			}
+			ctype default
+
+
+	# NEW! Cid@Lagoa - Dec/12/2007
+	if ($?doNOTplotranges) {
+	if ($doNOTplotranges == 0) {
+		# Call GM_plot_ranges to plot ranges...
+		# UEPA!! ATT: This sometimes produces ugly results...
+		if (dimen(xx) > 50000) {
+			#	define _naux (int(dimen(xx) / 100))
+				define _naux (int(dimen(xx) / 1000))
+				GM_plot_ranges xx yy $_naux
+				} else {
+				GM_plot_ranges xx yy
+				}
+
+		# Spearman coeff
+		spear xx yy lix1 lix2
+		lim 0 1 0 1
+		define lab_RSpear  (sprintf('%.5g',float($lix1)))
+		rel 0.02 0.9 label {R_S = $lab_RSpear}
+		}
+		}
+
+	# Projected Histograms
+	define Nx_bin (100)
+	define dx_bin (($xupp - $xlow) / ($Nx_bin - 1))
+	set x_bin = $xlow,$xupp,$dx_bin
+	set hx = histogram(xx:x_bin)
+	window -5 -5 1:4 5 lim $xlow $xupp hx box 0 2
+		hist x_bin hx
+		if (whatis($3) != 41) {ctype $3 hist x_bin hx ctype default}
+
+	define Ny_bin (100)
+	define dy_bin (($yupp - $ylow) / ($Ny_bin - 1))
+	set y_bin = $ylow,$yupp,$dy_bin
+	set hy = histogram(yy:y_bin)
+	window -5 -5 5 1:4 lim hy $ylow $yupp box 0 0 1 0
+		hist hy y_bin 
+		if (whatis($3) != 41) {ctype $3 hist hy y_bin ctype default}
+
+	# Reset to main window (in case you wanna use the cursor)
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+	expand 1
+	###################################################################
+
+
+
+
+	###################################################################
+	# Correlates x ($2) with z ($3) & then the y - y(x) residuals with z 
+	# & vice-versa too, where y = $1! 
+	# y = dependent variable. x & z = indep. variables.
+	# Optional flag $4 applied to select objects.
+	# Fits y(x), x(y) + bisector-fit & Spearman coef.
+	# Cid@Lagoa - 23/March/2005
+
+GM_resplot 14
+	expand 0.7
+	ptype 1 1 
+	ticksize 0 0 0 0
+
+	# Define who's who & Select objects with or without optional ($4) flag
+	if ($?4) {
+		set yy = $1 if ($4 >= 1 & $1 > -999 & $2 > -999 & $3 > -999)
+		set xx = $2 if ($4 >= 1 & $1 > -999 & $2 > -999 & $3 > -999)
+		set zz = $3 if ($4 >= 1 & $1 > -999 & $2 > -999 & $3 > -999)
+		define _nlix (dimen(xx))
+		echo **> $_nlix objects satisfy  x & y & z > -999 **AND** flag >= 1!
+	} else {
+		set yy = $1 if ($1 > -999 & $2 > -999 & $3 > -999)
+		set xx = $2 if ($1 > -999 & $2 > -999 & $3 > -999)
+		set zz = $3 if ($1 > -999 & $2 > -999 & $3 > -999)
+		define _nlix (dimen(xx))
+		echo **> $_nlix objects satisfy x & y & z > -999!
+		}
+
+
+	# Plot & fit x X z just for control...	
+	window 5 2 5 2	lim xx zz box 
+		xlabel {$2}
+		ylabel {$3}
+		ctype cyan	poi xx zz
+		ctype default	GM_ols_bisector_fit xx zz a b
+		spear xx zz lix1 lix2
+		window 5 2 5 1 lim 0 1 0 1
+			define lab_a       (sprintf('%.5g',float($a)))
+			define lab_RSpear  (sprintf('%.5g',float($lix1)))
+			rel 0 0.9 label {... x X z ...}
+			rel 0 0.7 label {R_S = $lab_RSpear}
+			rel 0 0.6 label {a = $lab_a}
+			rel 0 0.5 label {N = $_nlix}
+
+
+	# Plot y X x & y-y(x) X z...
+	GM_plot_xy_and_resid $1 $2 $3 1
+
+	# Swap x <==> z & plot y X z & y-y(z) X x...
+	set aux = xx
+	set xx = zz
+	set zz = aux
+	GM_plot_xy_and_resid $1 $3 $2 3
+
+
+GM_plot_xy_and_resid 4
+	# Define z-values for color boundaries: 1/5-th in each of 5 colors.
+	# (old/dumm scheme...)
+	set _lix = zz
+	sort {_lix}
+	define _i1 (int(1 * dimen(_lix) / 5))	define zz1 (_lix[$_i1])
+	define _i2 (int(2 * dimen(_lix) / 5))	define zz2 (_lix[$_i2])
+	define _i3 (int(3 * dimen(_lix) / 5))	define zz3 (_lix[$_i3])
+	define _i4 (int(4 * dimen(_lix) / 5))	define zz4 (_lix[$_i4])
+
+	# Plot y-x-z
+	define _ix1 ($4)	define _ix2 ($4+1)
+	window 5 2 $_ix1:$_ix2 2	lim xx yy box 
+		xlabel {$2}
+		ylabel {$1}
+		ctype magenta poi xx yy if (zz <= $zz1)
+		ctype blue    poi xx yy if (zz > $zz1 & zz <= $zz2)
+		ctype green   poi xx yy if (zz > $zz2 & zz <= $zz3)
+		ctype yellow  poi xx yy if (zz > $zz3 & zz <= $zz4)
+		ctype red     poi xx yy if (zz > $zz4)
+		ctype default
+
+
+	# Linear fit x(y), y(x) & bisector-fits & Spearman coef.
+	GM_ols_bisector_fit xx yy a b
+	spear xx yy lix1 lix2
+		define lab_a       (sprintf('%.5g',float($a)))
+		define lab_RSpear  (sprintf('%.5g',float($lix1)))
+		lim 0 1 0 1 rel 0 1.02 label {R_S = $lab_RSpear   |  a = $lab_a}
+
+	# Plot residuals y - y(x) against z
+	set res = yy - ($a * xx + $b)
+	window 5 2 $_ix1:$_ix2 1 lim zz res box 
+		xlabel {$3}
+		ylabel {$1 - $1($2)}
+		ctype magenta poi zz res if (zz <= $zz1)
+		ctype blue    poi zz res if (zz > $zz1 & zz <= $zz2)
+		ctype green   poi zz res if (zz > $zz2 & zz <= $zz3)
+		ctype yellow  poi zz res if (zz > $zz3 & zz <= $zz4)
+		ctype red     poi zz res if (zz > $zz4)
+		ctype default
+
+	# Linear fit x(y) , y(x) & bisector. Spearman coef
+	GM_ols_bisector_fit zz res a b
+	spear zz res lix1 lix2
+		define lab_a       (sprintf('%.5g',float($a)))
+		define lab_RSpear  (sprintf('%.5g',float($lix1)))
+		lim 0 1 0 1 rel 0 1.02 label {R_S = $lab_RSpear   |  a = $lab_a}
+	###################################################################
+
+
+
+	###################################################################
+	# image = density/dithered x-y plot + contours... finally an SM-image!
+	# Usage:
+	#
+	#   GM_implot x y xlow xupp ylow yupp npix_in_x npix_in_y flag
+	#
+	# where npix_in_x, npix_in_y & flag are OPTIONAL.
+	# Example: 
+	#
+	#	set flag = (flagAGN == 0)
+	#	GM_implot am_flux at_flux -0.7 0.5 7.6 10.5 20 20 flag
+	#
+	# Cid@Lagoa - 01/Mar/2007
+	#
+	# Added trick to use a predefined color for points & contours.
+	# MUST have defined $_UseMyColor4Levels & $_MyColor4Levels
+	# Also, if $_DoNotDither is defined the dithering is NOT done.
+	#
+	# Cid@Odeon - 13/Jul/2008 + Cid@Lagoa - 31/Jul/2008
+	#
+	# Added $_DoNotLabelInImplot, which, if defined, skip x & y labels
+	# Cid@Lagoa - 01/Feb/2009
+	#
+	# Added $_DoNotBoxInImplot, which, if defined, skip box (ie, no values on box)
+	# Cid@Lagoa - 01/Feb/2009
+
+
+
+
+GM_implot 19
+	#expand 0.7
+	ptype 1 1 
+	ticksize 0 0 0 0
+
+	# Select points to be plotted: xx & yy
+	set _lix = ($1 > -999 & $2 > -999)
+	set _aux_flag = _lix
+	if ($?9) {set _aux_flag = (_lix & $9)}
+	set xx = $1 if (_aux_flag)
+	set yy = $2 if (_aux_flag)
+	delete _lix	delete _aux_flag
+
+	# If there are no points to be ploted, return
+	if ($(dimen(xx)) == 0) {
+		echo [GM_implot] NOTHING TO PLOT!!
+		return
+		}
+
+	# Define plot-limits. Use $3..$6 = 0 to produce automatic min...max ranges
+	define xlow ($3)	define xupp ($4)
+	define ylow ($5)	define yupp ($6)
+	if ($xlow == $xupp) {vecminmax xx xlow xupp}
+	if ($ylow == $yupp) {vecminmax yy ylow yupp}
+
+	# Define x & y matrix/bins
+	define _nxm (10)	if ($?7) {define _nxm ($7)}
+	define _nym (10)	if ($?8) {define _nym ($8)}
+	define _dxm (($xupp - $xlow) / $_nxm)
+	define _dym (($yupp - $ylow) / $_nym)
+	set ilix = 1,$_nxm	set xm = $xlow + (ilix - 1/2) * $_dxm
+	set ilix = 1,$_nym	set ym = $ylow + (ilix - 1/2) * $_dym
+
+	# Define image as number of points in each xm,ym pixel
+	image ($_nxm,$_nym) $xlow $xupp $ylow $yupp
+	define _nmax (0)
+	do _ixm=0,$_nxm-1 {
+		set lix1 = yy if (abs(xx - xm[$_ixm]) <= $_dxm/2)
+		define _nlix (dimen(lix1))
+		if ($_nlix > 0) {
+			do _iym=0,$_nym-1 {
+				set lix2 = lix1 if (abs(lix1 - ym[$_iym]) <= $_dym/2)
+				define _n (dimen(lix2))
+				if ($_n > $_nmax) {define _nmax ($_n)}
+				set image[$_ixm,$_iym] = $_n
+				}
+			}
+		}
+
+	# Renormalize image to 0-->1, usimg LINEAR scale
+	do _ixm=0,$_nxm-1 {
+	do _iym=0,$_nym-1 {
+		set image[$_ixm,$_iym] = image[$_ixm,$_iym] / $_nmax
+		}
+		}
+
+	# Plot image! (contours are drawn @ levs, if it is defined!)
+	lw 3 #window 1 1 1 1 
+	lim $xlow $xupp $ylow $yupp 
+
+		if ($?$_DoNotBoxInImplot) {
+			echo [GM_implot]> Skiping labels in GM_implot!
+		} else { 
+			box
+		}
+
+		if ($?$_DoNotLabelInImplot) {
+			echo [GM_implot]> Skiping labels in GM_implot!
+		} else { 
+			xlabel {\2$1}
+			ylabel {\2$2} 
+		}
+
+
+		# Replot with fixed color if wanted...
+		if ($?$_UseMyColor4Levels) {
+			ctype $_MyColor4Levels
+			if ($?_DoNotDither) {
+				echo [GM_implot]> Will NOT dither!
+			} else {
+				lw 1	dither _x _y 0 1 20	poi _x _y
+				}
+			levels {0.2 0.4 0.6 0.8}
+			if ($?_UseMyLevels) {
+				if ($_UseMyLevels != 0) {levels MyLevels}
+				}
+			lw 4 	contour
+			lw 1 	ctype default
+		} else {
+			if ($?_DoNotDither){
+				echo [GM_implot] Will NOT dither!
+			} else {
+				lw 1	ctype cyan	dither _x _y 0 1 20	poi _x _y
+				}
+			echo [GM_implot]> Using default levels!
+			lw 4
+			levels {0.2}	ctype red	contour
+			levels {0.4}	ctype green	contour
+			levels {0.6}	ctype blue	contour
+			levels {0.8}	ctype magenta 	contour
+			lw 1 	ctype default
+		}
+
+	# blablabla & bye bye
+	define _nlix (dimen(xx))
+	echo [GM_implot]> $_nlix objects satisfy  x & y > -999 & (optional \$9) flag!
+	echo [GM_implot]> Image is $_nxm X $_nym and is LINEAR in number of points
+	###################################################################
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		     END OF PLOT x-y-z & resids BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#	        START of GENERAL PURPOSE MACROS BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	###################################################################
+GM_CalcMedAndPercentiles 8
+	# Return in $2--$6 the 5, 10, 16, 50, 84, 90 & 95% percentiles of array $1
+	set _aux = $1
+	sort {_aux}
+	define _naux (dimen(_aux))
+	define $2 (_aux[0.05 * $_naux - 1])
+	define $3 (_aux[0.10 * $_naux - 1])
+	define $4 (_aux[0.16 * $_naux - 1])
+	define $5 (_aux[0.50 * $_naux - 1])
+	define $6 (_aux[0.84 * $_naux - 1])
+	define $7 (_aux[0.90 * $_naux - 1])
+	define $8 (_aux[0.95 * $_naux - 1])
+	delete _aux
+	###################################################################
+
+
+	###################################################################
+GM_ols_bisector_fit 4
+	# Linear fit x(y) = a2 y + b2
+		vecminmax $2 _ylow _yupp
+		define _dyfit (($_yupp - $_ylow) / 10)
+		set _yfit = $_ylow,$_yupp,$_dyfit
+	lsq $2 $1 _yfit _xfit
+	define a2 ($a) 	define b2 ($b)
+	lty 2 con _xfit _yfit lty 0
+
+	# Linear fit y(x) = a1 x + b1
+		vecminmax $1 _xlow _xupp
+		define _dxfit (($_xupp - $_xlow) / 10)
+	set _xfit = $_xlow,$_xupp,$_dxfit
+	lsq $1 $2 _xfit _yfit
+	define a1 ($a) 	define b1 ($b)
+	lty 2 con _xfit _yfit lty 0
+
+	# Bisector fit: Formulae provided by Laerte 
+	# (except that I use y = a x + b whereas y = a + b x for him)
+	define a2 (1 / $a2)
+	define a (($a1*$a2-1+sqrt((1+$a1**2)*(1+$a2**2)))/($a1+$a2))
+		stats $1 _xm lix1 lix2
+		stats $2 _ym lix1 lix2
+	define b ($_ym - $a * $_xm)
+	set _yfit = $a * _xfit + $b
+	lw 3 con _xfit _yfit lw 1
+
+	# Store in a & b the bisector values!
+	define $3 ($a)
+	define $4 ($b)
+	###################################################################
+
+
+	#####################################################################
+GM_Mark_lambda_color 2
+	lty 1 ctype $2
+	rel $1 -1000 draw $1 1000
+	lty 0 ctype default
+	#####################################################################
+
+
+	#####################################################################
+GM_add_colors
+	# Adding orange & dgreen to sm colors...
+	add_ctype orange 		255 183 0
+	add_ctype dgreen 		  5 155 5
+	add_ctype gainsboro		220 220 220
+	add_ctype azure			240 255 255
+	add_ctype lavender		230 230 250
+	add_ctype MistyRose		255 228 225
+	add_ctype DimGray		105 105 105
+	add_ctype MediumSlateBlue	123 104 238
+	add_ctype DeepSkyBlue		 0  191 255 
+	add_ctype DarkTurquoise		 0  206 209 
+	add_ctype DarkKhaki		189 183 107
+	add_ctype SaddleBrown		139  69  19  
+	add_ctype chocolate		210 105  30 
+	add_ctype DarkViolet		148   0 211  
+	echo [GM_add_colors] Added colors: orange, dgreen
+	echo                 		   gainsboro, azure, lavender, MistyRose, DimGray, 
+	echo                 		   MediumSlateBlue, DeepSkyBlue, DarkTurquoise, 
+	echo 				   DarkKhaki, SaddleBrown, chocolate, DarkViolet,
+	#####################################################################
+
+
+	###################################################################
+GM_plot_ranges 13
+	# Define number of bins & dimension x & y bin-arrays
+	define n_bins (10)
+	if ($?3) {define n_bins ($3)}
+	foreach var (x_med y_p05 y_p16 y_med y_p84 y_p95) {set dimen($var) = $n_bins}
+
+	# Define number of points & number of points per bin
+	define n_points (dimen($1))
+	define n_pointsperbin (int($n_points / $n_bins))
+	echo **> n_points = $n_points  |  n_bins = $n_bins  |  n_pointsperbin = $n_pointsperbin
+
+	# Sort according to 1st variable
+	set ind = 1,$n_points
+	set xsorted = $1
+	set ysorted = $2
+	sort {xsorted ysorted}
+
+	# Loop over bins in x (defined to have same numbers of points, except for
+	# the last one) & define robust stats in each bin
+	do i_bin=0,$n_bins-1 {
+
+		# Define bin index limits
+		define ind_low ($i_bin * $n_pointsperbin + 1)
+		define ind_upp ($ind_low + $n_pointsperbin - 1)
+		if ($ind_upp > $n_points | $i_bin == ($n_bins - 1)) {define ind_upp ($n_points)}
+
+		# Select x & y in current bin
+		set xaux = xsorted if (ind >= $ind_low & ind <= $ind_upp)
+		set yaux = ysorted if (ind >= $ind_low & ind <= $ind_upp)
+
+		# Compute median x and y median plus 1 & 2 sigma-percentiles
+		sort {xaux}
+		set x_med[$i_bin] = xaux[0.50 * dimen(xaux)]
+
+		sort {yaux}
+		set y_p05[$i_bin] = yaux[0.05 * dimen(yaux)]
+		set y_p16[$i_bin] = yaux[0.16 * dimen(yaux)]
+		set y_med[$i_bin] = yaux[0.50 * dimen(yaux)]
+		set y_p84[$i_bin] = yaux[0.84 * dimen(yaux)]
+		set y_p95[$i_bin] = yaux[0.95 * dimen(yaux)]
+		}
+
+	# Plot things
+	lw 3 
+	#lty 2
+	ctype blue
+		con x_med y_p16 con x_med y_p84
+		con x_med y_p05 con x_med y_p95
+	lty 0	con x_med y_med 
+		ctype magenta  ptype 10 0 poi x_med y_med ptype 1 1 ctype default
+	lw 1
+
+	echo [UEPA! ATT/Paris2007] Fitting line!
+	lsq x_med y_med
+	set _lixx = <$(x_med[0]) $(x_med[dimen(x_med)-1])>
+	set _lixy = $a * _lixx + $b
+	con _lixx _lixy
+	echo Slope = $a    Intersept = $b
+	###################################################################
+
+
+	###################################################################
+	# equivalent to the above... (do we need both?)
+GM_Lagoa_plot_ranges 13
+	# Define number of bins & dimension x & y bin-arrays
+	define n_bins (10)
+	if ($?3) {define n_bins ($3)}
+	foreach var (x_ave y_ave x_med y_p05 y_p10 y_p16 y_med y_p84 y_p90 y_p95) {set dimen($var) = $n_bins}
+
+	# Define number of points & number of points per bin
+	define n_points (dimen($1))
+	define n_pointsperbin (int($n_points / $n_bins))
+	echo **> n_points = $n_points  |  n_bins = $n_bins  |  n_pointsperbin = $n_pointsperbin
+
+	# Sort according to 1st variable
+	set ind = 1,$n_points
+	set xsorted = $1
+	set ysorted = $2
+	sort {xsorted ysorted}
+
+	# Loop over bins in x (defined to have same numbers of points, except for
+	# the last one) & define robust stats in each bin
+	do i_bin=0,$n_bins-1 {
+
+		# Define bin index limits
+		define ind_low ($i_bin * $n_pointsperbin + 1)
+		define ind_upp ($ind_low + $n_pointsperbin - 1)
+		if ($ind_upp > $n_points | $i_bin == ($n_bins - 1)) {define ind_upp ($n_points)}
+
+		# Select x & y in current bin
+		set xaux = xsorted if (ind >= $ind_low & ind <= $ind_upp)
+		set yaux = ysorted if (ind >= $ind_low & ind <= $ind_upp)
+
+		# Compute mean x and y
+		set x_ave[$i_bin] = sum(xaux) / dimen(xaux)
+		set y_ave[$i_bin] = sum(yaux) / dimen(yaux)
+
+		# Compute median x and y median plus 1 & 2 sigma-percentiles
+		sort {xaux}
+		set x_med[$i_bin] = xaux[0.50 * dimen(xaux)]
+
+		sort {yaux}
+		set y_p05[$i_bin] = yaux[0.05 * dimen(yaux)]
+		set y_p10[$i_bin] = yaux[0.10 * dimen(yaux)]
+		set y_p16[$i_bin] = yaux[0.16 * dimen(yaux)]
+		set y_med[$i_bin] = yaux[0.50 * dimen(yaux)]
+		set y_p84[$i_bin] = yaux[0.84 * dimen(yaux)]
+		set y_p90[$i_bin] = yaux[0.90 * dimen(yaux)]
+		set y_p95[$i_bin] = yaux[0.95 * dimen(yaux)]
+		}
+
+	# Plot things
+	lw 3	ctype blue	lty 0	con x_med y_p05 con x_med y_p95
+	#lw 4	ctype blue	lty 0	con x_med y_p16 con x_med y_p84
+	lw 5 	ctype red	lty 0	con x_med y_med 
+	#lw 7 	ctype magenta	lty 2	con x_ave y_ave
+	ctype default	lw 2 lty 0
+	###################################################################
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#	          END of GENERAL PURPOSE MACROS BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		    START OF SPECTRAL-STATS BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	# May add computation of mean galaxy properties (like redshift and 
+	# mass) as a function of lambda!!
+
+	#####################################################################
+	# This macro computes a series of "spectral-stats": the mean spectrum,
+	# mean residual spectrum, spectral variance, etc. Two versions of each
+	# thing are computed, a straight one and one weighted by S/N (the *_SN
+	# arrays).
+	#
+	# To use it pass a list of file names (possibly selected according to 
+	# some criterium, eg, elliptical galaxies, low Mass galaxies, etc.)
+	#
+	# The optional 2nd argument is the maximum number of files to be read.
+	# This helps reducing reading time to produce quicker plots...
+	# The optional 3rd argument is the name of an output file.
+	#
+	# Example usage (select "High S/N Massive ellipticals")
+	# set aux  = sfile if (flagAGN < 0 & vd > 250 & CI > 2.6 & SN_w >= 20)
+	# Calc_SpectralStats aux 100000 SpecStat_ME_SNge20.dat
+	#
+	# Cid@INAOE - 26/June/2005 (based on Jean's macro).
+	#
+	# I've added relative residual stuff (Cid@INAOE - 26/June/2005)
+
+
+GM_Calc_SpectralStats 13
+	# Define aux_sfile = array with synthesis-file-names
+	set aux_sfile = $1
+	define N_files          (dimen(aux_sfile))
+	define orig_N_files     (dimen(aux_sfile))
+	if ($?2) {if ($2 < $N_files) {define N_files ($2)}}
+	echo @@> Computing Spectral-Stats for $N_files galaxies!! (originally = $orig_N_files)
+
+
+	# Trick to define Nl_obs.
+	define arq (aux_sfile[0])
+	ROT_Read_Output_of_Starlight $arq
+
+	# Reset all spectral arrays
+	foreach var (N_Ok ResTot fobsTot fsynTot fobsTot2 fsynTot2 ResTot2) {set dimen($var) = $Nl_obs}
+	foreach var (N_Ok_SN ResTot_SN fobsTot_SN fsynTot_SN fobsTot2_SN fsynTot2_SN ResTot2_SN) {set dimen($var) = $Nl_obs}
+	foreach var (RelResTot RelResTot2 RelResTot_SN RelResTot2_SN) {set dimen($var) = $Nl_obs}
+
+
+	# Add up spectrum, residual spectrum & etc.
+	# N_Ok counts the number of non-fucked-upp pixels... (f_wei == -2!)
+	do i_file=1,$N_files {
+
+		# Read synthesis file
+		define arq (aux_sfile[$i_file-1])
+		echo @@> Reading file $arq  =  $i_file of $N_files... (originally = $orig_N_files)
+		ROT_Read_Output_of_Starlight $arq
+
+		# ATT: ReNormalization test!
+		set aux = f_syn if (l_obs > 4700 & l_obs <= 5300 & f_wei > 0)
+		stats_med aux f_renorm_med kaka
+		set f_obs = f_obs / $f_renorm_med
+		set f_syn = f_syn / $f_renorm_med
+
+		# ATT: De-shifting f_obs & f_syn using v_0!!!
+		set l_rest = l_obs / (1 + $v_0 / 299792.5)
+		set _aux = f_obs	spline l_rest _aux l_obs f_obs
+		set _aux = f_syn	spline l_rest _aux l_obs f_syn
+
+		# Residual spectrum & S/N (used for SN-weighted spectral-stats)
+		set f_res = f_obs - f_syn
+		define SN ($SN_normwin)
+
+		# Update pure (= non-weighted) spectral-stats
+		set N_Ok        = (f_wei == -2) ? N_Ok + 0 : N_Ok + 1
+		set ResTot      = (f_wei == -2) ? ResTot   : ResTot   + f_res
+		set ResTot2     = (f_wei == -2) ? ResTot2  : ResTot2  + f_res**2
+		set fsynTot     = (f_wei == -2) ? fsynTot  : fsynTot  + f_syn
+		set fobsTot     = (f_wei == -2) ? fobsTot  : fobsTot  + f_obs
+		set fobsTot2    = (f_wei == -2) ? fobsTot2 : fobsTot2 + f_obs**2
+		set fsynTot2    = (f_wei == -2) ? fsynTot2 : fsynTot2 + f_syn**2
+
+		# Update SN-weighted spectral-stats
+		set N_Ok_SN     = (f_wei == -2) ? N_Ok_SN + 0 : N_Ok_SN + $SN
+		set ResTot_SN   = (f_wei == -2) ? ResTot_SN   : ResTot_SN   + f_res * $SN
+		set ResTot2_SN  = (f_wei == -2) ? ResTot2_SN  : ResTot2_SN  + f_res**2 * $SN
+		set fobsTot_SN  = (f_wei == -2) ? fobsTot_SN  : fobsTot_SN  + f_obs * $SN
+		set fsynTot_SN  = (f_wei == -2) ? fsynTot_SN  : fsynTot_SN  + f_syn * $SN
+		set fobsTot2_SN = (f_wei == -2) ? fobsTot2_SN : fobsTot2_SN + f_obs**2 * $SN
+		set fsynTot2_SN = (f_wei == -2) ? fsynTot2_SN : fsynTot2_SN + f_syn**2 * $SN
+
+		# Testing Relative residual = residual/error...
+		set RelResTot      = (f_wei == -2) ? RelResTot     : RelResTot     + f_res * f_wei
+		set RelResTot2     = (f_wei == -2) ? RelResTot2    : RelResTot2    + (f_res * f_wei)**2
+		set RelResTot_SN   = (f_wei == -2) ? RelResTot_SN  : RelResTot_SN  + f_res * f_wei * $SN
+		set RelResTot2_SN  = (f_wei == -2) ? RelResTot2_SN : RelResTot2_SN + (f_res * f_wei)**2 * $SN
+		}
+
+	# "Fix" N_Ok & N_Ok_SN if == 0 ... (may happen with few galaxies...)
+	set _aux = (N_Ok > 0) ? N_Ok : 0*N_Ok + 1
+	set N_Ok = _aux
+
+	set _aux = (N_Ok_SN > 0) ? N_Ok_SN : 0*N_Ok_SN + 1
+	set N_Ok_SN = _aux
+
+	# Compute  pure (= non-weighted) spectral-stats
+	set ResTot      = ResTot   / N_Ok
+	set ResTot2     = ResTot2  / N_Ok
+	set fobsTot     = fobsTot  / N_Ok
+	set fsynTot     = fsynTot  / N_Ok
+	set fobsTot2    = fobsTot2 / N_Ok
+	set fsynTot2    = fsynTot2 / N_Ok
+	set fsig_obs    = sqrt(abs(fobsTot2 - fobsTot**2))
+	set fsig_syn    = sqrt(abs(fsynTot2 - fsynTot**2))
+
+	# Compute SN-weighted spectral-stats
+	set ResTot_SN   = ResTot_SN   / N_Ok_SN
+	set ResTot2_SN  = ResTot2_SN  / N_Ok_SN
+	set fobsTot_SN  = fobsTot_SN  / N_Ok_SN
+	set fsynTot_SN  = fsynTot_SN  / N_Ok_SN
+	set fobsTot2_SN = fobsTot2_SN / N_Ok_SN
+	set fsynTot2_SN = fsynTot2_SN / N_Ok_SN
+	set fsig_obs_SN = sqrt(abs(fobsTot2_SN - fobsTot_SN**2))
+	set fsig_syn_SN = sqrt(abs(fsynTot2_SN - fsynTot_SN**2))
+
+	# Testing Relative residual = residual/error...
+	set RelResTot   = RelResTot   / N_Ok
+	set RelResTot2  = RelResTot2  / N_Ok
+	set RelResTot_SN   = RelResTot_SN / N_Ok_SN
+	set RelResTot2_SN  = RelResTot2_SN / N_Ok_SN
+
+	# print output file
+	if ($?3) {
+		set sqrt_ResTot2    = sqrt(ResTot2)
+		set sqrt_ResTot2_SN = sqrt(ResTot2_SN)
+		set sqrt_RelResTot2    = sqrt(RelResTot2)
+		set sqrt_RelResTot2_SN = sqrt(RelResTot2_SN)
+		print $3 {l_obs fobsTot ResTot sqrt_ResTot2 fobsTot_SN ResTot_SN sqrt_ResTot2_SN \
+			  RelResTot sqrt_RelResTot2 RelResTot_SN sqrt_RelResTot2_SN fsynTot fsynTot_SN N_Ok N_Ok_SN} 
+
+	#	print $3.Raw_SpecStats {l_obs fobsTot fsynTot ResTot sqrt_ResTot2 RelResTot sqrt_RelResTot2 N_Ok}
+	#	print $3.SN_SpecStats  {l_obs fobsTot_SN fsynTot_SN ResTot_SN sqrt_ResTot2_SN RelResTot_SN sqrt_RelResTot2_SN N_Ok_SN}
+		}
+ 	#####################################################################
+
+
+
+ 	#####################################################################
+GM_Read_SpectralStats 1
+	# Reads spectral stats from files produced by Calc_SpectralStats above
+	data $1
+	read {l_obs 1 fobsTot 2 ResTot 3 sqrt_ResTot2 4 fobsTot_SN 5 ResTot_SN 6 sqrt_ResTot2_SN 7 \
+	     RelResTot 8 sqrt_RelResTot2 9 RelResTot_SN 10 sqrt_RelResTot2_SN 11 fsynTot 12 fsynTot_SN 13 \
+	     N_Ok 14 N_Ok_SN 15}
+ 	#####################################################################
+
+
+ 	#####################################################################
+GM_plot_SpectralStats 13
+	# Plot spectral stats from files produced by Calc_SpectralStats above
+	expand 0.9
+	ticksize 0 0 0 0
+	lw 2
+
+	GM_Read_SpectralStats $1
+
+	window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 label {File = $1}
+
+	vecminmax l_obs llow lupp
+	if ($?2) {define llow ($2)}
+	if ($?3) {define lupp ($3)}
+
+	define flow (-0.199)	define fupp (0.2)
+	window 1 -4 1 4 lim $llow $lupp $flow $fupp box 0 2 0 3
+		ctype yellow	lty 1 rel 0 0 draw 10000 0 lty 0
+		ctype default	con l_obs ResTot
+		ylabel {<\Delta_\lambda>}
+
+		# Relative residuals ...
+		define flow (-1.199)	define fupp (3.2)
+		ctype cyan lim $llow $lupp $flow $fupp box 3 3 3 2
+			ctype cyan	con l_obs RelResTot #if (RelResTot != 0)
+			ctype default	box 3 3 3 4
+
+	# Relative rms-residuals ...
+	define flow (-0.05)		define fupp (2.399)
+	window 1 -4 1 3 lim $llow $lupp $flow $fupp box 0 0 0 3
+		ylabel {<(\Delta_\lambda/\sigma_\lambda)^2>^{1/2}}
+
+		ctype cyan lim $llow $lupp $flow $fupp box 3 3 3 2
+		ctype cyan	con l_obs sqrt_RelResTot2 #if (sqrt_RelResTot2 > 0)
+		ctype default 	box 3 3 3 4
+
+	define flow (-0.02)		define fupp (0.399)
+	window 1 -4 1 2 lim $llow $lupp $flow $fupp box 0 2 0 3
+		ctype default	con l_obs sqrt_ResTot2
+		ylabel {<\Delta_\lambda^2>^{1/2}}
+
+	window 1 -4 1 1 lim $llow $lupp fobsTot box 
+	#window 1 -4 1 1 lim $llow $lupp 0.2 1.3 box 
+		ctype red 	con l_obs fsynTot
+		ctype default 	con l_obs fobsTot
+		ylabel {<O_\lambda> & <M_\lambda>}
+		xlabel {\lambda  [\AA]}
+
+
+GM_plot_SpectralStats_SN 13
+	# Plot SN-weighted spectral stats from files produced by Calc_SpectralStats above
+	expand 0.9
+	ticksize 0 0 0 0
+	lw 2
+
+	window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 label {File = $1}
+
+	data $1
+	read {l_obs 1 fobsTot 2 ResTot 3 sqrt_ResTot2 4 fobsTot_SN 5 ResTot_SN 6 sqrt_ResTot2_SN 7 \
+	     RelResTot 8 sqrt_RelResTot2 9 RelResTot_SN 10 sqrt_RelResTot2_SN 11 fsynTot 12 fsynTot_SN 13 \
+	     N_Ok 14 N_Ok_SN 15}
+
+
+	vecminmax l_obs llow lupp
+	if ($?2) {define llow ($2)}
+	if ($?3) {define lupp ($3)}
+
+
+	define flow (-0.199)	define fupp (0.2)
+	window 1 -4 1 4 lim $llow $lupp $flow $fupp box 0 2 0 3
+		ctype yellow	lty 1 rel 0 0 draw 10000 0 lty 0
+		ctype default	con l_obs ResTot_SN
+		ylabel {<\Delta_\lambda>}
+
+		# Relative residuals ...
+		define flow (-1.199)	define fupp (3.2)
+		ctype cyan lim $llow $lupp $flow $fupp box 3 3 3 2
+			ctype cyan	con l_obs RelResTot_SN #if (RelResTot != 0)
+			ctype default	box 3 3 3 4
+
+	# Relative rms-residuals ...
+	define flow (-0.05)		define fupp (2.399)
+	window 1 -4 1 3 lim $llow $lupp $flow $fupp box 0 0 0 3
+		ylabel {<(\Delta_\lambda/\sigma_\lambda)^2>^{1/2}}
+
+		ctype cyan lim $llow $lupp $flow $fupp box 3 3 3 2
+		ctype cyan	con l_obs sqrt_RelResTot2_SN #if (sqrt_RelResTot2 > 0)
+		ctype default 	box 3 3 3 4
+
+	define flow (-0.02)		define fupp (0.399)
+	window 1 -4 1 2 lim $llow $lupp $flow $fupp box 0 2 0 3
+		ctype default	con l_obs sqrt_ResTot2_SN
+		ylabel {<\Delta_\lambda^2>^{1/2}}
+
+	window 1 -4 1 1 lim $llow $lupp fobsTot box 
+		ctype red 	con l_obs fsynTot_SN
+		ctype default 	con l_obs fobsTot_SN
+		ylabel {<O_\lambda> & <M_\lambda>}
+		xlabel {\lambda  [\AA]}
+
+
+OtherVersionFirResSpec_plot_res_spec 1
+	# Plot spectral stats from files produced by Calc_SpectralStats above
+	expand 0.9
+	ticksize 0 0 0 0
+	lw 2
+
+	window 1 1 1 1 lim 0 1 0 1 rel 0 1.02 label {File = $1}
+
+	data $1
+	read {l_obs 1 fobsTot 2 ResTot 3 sqrt_ResTot2 4 fobsTot_SN 5 ResTot_SN 6 sqrt_ResTot2_SN 7 \
+	     RelResTot 8 sqrt_RelResTot2 9 RelResTot_SN 10 sqrt_RelResTot2_SN 11 fsynTot 12 fsynTot_SN 13 \
+	     N_Ok 14 N_Ok_SN 15}
+
+	vecminmax l_obs llow lupp
+	#window 1 -3 1 3 lim $llow $lupp fobsTot box 0 2
+	window 1 -3 1 3 lim $llow $lupp 0.2 2.2 box 0 2
+		ctype red 	con l_obs fsynTot
+		ctype default 	con l_obs fobsTot
+		ylabel {<O_\lambda> & <M_\lambda>}
+
+
+	define flow (-0.199)	define fupp (0.5)
+	window 1 -3 1 2 lim $llow $lupp $flow $fupp box 0 2 0 3
+		ctype cyan  	lty 1 rel 0 0 draw 10000 0 lty 0
+		ctype default	con l_obs ResTot
+		ylabel {<R_\lambda> & <Q_\lambda>}
+
+		# Relative residuals ...
+		define flow (-1.599)	define fupp (4.19)
+		ctype blue lim $llow $lupp $flow $fupp box 3 3 3 2
+		#	ctype blue 	con l_obs RelResTot if (RelResTot != 0)
+		#	ctype cyan  	lty 1 rel 0 0 draw 10000 0 lty 0
+		#	ctype default	box 3 3 3 4
+
+
+	define flow (-0.39)		define fupp (0.299)
+	window 1 -3 1 1 lim $llow $lupp $flow $fupp box 1 2 0 3
+		ctype default	con l_obs sqrt_ResTot2
+	#	ylabel {<R_\lambda^2>^{1/2} & <Q_\lambda^2>^{1/2}}
+
+		ylabel {rms of R_\lambda  & Q_\lambda}
+
+
+		# Relative rms-residuals ...
+		define flow (0.4)		define fupp (2.799)
+		window 1 -3 1 1 lim $llow $lupp $flow $fupp box 4 4 4 3
+			ctype blue  lim $llow $lupp $flow $fupp box 3 3 3 2
+			con l_obs sqrt_RelResTot2 if (sqrt_RelResTot2 > 0)
+			ctype default 	box 3 3 3 4
+		xlabel {\lambda  [\AA]}
+
+	window 1 -3 1 1:3 lim $llow $lupp 0 1 
+		GM_Mark_lambda_color  6850 yellow
+		GM_Mark_lambda_color  6950 yellow
+		GM_Mark_lambda_color  7550 yellow
+		GM_Mark_lambda_color  7725 yellow
+ 	#####################################################################
+
+
+
+	#####################################################################
+	# As GM_Calc_SpectralStats above, but multiplying each spectrum (obs & syn) 
+	# by a user given weight ($2). Useful to renormalize the spectra!
+	# For instance, with a weigth = El_fc_5007 / fobs_norm one effectively 
+	# changes from our standard normalization @ 4020 Angs to one where the 
+	# continuum under [OIII]5007 is = 1.
+	#
+	# Cid@Lagoa - 28/april/2008
+
+
+GM_Calc_WeightedSpectralStats 14
+	# Define aux_sfile = array with synthesis-file-names
+	set aux_sfile = $1
+	define N_files          (dimen(aux_sfile))
+	define orig_N_files     (dimen(aux_sfile))
+
+	# Weight for each file/galaxy
+	set aux_wei_file = $2
+	if (dimen(aux_wei_file) != dimen(aux_sfile)) { 
+		echo [GM_Calc_WeightedSpectralStats] OOPS! wei-array differ in size from file-name array!
+		echo [GM_Calc_WeightedSpectralStats]       Aborted:(
+		return
+		}
+
+	# Limit number of galaxies (optional)
+	if ($?3) {if ($3 < $N_files & $3 > 0) {define N_files ($3)}}
+	echo [GM_Calc_WeightedSpectralStats]> Computing Spectral-Stats for $N_files galaxies!! (originally = $orig_N_files)
+
+	# Trick to define Nl_obs.
+	define arq (aux_sfile[0])
+	ROT_Read_Output_of_Starlight $arq
+
+	# Reset all spectral arrays
+	foreach var (N_Ok ResTot fobsTot fsynTot fobsTot2 fsynTot2 ResTot2) {set dimen($var) = $Nl_obs}
+	foreach var (N_Ok_SN ResTot_SN fobsTot_SN fsynTot_SN fobsTot2_SN fsynTot2_SN ResTot2_SN) {set dimen($var) = $Nl_obs}
+	foreach var (RelResTot RelResTot2 RelResTot_SN RelResTot2_SN) {set dimen($var) = $Nl_obs}
+
+
+	# Add up spectrum, residual spectrum & etc.
+	# N_Ok counts the number of non-fucked-upp pixels... (f_wei == -2!)
+	do i_file=1,$N_files {
+
+		# Read synthesis file
+		define arq (aux_sfile[$i_file-1])
+		echo @@> Reading file $arq  =  $i_file of $N_files... (originally = $orig_N_files)
+		ROT_Read_Output_of_Starlight $arq
+
+		# Apply weight directly to obs & syn spectra ==> "ReNormalization"
+		set f_obs = f_obs * aux_wei_file[$i_file-1]
+		set f_syn = f_syn * aux_wei_file[$i_file-1]
+
+		# ATT: De-shifting f_obs & f_syn using v_0!!!
+		set l_rest = l_obs / (1 + $v_0 / 299792.5)
+		set _aux = f_obs	spline l_rest _aux l_obs f_obs
+		set _aux = f_syn	spline l_rest _aux l_obs f_syn
+
+		# Residual spectrum & S/N (used for SN-weighted spectral-stats)
+		set f_res = f_obs - f_syn
+		define SN ($SN_normwin)
+
+		# Update pure (= non-weighted) spectral-stats
+		set N_Ok        = (f_wei == -2) ? N_Ok + 0 : N_Ok + 1
+		set ResTot      = (f_wei == -2) ? ResTot   : ResTot   + f_res
+		set ResTot2     = (f_wei == -2) ? ResTot2  : ResTot2  + f_res**2
+		set fsynTot     = (f_wei == -2) ? fsynTot  : fsynTot  + f_syn
+		set fobsTot     = (f_wei == -2) ? fobsTot  : fobsTot  + f_obs
+		set fobsTot2    = (f_wei == -2) ? fobsTot2 : fobsTot2 + f_obs**2
+		set fsynTot2    = (f_wei == -2) ? fsynTot2 : fsynTot2 + f_syn**2
+
+		# Update SN-weighted spectral-stats
+		set N_Ok_SN     = (f_wei == -2) ? N_Ok_SN + 0 : N_Ok_SN + $SN
+		set ResTot_SN   = (f_wei == -2) ? ResTot_SN   : ResTot_SN   + f_res * $SN
+		set ResTot2_SN  = (f_wei == -2) ? ResTot2_SN  : ResTot2_SN  + f_res**2 * $SN
+		set fobsTot_SN  = (f_wei == -2) ? fobsTot_SN  : fobsTot_SN  + f_obs * $SN
+		set fsynTot_SN  = (f_wei == -2) ? fsynTot_SN  : fsynTot_SN  + f_syn * $SN
+		set fobsTot2_SN = (f_wei == -2) ? fobsTot2_SN : fobsTot2_SN + f_obs**2 * $SN
+		set fsynTot2_SN = (f_wei == -2) ? fsynTot2_SN : fsynTot2_SN + f_syn**2 * $SN
+
+		# Testing Relative residual = residual/error...
+		set RelResTot      = (f_wei == -2) ? RelResTot     : RelResTot     + f_res * f_wei
+		set RelResTot2     = (f_wei == -2) ? RelResTot2    : RelResTot2    + (f_res * f_wei)**2
+		set RelResTot_SN   = (f_wei == -2) ? RelResTot_SN  : RelResTot_SN  + f_res * f_wei * $SN
+		set RelResTot2_SN  = (f_wei == -2) ? RelResTot2_SN : RelResTot2_SN + (f_res * f_wei)**2 * $SN
+		}
+
+	# "Fix" N_Ok & N_Ok_SN if == 0 ... (may happen with few galaxies...)
+	set _aux = (N_Ok > 0) ? N_Ok : 0*N_Ok + 1
+	set N_Ok = _aux
+
+	set _aux = (N_Ok_SN > 0) ? N_Ok_SN : 0*N_Ok_SN + 1
+	set N_Ok_SN = _aux
+
+	# Compute  pure (= non-weighted) spectral-stats
+	set ResTot      = ResTot   / N_Ok
+	set ResTot2     = ResTot2  / N_Ok
+	set fobsTot     = fobsTot  / N_Ok
+	set fsynTot     = fsynTot  / N_Ok
+	set fobsTot2    = fobsTot2 / N_Ok
+	set fsynTot2    = fsynTot2 / N_Ok
+	set fsig_obs    = sqrt(abs(fobsTot2 - fobsTot**2))
+	set fsig_syn    = sqrt(abs(fsynTot2 - fsynTot**2))
+
+	# Compute SN-weighted spectral-stats
+	set ResTot_SN   = ResTot_SN   / N_Ok_SN
+	set ResTot2_SN  = ResTot2_SN  / N_Ok_SN
+	set fobsTot_SN  = fobsTot_SN  / N_Ok_SN
+	set fsynTot_SN  = fsynTot_SN  / N_Ok_SN
+	set fobsTot2_SN = fobsTot2_SN / N_Ok_SN
+	set fsynTot2_SN = fsynTot2_SN / N_Ok_SN
+	set fsig_obs_SN = sqrt(abs(fobsTot2_SN - fobsTot_SN**2))
+	set fsig_syn_SN = sqrt(abs(fsynTot2_SN - fsynTot_SN**2))
+
+	# Testing Relative residual = residual/error...
+	set RelResTot   = RelResTot   / N_Ok
+	set RelResTot2  = RelResTot2  / N_Ok
+	set RelResTot_SN   = RelResTot_SN / N_Ok_SN
+	set RelResTot2_SN  = RelResTot2_SN / N_Ok_SN
+
+	# print output file
+	if ($?4) {
+		set sqrt_ResTot2    = sqrt(ResTot2)
+		set sqrt_ResTot2_SN = sqrt(ResTot2_SN)
+		set sqrt_RelResTot2    = sqrt(RelResTot2)
+		set sqrt_RelResTot2_SN = sqrt(RelResTot2_SN)
+		print $4 {l_obs fobsTot ResTot sqrt_ResTot2 fobsTot_SN ResTot_SN sqrt_ResTot2_SN \
+			  RelResTot sqrt_RelResTot2 RelResTot_SN sqrt_RelResTot2_SN fsynTot fsynTot_SN N_Ok N_Ok_SN} 
+		}
+ 	#####################################################################
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#			END OF SPECTRAL-STATS BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		START OF EMISSION-LINE-STUFF BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+	###################################################################
+GM_CalcLogLineRatio 5
+	# New macro to compute observed & dereddened emision line ratios
+	#
+	# ATT: Deredened line ratios are ONLY computed when $5 = AV_lines >= 0 
+	# **EXCEPT** in cases like N2Ha, O3Hb, O1Ha or S2S2, where the two lines are 
+	# very close in lambda (diff <= 264 Angs), but AV_lines is not available 
+	# (because Ha or Hb is screwed up). In these cases, we set the 
+	# deredened ratio = to the observed one.
+	# 
+	# NEEDS: q_ext[lambda] & MINUS999, apart from El_F_*'s.
+	#
+	# $3 = log of line ratio $1 / $2
+	# $4 = DEREDENED log of line ratio $1 / $2
+	# $5 = AV-array to use in the dereddening (defined elsewhere!)
+	#
+	# Example usage: GM_CalcLogLineRatio 5007 3727 O3O2 O3O2_dr AV_lines
+	#
+	# Cid@Paris - 23/Juin/2007 + Cid@Lagoa - 13/July/2007
+
+	if (whatis(El_F_$1) != 41 | whatis(El_F_$2)  != 41 | whatis($5) != 41 | \
+            whatis(q_ext)   != 41 | whatis(MINUS999) != 41) {
+		echo [GM_CalcLogLineRatio] OOPS! Something NOT defined...
+		echo                       Mission aborted!
+		return
+		}
+
+	set lix1 = lg((abs(El_F_$1) + 1e-30) / (abs(El_F_$2) + 1e-30)) 
+	set $3   = (El_F_$1 > 0 & El_F_$2 > 0) ? lix1 : MINUS999
+
+	set lix2 = lix1 + 0.4 * $5 * (q_ext[$1] - q_ext[$2])
+	set lix3 = ($5 >= 0) ? lix2 : MINUS999
+	set lix4 = ($5 < 0 & (abs($1 - $2) <= 264)) ? lix1 : lix3
+	set $4   = (El_F_$1 > 0 & El_F_$2 > 0) ? lix4 : MINUS999
+
+	# Clean up auxiliary variables
+	foreach var (lix1 lix2 lix3 lix4) {delete $var}
+	echo [GM_CalcLogLineRatio] Done! Computed raw & dr $1/$2 ratios, stored on $3 & $4.
+	###################################################################
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		END OF EMISSION-LINE-STUFF BLOCK		    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+
+
+
+
+
+
+	# !!!!!!!!!!!!!!!! MACROS BELOW ARE NOT OFFICIAL !!!!!!!!!!!!!!!!!!!!
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+	#		    TESTING 1/Vmax WEIGHTING IN PLOTS...	    #
+	#			Cid@INAOE - 16/Jul/2006			    #
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+
+	###################################################################
+	# Plots x vs y color coding by z, optionally defining limits &
+	# applying flag. Only points with valid x, y, z & Vmax (!= -999) are
+	# plotted.
+	# This version can call either plot_ranges or vcor_plot_ranges
+	# for the median & percentile ranges.
+	# Cid@INAOE - 15/July/2006
+
+vcor_plot_xyz 18
+	expand 0.7
+	ptype 1 1 
+	ticksize 0 0 0 0
+
+	# Select points to be plotted: xx, yy, zz & ww
+	set _lix = ($1 > -999 & $2 > -999 & $3 > -999 & Vmax > -999)
+	set aux_flag = _lix
+	if ($?8) {set aux_flag = (_lix & $8)}
+
+	set xx = $1 	  if (aux_flag)
+	set yy = $2 	  if (aux_flag)
+	set zz = $3 	  if (aux_flag)
+	set ww = 1 / Vmax if (aux_flag)
+	define _nlix (dimen(xx))
+	echo [plot_xyz_vcor]**> $_nlix objects satisfy  x & y & z > -999 & flag (par8) >= 1!
+
+	# Define plot-limits. Authomatic or optional-input values.
+	define xlow (0)	define xupp (0) define ylow (0) define yupp (0)
+	if ($?4) {define xlow ($4)}
+	if ($?5) {define xupp ($5)}
+	if ($?6) {define ylow ($6)}
+	if ($?7) {define yupp ($7)}
+	if ($xlow == $xupp) {
+		vecminmax xx _xlow _xupp
+		define xlow ($_xlow - 0.05 * ($_xupp - $_xlow))
+		define xupp ($_xupp + 0.05 * ($_xupp - $_xlow))
+		}
+	if ($ylow == $yupp) {
+		vecminmax yy _ylow _yupp
+		define ylow ($_ylow - 0.05 * ($_yupp - $_ylow))
+		define yupp ($_yupp + 0.05 * ($_yupp - $_ylow))
+		}
+
+	# Define z-values for color boundaries: 1/5-th in each of 5 colors.
+	set _lix = zz
+	sort {_lix}
+	define _i1 (int(1 * dimen(_lix) / 5))	define zz1 (_lix[$_i1])
+	define _i2 (int(2 * dimen(_lix) / 5))	define zz2 (_lix[$_i2])
+	define _i3 (int(3 * dimen(_lix) / 5))	define zz3 (_lix[$_i3])
+	define _i4 (int(4 * dimen(_lix) / 5))	define zz4 (_lix[$_i4])
+
+	# Plot x-y-z
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+	lim $xlow $xupp $ylow $yupp box 
+		xlabel {$1}
+		ylabel {$2}
+		ctype magenta poi xx yy if (zz <= $zz1)
+		ctype blue    poi xx yy if (zz > $zz1 & zz <= $zz2)
+		ctype green   poi xx yy if (zz > $zz2 & zz <= $zz3)
+		ctype yellow  poi xx yy if (zz > $zz3 & zz <= $zz4)
+		ctype red     poi xx yy if (zz > $zz4)
+		ctype default
+
+	define _naux (int(dimen(xx) / 500))
+	plot_ranges xx yy $_naux
+	vcor_plot_ranges xx yy ww $_naux
+
+	# Projected Histograms
+	define Nx_bin (100)
+	define dx_bin (($xupp - $xlow) / ($Nx_bin - 1))
+	set x_bin = $xlow,$xupp,$dx_bin
+	set hx = histogram(xx:x_bin)
+	window -5 -5 1:4 5 lim $xlow $xupp hx box 0 2
+		hist x_bin hx
+
+		# Cumulative distribution function in x...
+		set xaux = xx
+		set waux = ww / sum(ww)
+		sort {xaux waux}
+		set Cumul = xaux * 0
+		set Cumul[0] = waux[0]
+		do _i=1,dimen(xaux)-1 {set Cumul[$_i] = Cumul[$_i-1] + waux[$_i]}
+
+		set Cumul0 = xaux * 0
+		set Cumul0[0] = 1
+		do _i=1,dimen(xaux)-1 {set Cumul0[$_i] = Cumul0[$_i-1] + 1}
+		set Cumul0 = Cumul0 / dimen(xaux)
+
+		lim $xlow $xupp -0.1 1.1 ctype magenta con xaux Cumul ctype default
+			 ctype yellow con xaux Cumul0 ctype default
+
+
+	define Ny_bin (100)
+	define dy_bin (($yupp - $ylow) / ($Ny_bin - 1))
+	set y_bin = $ylow,$yupp,$dy_bin
+	set hy = histogram(yy:y_bin)
+	window -5 -5 5 1:4 lim hy $ylow $yupp box 0 0 1 0
+		hist hy y_bin 
+
+		# Cumulative distribution function in y...
+		set yaux = yy
+		set waux = ww / sum(ww)
+		sort {yaux waux}
+		set Cumul = yaux * 0
+		set Cumul[0] = waux[0]
+		do _i=1,dimen(yaux)-1 {set Cumul[$_i] = Cumul[$_i-1] + waux[$_i]}
+		lim -0.1 1.1 $ylow $yupp ctype magenta con Cumul yaux ctype default
+
+		set Cumul0 = yaux * 0
+		set Cumul0[0] = 1
+		do _i=1,dimen(yaux)-1 {set Cumul0[$_i] = Cumul0[$_i-1] + 1}
+		set Cumul0 = Cumul0 / dimen(yaux)
+		ctype yellow con Cumul0 yaux ctype default
+
+	# Reset to main window to use the cursor
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+
+
+
+vcor_plot_ranges 14
+	# $1 is the independent variable.
+	# $3 is a weight (presumably 1/V-max) apply to the y-variable ($2)
+	# to construct a normalized weighted cumulative distribution from
+	# which medians & percentiles are computed.
+	# This is done separately for each of $4 bins in the x-variable ($1).
+
+	# Define number of bins & dimension x & y bin-arrays
+	define n_bins (10)
+	if ($?4) {define n_bins ($4)}
+	foreach var (x_med y_p05 y_p10 y_p16 y_med y_p84 y_p95 y_p90) {set dimen($var) = $n_bins}
+
+	# Define number of points & number of points per bin
+	define n_points (dimen($1))
+	define n_pointsperbin (int($n_points / $n_bins))
+	echo [vcor_plot_ranges]**> n_points = $n_points  |  n_bins = $n_bins  |  n_pointsperbin = $n_pointsperbin
+
+	# Sort according to 1st variable (this makes it easier to find who's in each x-bin)
+	set xsorted = $1
+	set ysorted = $2
+	set wsorted = $3
+	sort {xsorted ysorted wsorted}
+
+	# Loop over bins in x (defined to have same numbers of points, except for
+	# the last one) & define 1/Vmax-weigthed robust stats in each bin
+	set ind = 1,$n_points
+	do i_bin=0,$n_bins-1 {
+
+		# Define bin index limits
+		define ind_low ($i_bin * $n_pointsperbin + 1)
+		define ind_upp ($ind_low + $n_pointsperbin - 1)
+		if ($ind_upp > $n_points | $i_bin == ($n_bins - 1)) {define ind_upp ($n_points)}
+
+		# Select x & y in current bin
+		set xaux = xsorted if (ind >= $ind_low & ind <= $ind_upp)
+		set yaux = ysorted if (ind >= $ind_low & ind <= $ind_upp)
+
+		# Compute median x (just for plot)
+		sort {xaux}
+		set x_med[$i_bin] = xaux[0.50 * dimen(xaux)]
+
+		# Select weights in current bin & normalize them to unit sum (in the bin)
+		set waux = wsorted if (ind >= $ind_low & ind <= $ind_upp)
+		define sum_wei (sum(waux))
+		set waux = waux / $sum_wei
+
+		# sort y-points in bin & their weights.
+		# Then compute cumulative distribution function at the sorte yaux values
+		# (ie where the Cumul actually changes).
+		sort {yaux waux}
+		set Cumul = yaux * 0
+		set Cumul[0] = waux[0]
+		do _i=1,dimen(yaux)-1 {set Cumul[$_i] = Cumul[$_i-1] + waux[$_i]}
+
+
+		# Find median & percentiles (ATT: MAY fail if 1st poin has most weight!)
+		set y_p05[$i_bin] = yaux[0]
+		set y_p10[$i_bin] = yaux[0]
+		set y_p16[$i_bin] = yaux[0]
+		set y_med[$i_bin] = yaux[0]
+		set y_p84[$i_bin] = yaux[0]
+		set y_p90[$i_bin] = yaux[0]
+		set y_p95[$i_bin] = yaux[0]
+		do _i=0,dimen(yaux)-2 {
+			define C1 (Cumul[$_i])
+			define C2 (Cumul[$_i+1])
+			define y1 (yaux[$_i])
+			define y2 (yaux[$_i+1])
+			if ($C1 <= 0.05 & $C2 > 0.05) {set y_p05[$i_bin] = $y1 + (0.05 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.10 & $C2 > 0.10) {set y_p10[$i_bin] = $y1 + (0.10 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.16 & $C2 > 0.16) {set y_p16[$i_bin] = $y1 + (0.16 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.50 & $C2 > 0.50) {set y_med[$i_bin] = $y1 + (0.50 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.84 & $C2 > 0.84) {set y_p84[$i_bin] = $y1 + (0.84 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.90 & $C2 > 0.90) {set y_p90[$i_bin] = $y1 + (0.90 - $C1) * ($y2-$y1)/($C2-$C1)}
+			if ($C1 <= 0.95 & $C2 > 0.95) {set y_p95[$i_bin] = $y1 + (0.95 - $C1) * ($y2-$y1)/($C2-$C1)}
+			}
+		define lix (y_p05[$i_bin])
+		if ($lix == -999) {define lixo ?}
+	}
+
+	# Plot things
+	lw 3 
+	#lty 2
+	ctype magenta
+	#	con x_med y_p16 con x_med y_p84
+	#	con x_med y_p10 con x_med y_p90
+		con x_med y_p05 con x_med y_p95
+	lty 0	con x_med y_med 
+		ctype green  ptype 10 0 poi x_med y_med ptype 1 1 ctype default
+	lw 1
+	###################################################################
+
+
+
+
+
+	# Paris/Juin/2007: fit-median-line macro... inda nao fiz nada!!
+
+
+	###################################################################
+GM_fit_median_trend_fixed_dx 5
+	# $1 = X
+	# $2 = Y
+	# $3 = flag to filter unwanted X & Z
+	# $4 = dX_bin
+	# $5 = N_min (minimum number of points in a bin)
+	set X = $1 if ($3)
+	set Y = $2 if ($3)
+	define dX            ($4)
+	define Np_in_bin_min ($5)
+
+	# Find X-range: Xlow => Xupp. Then enlarge it by a tiny little bit
+	# to make sure we include all points (including the lowest & largest X)
+	vecminmax X Xlow Xupp
+	define a_whisker (1.e-6 * ($Xupp - $Xlow))
+	define Xlow ($Xlow - $a_whisker)
+	define Xupp ($Xupp + $a_whisker)
+
+	# Define number of bins
+	define N_bins (int(($Xupp - $Xlow) / $dX))
+
+	# SAFETY: If N_bins turns out to be <= 1, reset dX such that we get 2 bins!
+	if ($N_bins <= 1) {
+		echo [GM_fit_median_trend_fixed_dx] ATT! Had to redefine bin size to get > 1 bins!
+		echo [GM_fit_median_trend_fixed_dx]      Original  dX = $dX
+		define N_bins (2)
+		define dX (($Xupp - $Xlow) / $N_bins)
+		echo [GM_fit_median_trend_fixed_dx]      Redefined dX = $dX  (==> 2 bins)
+		}
+
+	# Compute the "rest" (the diff in X left over after subtracting 
+	# N_bins * dX from the low --> upp X range.
+	define dX_rest (($Xupp - $Xlow) - $N_bins * $dX)
+
+	# Define bin_low & _upp limits in X. Bins are dX wide, except for
+	# the 1st and last, which are adjusted to compensate for the "rest"
+	# (This has no effect since we will compute the median X & Y in each 
+	# bin anyway)
+	set ind_bin = 1,$N_bins
+	set Xbin_low = 0 * ind_bin
+	set Xbin_upp = 0 * ind_bin
+
+	set Xbin_low[0] = $Xlow
+	set Xbin_upp[0] = $Xlow + $dX + $dX_rest / 2
+	do i_bin=1,$N_bins-2 {
+		set Xbin_low[$i_bin] = Xbin_upp[$i_bin - 1]
+		set Xbin_upp[$i_bin] = Xbin_low[$i_bin] + $dX
+		}
+	set Xbin_low[$N_bins-1] = Xbin_upp[$N_bins - 2]
+	set Xbin_upp[$N_bins-1] = $Xupp
+
+	# Now compute MEDIAN X & Y, "SIGMA" of X & Y and Number of Points in each bin
+	# OBS: SIGMA == (84% - 16%) / 2 
+	set Xbin_med  = 0 * Xbin_low - 999
+	set Ybin_med  = 0 * Xbin_low - 999
+	set Xbin_sig  = 0 * Xbin_low - 999
+	set Ybin_sig  = 0 * Xbin_low - 999
+	set Np_in_bin = 0 * Xbin_low
+	do i_bin=0,$N_bins-1 {
+		set Is_in_bin = (X >= Xbin_low[$i_bin] & X <= Xbin_upp[$i_bin])
+		set Np_in_bin[$i_bin] = sum(Is_in_bin)
+
+		if (Np_in_bin[$i_bin] > 0) {
+			set aux_X = X if (Is_in_bin)
+			set aux_Y = Y if (Is_in_bin)
+
+			GM_CalcMedAndPercentiles aux_X p05 p10 p16 p50 p84 p90 p95
+			set Xbin_med[$i_bin] = $p50
+			set Xbin_sig[$i_bin] = ($p84 - $p16) / 2
+
+			GM_CalcMedAndPercentiles aux_Y p05 p10 p16 p50 p84 p90 p95
+			set Ybin_med[$i_bin] = $p50
+			set Ybin_sig[$i_bin] = ($p84 - $p16) / 2
+			}
+		}
+
+	# Fit a straight-line Y_med = a * X_med + b, clipping bins
+	# with < Np_in_bin_min points (unless this leaves less than 2 bins!!)
+	set flag_lix = (Np_in_bin >= $Np_in_bin_min)
+	define N_bins4fit (sum(flag_lix))
+	if ($N_bins4fit >= 2) {
+		set _X = Xbin_med if (flag_lix)
+		set _Y = Ybin_med if (flag_lix)
+	} else {
+		echo [GM_fit_median_trend_fixed_dx] ATT! Only $N_bins4fit bins with > $Np_in_bin_min points!!
+
+		define i_KeepTrying (1)
+		do n_try=$Np_in_bin_min,1,-1 {
+			if ($i_KeepTrying > 0) {
+				set flag_lix = (Np_in_bin >= $n_try)
+				define N_bins4fit (sum(flag_lix))
+				if ($N_bins4fit >= 2) {
+					define n_best       ($n_try)
+					define i_KeepTrying (0)
+					}
+				}
+			}
+		define Np_in_bin_min ($n_best)
+		echo [GM_fit_median_trend_fixed_dx]      Redefined Np_in_bin_min to $Np_in_bin_min!!
+
+		set flag_lix = (Np_in_bin >= $Np_in_bin_min)
+		set _X = Xbin_med if (flag_lix)
+		set _Y = Ybin_med if (flag_lix)
+		}
+
+	lsq _X _Y
+	echo ==========>> a = $a   |   b = $b    ====   Np in fit = $(dimen(_X))
+
+
+
+ddd
+
+	# test...
+	define diff ((Xbin_upp[$N_bins - 2]) - $($Xupp - $dX - $dX_rest/2))
+	echo testX: $(Xbin_upp[$N_bins - 2])   ==?==  ($Xupp - $dX - $dX_rest/2)  : diff = $diff
+	echo testX: $Xlow --> $Xupp   N_bins = $N_bins    dX_rest=$dX_rest   dX=$dX
+	set diff = Xbin_upp -Xbin_low
+	print {ind_bin Xbin_low Xbin_upp  diff Xbin_med Ybin_med Np_in_bin}
+
+
+
+	# TMP/CHECK PLOT!
+	do i_bin=0,$N_bins-1 {
+		ctype blue 	lty 1	rel $(Xbin_low[$i_bin]) -10 draw $(Xbin_low[$i_bin]) 100 
+		ctype red 	lty 2 	rel $(Xbin_upp[$i_bin]) -10 draw $(Xbin_upp[$i_bin]) 100 
+		lty 0
+		if (Np_in_bin[$i_bin] < $Np_in_bin_min) {ctype magenta}
+		rel $(Xbin_med[$i_bin])  0.0 putlabel 5 {$(Np_in_bin[$i_bin])}
+		rel $(Xbin_med[$i_bin]) -0.4 putlabel 5 {$(ind_bin[$i_bin])}
+		ctype default 	lty 0
+		}
+
+
+	set lixx = Xbin_med
+	set lixy = $a * lixx + $b
+	lw 5 ctype blue	con lixx lixy ctype default lw 1
+
+	ptype 4 1 	ctype red	poi Xbin_med Ybin_med
+
+		 	ctype cyan 	error_x Xbin_med Ybin_med Xbin_sig
+		 	     	 	error_y Xbin_med Ybin_med Ybin_sig
+
+
+	ptype 10 0	ctype yellow 	poi _X _Y
+	ptype 4 1	ctype default
+
+
+
+d
+
+
+	# Define bin-sizes. They are = $dX, except for the 1st and last
+	# which are adjustes to compensate for the "rest"
+	# (This has no effect since we will compute the median X & Y in each 
+	# bin anyway)
+
+	set ind_bin = 1,$N_bins
+	set dX_bin  = 0 * ind_bin + $dX
+	set dX_bin[0]        = $dX + $dX_rest / 2
+	set dX_bin[$N_bins-1] = $dX + $dX_rest / 2
+
+
+
+
+		set Xbin_upp = $Xlow + ind_bin * dX_bin
+
+	set Xbin_upp[$Nbins-1] = $Xupp
+	set Xbin_upp[$Nbins-1] = $Xlow + $dX_rest / 2
+	set dX_bin
+ = $dX + $dX_rest / 2
+
+
+
+
+	do i_bin=1,$N_bins {
+		set Xbin_low = $Xlow + ($ind_bin - 1) * dX_bin[$i_bin
+		set Xbin_upp = $Xlow + ind_bin * dX_bin
+
+ss
+
+
+
+
+	# Define number of bins & dimension x & y bin-arrays
+	define n_bins (10)
+	if ($?3) {define n_bins ($3)}
+	foreach var (x_med y_p05 y_p16 y_med y_p84 y_p95) {set dimen($var) = $n_bins}
+
+	# Define number of points & number of points per bin
+	define n_points (dimen($1))
+	define n_pointsperbin (int($n_points / $n_bins))
+	echo **> n_points = $n_points  |  n_bins = $n_bins  |  n_pointsperbin = $n_pointsperbin
+
+	# Sort according to 1st variable
+	set ind = 1,$n_points
+	set xsorted = $1
+	set ysorted = $2
+	sort {xsorted ysorted}
+
+	# Loop over bins in x (defined to have same numbers of points, except for
+	# the last one) & define robust stats in each bin
+	do i_bin=0,$n_bins-1 {
+
+		# Define bin index limits
+		define ind_low ($i_bin * $n_pointsperbin + 1)
+		define ind_upp ($ind_low + $n_pointsperbin - 1)
+		if ($ind_upp > $n_points | $i_bin == ($n_bins - 1)) {define ind_upp ($n_points)}
+
+		# Select x & y in current bin
+		set xaux = xsorted if (ind >= $ind_low & ind <= $ind_upp)
+		set yaux = ysorted if (ind >= $ind_low & ind <= $ind_upp)
+
+		# Compute median x and y median plus 1 & 2 sigma-percentiles
+		sort {xaux}
+		set x_med[$i_bin] = xaux[0.50 * dimen(xaux)]
+
+		sort {yaux}
+		set y_p05[$i_bin] = yaux[0.05 * dimen(yaux)]
+		set y_p16[$i_bin] = yaux[0.16 * dimen(yaux)]
+		set y_med[$i_bin] = yaux[0.50 * dimen(yaux)]
+		set y_p84[$i_bin] = yaux[0.84 * dimen(yaux)]
+		set y_p95[$i_bin] = yaux[0.95 * dimen(yaux)]
+		}
+
+	# Plot things
+	lw 3 
+	#lty 2
+	ctype blue
+	#	con x_med y_p16 con x_med y_p84
+		con x_med y_p05 con x_med y_p95
+	lty 0	con x_med y_med 
+		ctype magenta  ptype 10 0 poi x_med y_med ptype 1 1 ctype default
+	lw 1
+	###################################################################
+
+
+
+	###################################################################
+	# (added by Cid@Lagoa on 20/March/2008)
+GM_locwin 4
+	# like window * * * *, but using location! This way I can
+	# run macros with multiple windows within $1 X $2 location frames!
+	# GM_locwin 0 0 0 0 restores full location frame
+	if ($1 == 0 & $2 == 0) {
+			echo [GM_locwin] Restoring full frame...
+			window 1 1 1 1
+			location 3500 31000 3500 31000
+			return
+			}
+
+	define __nxw ($1)
+	define __nyw ($2)
+	define __sep (3000)
+	define __dxw ((31000 - 3500 - ($__nxw - 1) * $__sep) / $__nxw)
+	define __dyw ((31000 - 3500 - ($__nyw - 1) * $__sep) / $__nyw)
+
+	define __xini (int(3500 + ($3 - 1) * ($__dxw + $__sep)))
+	define __xfin (int($__xini + $__dxw))
+	define __yini (int(3500 + ($4 - 1) * ($__dyw + $__sep)))
+	define __yfin (int($__yini + $__dyw))
+	#foreach var (__nxw __nyw __sep __dxw __dyw __xini __xfin __yini __yfin) {echo [GM_locwin] $var = $$var}
+
+	window 1 1 1 1 
+	location $__xini $__xfin $__yini $__yfin
+
+	foreach var (__nxw __nyw __sep __dxw __dyw __xini __xfin __yini __yfin) {delete $var}
+	###################################################################

@@ -1,0 +1,25 @@
+
+	###################################################################
+	# 		    READ GALEX tables                             #
+ 	###################################################################
+	# Read selected quantitities from GALEX tables
+	# Andre@UFSC - 16/Mar/2011
+ROT_Read_Galex_Tables
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Galex_Tables] Reading selected $tab_prefix...$tab_suffix tables! **ATT: JUST A FEW**
+
+	#----------------------------------------------------------------#
+	# Read GALEX-parameters (no-suffix!)
+	# GALEX surveys are MIS or AIS
+	#
+	# MIS
+	data $tab_prefix.GALEX.MIS.tab
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {mis_nuv_mag 2 mis_nuv_magErr 3 mis_fuv_mag 4 mis_fuv_magErr 5 mis_e_bv 6 mis_band 7 mis_distance 8 mis_nexptime 9 mis_fexptime 10}
+
+	# AIS
+	data $tab_prefix.GALEX.AIS.tab
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {ais_nuv_mag 2 ais_nuv_magErr 3 ais_fuv_mag 4 ais_fuv_magErr 5 ais_e_bv 6 ais_band 7 ais_distance 8 ais_nexptime 9 ais_fexptime 10}
+	#----------------------------------------------------------------#

@@ -1,0 +1,568 @@
+* Start-up
+** Reading and defining everthing
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X			 START-UP STUFF				  X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+doit
+	S926K_tables
+	DeleteStuffAndFixOthers
+	CidsDefs_Paris2009
+
+	###################################################################
+	# Here I define the main (work/table/fits) dirs where things are,
+	# read our main ROT & GM macros & define some extra colors.
+	# Comment/Uncomment the WhereAmI definition to setup dirs according
+	# to where you're working...
+	# Cid@Lagoa - 5/Dec/2007
+StartUpDefs
+
+	define WhereAmI ('Woodstock')
+
+	if ('$WhereAmI' == 'Woodstock') {
+		define work_dir   ('~/astro/dissert/sm_macros')
+		define tables_dir ('~/astro/DR7/tables/')
+		define macros_dir ('$work_dir')
+	}
+
+	cd $macros_dir
+	macro read ReadOurTables_v09.mac
+	macro read ReadGalexTables.mac
+	macro read GeneralMacros_v08.mac
+	macro read OutrasMacros_v02.mac
+	cd $work_dir
+
+	echo **> I'm working at $WhereAmI ...
+	echo 
+	echo ***************************************************************
+	echo **>   Type ROT_ReadMe & GM_ReadMe to see a list of macros   <**
+	echo ***************************************************************
+	echo 
+	GM_add_colors
+	echo ***************************************************************
+	###################################################################
+
+
+
+	###################################################################
+	# FDR7.926246.f tables ... (the DR7-BS sample...)
+S926K_tables
+	define DR5orDR6 ('DR7')
+	StartUpDefs
+	#define tables_dir ('/media/seagal/starlight/DR7/tables/')
+	#define fits_dir   ('/media/seagal/starlight/DR7/output/')
+
+	# Define prefix & suffix for the tables
+	define tab_prefix ('sample.FDR7.926246.f')
+	define tab_suffix ('BS')
+		ROT_StandardWelcome 1000000
+		ROT_Read_Starlight_SYN_Tables
+		ROT_Read_Abilio_Tables
+		ROT_DeRedBasics CCM  3.00	# ATT: Using (Ha/Hb)_intrinsic = 3! (as in Grazyna's pAGB models)
+		ROT_Read_Galex_Tables
+	###################################################################
+
+
+
+	###################################################################
+ReadSome_SFH_RelatedTables
+	# Read other Tables, related to SFH, chemical evol, etc.
+	# (This is done separetely for RAM/safety reasons.)
+	# Cid@Odeon - 04/Juillet/2009
+
+	# **> SSFRs, ETA, ZETA, XETA ...
+	# STE 8 = SSFRs. Then Read previsouly computed ETA & ZETA(logtc)
+	# and their smoothed (by 0.2 dex only!) versions.
+	#	ROT_Read_Starlight_STE_Tables 8
+	#	ReadETA
+	#	ReadSmoothedETA
+	#	ReadZETA
+	#	ReadSmoothedZETA
+	#	ReadXETA
+	#	ReadSmoothedXETA
+	echo [ReadSome_SFH_RelatedTables] Done!
+
+ReadOnlyXETA24
+	# XETA24 is used often, but XETA1...XETA23 & XETA26...XETA50 not!
+	# This stupid macro reads all XETAs and delete all but XETA24!
+	# Cid@Odeon - 10/Juillet/2009
+	ReadXETA
+	set __lix = XETA24
+	do __i=1,50 {delete XETA$__i}
+	set XETA24 = __lix
+	delete __lix
+	echo [ReadOnlyXETA24] Read XETAs and deleted all except for XETA24!!
+	###################################################################
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X			END OF START-UP STUFF			  X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+** Read other stuff
+	# Cid@Lagoa - 16/May/2006
+Read_Abilio_Duplicate
+	echo
+	ROT_GoToTablesDir
+	echo @@> [$0] Reading selected $tab_prefix...$tab_suffix tables!
+
+	#----------------------------------------------------------------#
+	# Read SDSS-parameters (no-suffix!)
+	data $tab_prefix.parameters.dat
+	lines $line_read_low $line_read_upp
+	read {flag_dupl 47}
+	#----------------------------------------------------------------#
+
+	# Done:)
+	define _ngals (dimen(redshift))
+	echo @@> [$0] Done:) ($_ngals galaxies)
+	ROT_GoToWorkDir
+
+** Cid's definitions
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X                                                                X
+	#X	 CID'S DEFINITIONS FOR PARIS2009!! (Odeon/04/July/2009)	  X
+	#X                                                                X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	# Here I define a bunch of things (and fix a number of others!)!
+	# List of macros in this block:
+	#
+	# CidsDefs_Paris2009
+	# ReadSome_SFH_RelatedTables
+	# ReadOnlyXETA24
+	# Define_EmLineStuff 1
+	# Define_BlackHoleStuff 1
+	# SetUp_boan_GrazynaElFlags 1
+
+
+
+	###################################################################
+CidsDefs_Paris2009
+	#------------------------------------------------------------------
+	echo
+	echo [CidsDefs_Paris2009]   -------------------------------------------
+	echo [CidsDefs_Paris2009]   |  Define a bunch of things! Cid/July/2009  |
+	echo [CidsDefs_Paris2009]   -------------------------------------------
+	echo
+	#------------------------------------------------------------------
+
+	#------------------------------------------------------------------
+	# 		    Define EL, Zneb & other stuff 
+	#------------------------------------------------------------------
+	# "Tercerize" the emission-line ratios, classification, and BH stuff...
+	Define_EmLineStuff 3
+	Define_BlackHoleStuff 70
+
+	#[*OLD*]
+	#+++ ATT: O3Hab!! This is redefined in diff places... BEWARE!
+	echo [*OLD*] [CidsDefs_Paris2009] ATT DEFINED O3Hba!! Using Ha/Hb = 3!! Should be a LOWER limit! OBSOLETE??
+	set O3Hba = (O3Hb == -999 & O3Ha > -999) ? O3Ha + lg(3.0) : O3Hb
+
+	# TMP-Marielli-Seyfert/LINER BPT-classification (start from Grazyna's line)
+	set Mari_O3Hb      = (N2Ha > -999) ? 1.01 * N2Ha + 0.48 : MINUS999
+	set flag_Mar_Seyf2 = (O3Hb > -999 & N2Ha > -999 & flag_AGN_Gra & O3Hb >= Mari_O3Hb)
+	set flag_Mar_LINER = (O3Hb > -999 & N2Ha > -999 & flag_AGN_Gra & O3Hb <  Mari_O3Hb)
+	delete Mari_O3Hb
+	echo [CidsDefs_Paris2009] Defined **TMP** flag_Mar_Seyf2 & flag_Mar_LINER flags
+
+	# Define Zneb = log O/H [O/Hsun] as in Asari et al (2007) & Stasinska (2006)
+	# OBS: Only for flag_SF_Gra sources!!
+	GM_CalcLogLineRatio 5007 6584 O3N2 O3N2_dr AV_lines
+	set Zneb = (O3N2_dr > -999 & flag_SF_Gra) ? 8.55 - 0.25 * O3N2_dr - 12 - lg(4.9e-4) : MINUS999
+	foreach var (O3N2 O3N2_dr) {delete $var}
+
+	# Define some log EW Ha & O2
+	set log_El_W_6563 = (El_W_6563 > 0) ? lg(abs(El_W_6563)+1e-30) : MINUS999
+	set log_El_W_3727 = (El_W_3727 > 0) ? lg(abs(El_W_3727)+1e-30) : MINUS999
+
+	# Define flag_1in10 & flag_1in100 (usefull for crowed plots)
+	set flag_1In10  = ((ind_gal % 10)  == 1) ? 0 * MINUS999 + 1 : 0 * MINUS999
+	set flag_1In100 = ((ind_gal % 100) == 1) ? 0 * MINUS999 + 1 : 0 * MINUS999
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# 		     *** Define flags for samples ***
+	#
+	# flag_CleanShit	= removes galaxies with bugged parameters
+	# flag_MGS		= MGS (after CleanShit'ng)
+	# flag_SNcont		= goog continuum S/N 
+	# flag_NOk_O2HbO3HaN2	= elines are in clean windows
+	# flag_CID		= MAIN sample for WLG paper
+	# flag_ELG		= MAIN ELG sample for WLG paper
+	# 
+	# Cid@Odeon - 04/Juillet/2009
+	#------------------------------------------------------------------
+
+	# Cleaning some absurdities and other pathologies... => flag_CleanShit!
+	set flag_CleanShit = Mr < -10 & Mz < -10 & petroR50_z_kpc > 0 & CI > 0 & SB_50 > 10
+
+	# Read Abilio's MGS flag from table (stored in array flag_IsInMGS)
+	# OBS: According to Abilio, the MGS charateristics are
+	#		redshift > 0.002  (note no upper z limit)
+	#		m_r >= 14.5 & m_r <= 17.77 & SB_50 < 24.5
+	#      but we are now reading the IsInMGS flag directly from is table!
+	ROT_Read_Abilio_MGS_LRG_Tables 
+	delete flag_IsInLRG
+
+	# Defining flag_MGS = those in Abilio's list & w/flag_CleanShit = Ok. (flag_IsInMGS is then deleted)
+	set flag_MGS = flag_IsInMGS & flag_CleanShit
+	delete flag_IsInMGS
+
+	#[*OLD*]
+	# Define VOLUME-LIMITED sample. Abilio should check this, but it's NOT USED SERIOULY here!
+	set flag_VOL = flag_MGS & redshift > 0.04 & redshift < 0.075 & Mr < -19.9
+
+
+	# Read CountNOkEmLines table (very important for our WLG work)
+	# Define flag_NOk_O2HbO3HaN2: = Ok only when O2, Hb, O3, Ha AND N2 have ALL pixels ok within +/- 15 Angs!
+	# OBS: The NOk_* for [SII] lines may need to be re-read if we use [SII] for densities...
+	ROT_CountNOkEmLines
+	set flag_NOk_O2HbO3HaN2 = (NOk_3727 == 31 & NOk_4861 == 31 & NOk_5007 == 31 & NOk_6563 == 31 & NOk_6584 == 31)
+	foreach l {3727 4861 5007 6563 6584 6716 6731 6300} {delete NOk_$l}
+
+	# Define flag for "good continuum" (=> reliable synthesis)
+	define SNcont_cut  (10)
+	set flag_SNcont = (SN_w >= $SNcont_cut)
+
+
+	# Set up flag_CID - the MAIN SAMPLE for our WLG-paper!
+	# ATT: The 0.024 < z < 0.17 cuts just round-off cuts naturaly imposed by the NOk_O2HbO3HaN2 flag 
+	set flag_CID = flag_MGS & flag_SNcont & flag_NOk_O2HbO3HaN2 & redshift < 0.17 & redshift > 0.024
+
+	# Set up flag_ELG - galaxies in flag_CID which have S/N >= $SNline_lim in Ha & N2, for our WLG paper!
+	set flag_ELG = flag_CID & fSN_6563 & fSN_6584
+	echo [CidsDefs_Paris2009]>>>>> ATT: flag_CID = $(sum(flag_CID))  &  flag_ELG = $(sum(flag_ELG))
+
+
+	# Spit our some numbers. This is done carefully elsewhere!!
+	foreach var (CleanShit MGS SNcont NOk_O2HbO3HaN2 CID ELG) {
+		define l1 (sum(flag_$var * flag_SNcont))
+		define l2 (sum(flag_$var * flag_SNcont * flag_NOk_O2HbO3HaN2))
+		echo [CidsDefs_Paris2009] >>> sum(flag_$var)=$(sum(flag_$var)) >> reduces to $l1 with flag_SNcont and to $l2 with flag_SNcont & flag_NOk_O2HbO3HaN2
+		}
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# 	    Set up some extra emission line flags
+	#------------------------------------------------------------------
+	#[*OLD*] ???OBSOLETE???
+	SetUp_boan_GrazynaElFlags flag_CID
+	#------------------------------------------------------------------
+	###################################################################
+
+
+	###################################################################
+DeleteStuffAndFixOthers
+	echo [DeleteStuffAndFixOthers] Doing what the maco name says...
+	# Delete Some Unused Arrays (to free RAM)
+	#foreach var (plateID mjdID fiberID ra dec eClass log_L log_L_fiber log_L_fiber_z log_smd_fib  \
+	#	     D DA  \
+	#	     SurfDenCor SN_n tz_lookback M2L_r M2L_z Mphot_gal  \
+	#	     El_F_4340 El_W_4340 El_vd_4340 El_v0_4340 El_SN_4340  \
+	#	     El_F_4363 El_W_4363 El_vd_4363 El_v0_4363 El_SN_4363) {delete $var}
+	#	...     Dn4000_synt HdA_synt
+
+
+	# Fixing CI bugs & defining some logs...
+	set CI       = (CI < 0) ? MINUS999 : CI
+	set log_vd   = lg(vd+1e-10)
+	set log_R50z = (petroR50_z_kpc > 0) ? lg(abs(petroR50_z_kpc) + 1e-30) : MINUS999
+	set log_v_virial  = (petroR50_z_kpc > 0) ? 0.5 * (lg(4.301179e-6) + (Mcor_gal - log_R50z)) : MINUS999
+
+	# Computing raw & dereddened g - r colors, and deredenned Mr (for eventual CMD plots)
+	# (the coefficients are probably from the CCM law, but need double-checking!)
+	set gmr    = ((Mg-Mr < 2) & ((Mg-Mr) > -0.5)) ? Mg -Mr : MINUS999
+	set gmr_dr = (gmr > -999) ? gmr - 0.3109 * AV : MINUS999
+	set Mr_dr  = (Mr > -999)  ? Mr - 0.8641 * AV  : MINUS999
+	###################################################################
+
+
+	###################################################################
+ReadSome_SFH_RelatedTables
+	# Read other Tables, related to SFH, chemical evol, etc.
+	# (This is done separetely for RAM/safety reasons.)
+	# Cid@Odeon - 04/Juillet/2009
+
+	# **> SSFRs, ETA, ZETA, XETA ...
+	# STE 8 = SSFRs. Then Read previsouly computed ETA & ZETA(logtc)
+	# and their smoothed (by 0.2 dex only!) versions.
+	#	ROT_Read_Starlight_STE_Tables 8
+	#	ReadETA
+	#	ReadSmoothedETA
+	#	ReadZETA
+	#	ReadSmoothedZETA
+	#	ReadXETA
+	#	ReadSmoothedXETA
+	echo [ReadSome_SFH_RelatedTables] Done!
+
+ReadOnlyXETA24
+	# XETA24 is used often, but XETA1...XETA23 & XETA26...XETA50 not!
+	# This stupid macro reads all XETAs and delete all but XETA24!
+	# Cid@Odeon - 10/Juillet/2009
+	ReadXETA
+	set __lix = XETA24
+	do __i=1,50 {delete XETA$__i}
+	set XETA24 = __lix
+	delete __lix
+	echo [ReadOnlyXETA24] Read XETAs and deleted all except for XETA24!!
+	###################################################################
+
+
+
+
+	###################################################################
+Define_EmLineStuff 1
+	#------------------------------------------------------------------
+	#  Set-up limits in S/N (for em-lines) & corresponding fSN_* flags
+	#------------------------------------------------------------------
+	define SNline_lim ($1)
+	echo [Define_EmLineStuff] SNline_lim = $SNline_lim
+
+	# Define auxiliar fSN_* S/N-flags for several emission lines! 
+	# These flags say whether the line has the require minimum S/N.
+	# (A flux > 0 criterion is included to make sure we have a line...)
+	foreach var (3727 4861 5007 6300 6563 6584 6716 6731) {
+		set fSN_$var = (El_SN_$var >= $SNline_lim & El_F_$var > 0)
+		}
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	#          Some Observed & Deredened (by AV_lines) Line Ratios 
+	#------------------------------------------------------------------
+	# O3Hb, O3O2, N2Ha, N2O2, O1Ha, O3Ha & HaHb: computed with macro GM_CalcLogLineRatio
+	GM_CalcLogLineRatio 5007 4861 O3Hb O3Hb_dr AV_lines
+	GM_CalcLogLineRatio 5007 3727 O3O2 O3O2_dr AV_lines
+	GM_CalcLogLineRatio 6584 6563 N2Ha N2Ha_dr AV_lines
+	GM_CalcLogLineRatio 6584 3727 N2O2 N2O2_dr AV_lines
+	GM_CalcLogLineRatio 6300 6563 O1Ha O1Ha_dr AV_lines
+	GM_CalcLogLineRatio 5007 6563 O3Ha O3Ha_dr AV_lines
+	GM_CalcLogLineRatio 6563 4861 HaHb lix     AV_lines
+
+	# New ratios added by Natalia
+	GM_CalcLogLineRatio 6584 4861 N2Hb N2Hb_dr AV_lines
+	GM_CalcLogLineRatio 3727 4861 O2Hb O2Hb_dr AV_lines
+	GM_CalcLogLineRatio 3727 6563 O2Ha O2Ha_dr AV_lines
+
+
+	# S2Ha = log[ (6716 + 6731) / 6563 ]
+	set lix  = lg((abs(El_F_6716 + El_F_6731) + 1e-30) / (abs(El_F_6563) + 1e-30))
+	set S2Ha = (El_F_6716 > 0 & El_F_6731 > 0 & El_F_6563 > 0) ? lix : MINUS999
+	set lix1 = El_F_6716 * 10**(0.4 * AV_lines * q_ext[6716])
+	set lix2 = El_F_6731 * 10**(0.4 * AV_lines * q_ext[6731])
+	set lix3 = El_F_6563 * 10**(0.4 * AV_lines * q_ext[6563])
+	set lix  = lg((abs(lix1 + lix2) + 1e-30) / (abs(lix3) + 1e-30))
+	set S2Ha_dr = (El_F_6716 > 0 & El_F_6731 > 0 & El_F_6563 > 0 & AV_lines >= 0) ? lix : MINUS999
+
+	# S2S2 = log 6731 / 6716 - The higher this ratio the higher the electron density.
+	set S2S2 = (El_F_6716 > 0 & El_F_6731 > 0) ? lg((abs(El_F_6716) + 1e-30) / (abs(El_F_6731) + 1e-30)) : MINUS999
+	set lix1 = El_F_6716 * 10**(0.4 * AV_lines * q_ext[6716])
+	set lix2 = El_F_6731 * 10**(0.4 * AV_lines * q_ext[6731])
+	set S2S2_dr = (El_F_6716 > 0 & El_F_6731 > 0) ? lg((abs(lix2) + 1e-30) / (abs(lix1) + 1e-30)) : MINUS999
+
+	# O32 = log[ (4959 + 5007) / 3727 ]
+	set O32    = (O3O2    > -999) ? lg(1 + 1/2.98) + O3O2    : MINUS999
+	set O32_dr = (O3O2_dr > -999) ? lg(1 + 1/2.98) + O3O2_dr : MINUS999
+
+	# Clean up auxiliary variables
+	foreach var (lix lix1 lix2 lix3) {delete $var}
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	#     Emission Line Classification: Using **REDDENED** line ratios!
+	#------------------------------------------------------------------
+	# This section defines flag_* arrays, where * = 
+	# P SF_Kau SF_Gra AGN_Kew AGN_Kau AGN_Gra Kew_Seyf2 Kew_LINER
+	# OBS: flag_P is based on S/N's, but all others aren't!
+
+	# Passives:
+	set flag_P = (!fSN_3727 & !fSN_4861 & !fSN_5007 & !fSN_6563 & !fSN_6584)
+
+
+	# NEW SAFETY TEST: If N2Ha **EXACTLY** = 0.47 (or 0.05, or -0.20) a division by zero 
+	# will occur below! (Same happens if S2Ha = 0.32 or O1Ha = -0.59)
+	# If this happens, stop the run to fix the macros!!
+	set lix = (N2Ha == 0.47 | N2Ha == 0.05 | N2Ha == -0.20 | S2Ha == 0.32 | O1Ha == -0.59)
+	if ($(sum(lix) > 0)) {
+		echo [Define_EmLineStuff] OOPS! $(sum(lix))  galaxies will yield division by 0!!
+		echo [Define_EmLineStuff]       STOP what you are doing and fix the macros here!
+		define lix ?
+		}
+	delete lix
+
+
+	# For given N2Ha, define galaxy O3Hb on Kewley, Kauffmann & Grazyna lines
+	set Kewl_O3Hb = (N2Ha > -999 & N2Ha <  0.47) ? 1.19 + 0.61 / (N2Ha - 0.47) : MINUS999
+	set Kauf_O3Hb = (N2Ha > -999 & N2Ha <  0.05) ? 1.30 + 0.61 / (N2Ha - 0.05) : MINUS999
+	set Graz_O3Hb = (N2Ha > -999 & N2Ha < -0.20) ? 0.96 + 0.29 / (N2Ha + 0.20) : MINUS999
+
+	# Kewley AGN & SF: (OBS: Kewley SF is just below K01 line on BPT)
+	set flag_AGN_Kew = (O3Hb > -999 & N2Ha > -999 & O3Hb >= Kewl_O3Hb)
+	set flag_SF_Kew  = (O3Hb > -999 & N2Ha > -999 & O3Hb <  Kewl_O3Hb)
+
+	# Kauffman SF & AGN:
+	set flag_SF_Kau  = (O3Hb > -999 & N2Ha > -999 & O3Hb <  Kauf_O3Hb)
+	set flag_AGN_Kau = (O3Hb > -999 & N2Ha > -999 & O3Hb >= Kauf_O3Hb)
+
+	# Grazyna SF & AGN:
+	set flag_SF_Gra  = (O3Hb > -999 & N2Ha > -999 & O3Hb <  Graz_O3Hb)
+	set flag_AGN_Gra = (O3Hb > -999 & N2Ha > -999 & O3Hb >= Graz_O3Hb)
+
+	# Define CMP_Kau = above **Kauffmann** line & below **Kewley** line
+	#        CMP_Gra = above **Grazyna**   line & below **Kewley** line
+	# ATT: These CMPs are also included in the flag_AGN_Kau & flag_AGN_Gra flags.
+	set flag_CMP_Kau = (O3Hb > -999 & N2Ha > -999 & O3Hb >= Kauf_O3Hb & O3Hb < Kewl_O3Hb)
+	set flag_CMP_Gra = (O3Hb > -999 & N2Ha > -999 & O3Hb >= Graz_O3Hb & O3Hb < Kewl_O3Hb)
+
+	# Clean up auxiliary variables
+	foreach var (Kewl_O3Hb Kauf_O3Hb Graz_O3Hb Kauf_O3Ha Graz_O3Ha Kewl_O3Ha) {delete $var}
+
+	# Implementing K06 classification scheeme. Still missing AMBIGUOUS class!
+	# ATT: Require good S/N in **ALL** lines: Hb, O3, O1, Ha, N2, S2's > $SNline_lim!!
+	set fSN_Kew = (fSN_4861 & fSN_5007 & fSN_6300 & fSN_6563 & fSN_6584 & fSN_6716 & fSN_6731)
+
+	# Kewley Seyferts & LINERS: 
+	#	First compares to AGN x HII Ke01 line
+	#	Then compares to Seyfert X LINER Ke06 line
+	#	OBS: * > -999 conditions are not imposed explicitly because they are 
+	#	     authomatically/implicitly included in the fSN_Kew "good lines" flag.
+	set Kew_O3Hb_N2Ha = (N2Ha < 0.47)  ? 1.19 + 0.61 / (N2Ha - 0.47) : MINUS999
+	set Kew_O3Hb_S2Ha = (S2Ha < 0.32)  ? 1.30 + 0.72 / (S2Ha - 0.32) : MINUS999
+	set Kew_O3Hb_O1Ha = (O1Ha < -0.59) ? 1.33 + 0.73 / (O1Ha + 0.59) : MINUS999
+	set flag_AboveK01Line = (fSN_Kew & O3Hb > Kew_O3Hb_N2Ha & O3Hb > Kew_O3Hb_S2Ha & O3Hb > Kew_O3Hb_O1Ha)
+
+	set Kew_S2Ha = 1.89 * S2Ha + 0.76
+	set Kew_O1Ha = 1.18 * O1Ha + 1.30
+	set flag_Kew_Seyf2 = (flag_AboveK01Line & O3Hb > Kew_S2Ha & O3Hb > Kew_O1Ha)
+	set flag_Kew_LINER = (flag_AboveK01Line & O3Hb < Kew_S2Ha & O3Hb < Kew_O1Ha)
+
+	# Report numbers
+	foreach var (P SF_Kau SF_Gra SF_Kew AGN_Kew AGN_Kau AGN_Gra Kew_Seyf2 Kew_LINER) {
+		set lix1 = flag_$var
+		echo [Define_EmLineStuff] >>>> N flag = flag_$var = $(sum(lix1))
+		}
+
+	# Clean up auxiliary variables
+	foreach var (Kew_O3Hb_N2Ha Kew_O3Hb_S2Ha Kew_O3Hb_O1Ha Kew_S2Ha Kew_O1Ha) {delete $var}
+	foreach var (fSN_Kew flag_AboveK01Line lix1) {delete $var}
+	#------------------------------------------------------------------
+	###################################################################
+
+
+
+	###################################################################
+Define_BlackHoleStuff 1
+	# MBH ("Black Hole Mass) & LO3/MBH ("Eddingtion ratio") for AGN work
+
+	# Defines vd limit (for MBH calculation)
+	define vd_lim     ($1)
+
+	# Compute Black Hole mass & "Edd Ratio", only for vd > vd_lim & El_SN_5007 limit!!
+	# MBH        = log of BH mass (formula from Tremaine et al 2002)
+	# LO3_MBH    = "Eddington ratio" = log LO3 / MBH
+	# LO3_MBH_dr = as above, but deredening LO3 by AV_lines!
+	#
+	# OBS: Things are computed for all galaxies, but only make sense for AGN!!
+	set MBH        = (vd >= $vd_lim) ? 8.13 + 4.02 * lg(abs(vd + 1e-30) / 200) : MINUS999
+	set LO3_MBH    = (El_F_5007 > 0 & vd >= $vd_lim) ? log_LO3 - MBH : MINUS999
+	set LO3_MBH_dr = (El_F_5007 > 0 & vd >= $vd_lim & AV_lines >= 0) ? LO3_MBH + 0.4 * AV_lines * q_ext[5007] : LO3_MBH
+
+	echo [Define_BlackHoleStuff] Defined MBH, LO3_MBH & LO3_MBH_dr (CCM-law) for vd > $vd_lim km/s & El_F_5007 >0!
+	###################################################################
+
+
+
+	###################################################################
+	# Define f4boan.... f2an...f00 el-flags, following Grazyna's ideas.	
+	# Assumes $1 (= a general flag), $SNline_lim & fSN_* are all are previosuly defined!
+	#
+	# Cid@Lagoa - 05/Aug/2008
+SetUp_boan_GrazynaElFlags 1
+
+	set f4boan = $1  &  fSN_4861  &  fSN_5007  &  fSN_6563  &  fSN_6584
+	set f3oan  = $1  & !fSN_4861  &  fSN_5007  &  fSN_6563  &  fSN_6584
+	set f3ban  = $1  &  fSN_4861  & !fSN_5007  &  fSN_6563  &  fSN_6584
+	set f3boa  = $1  &  fSN_4861  &  fSN_5007  &  fSN_6563  & !fSN_6584
+	set f3bon  = $1  &  fSN_4861  &  fSN_5007  & !fSN_6563  &  fSN_6584
+	set f2ba   = $1  &  fSN_4861  & !fSN_5007  & !fSN_6563  &  fSN_6584
+	set f2an   = $1  & !fSN_4861  & !fSN_5007  &  fSN_6563  &  fSN_6584
+	set f2oa   = $1  & !fSN_4861  &  fSN_5007  &  fSN_6563  & !fSN_6584
+	set f2on   = $1  & !fSN_4861  &  fSN_5007  & !fSN_6563  &  fSN_6584
+	set f2bo   = $1  &  fSN_4861  &  fSN_5007  & !fSN_6563  & !fSN_6584
+	set f2bn   = $1  &  fSN_4861  & !fSN_5007  & !fSN_6563  &  fSN_6584
+	set f1b    = $1  &  fSN_4861  & !fSN_5007  & !fSN_6563  & !fSN_6584
+	set f1o    = $1  & !fSN_4861  &  fSN_5007  & !fSN_6563  & !fSN_6584
+	set f1a    = $1  & !fSN_4861  & !fSN_5007  &  fSN_6563  & !fSN_6584
+	set f1n    = $1  & !fSN_4861  & !fSN_5007  & !fSN_6563  &  fSN_6584
+	set f0     = $1  & !fSN_4861  & !fSN_5007  & !fSN_6563  & !fSN_6584
+	set f00    = $1  & !fSN_4861  & !fSN_5007  & !fSN_6563  & !fSN_6584 & !fSN_3727
+
+	foreach var ($1 f4boan f3oan f3ban f3boa f3bon f2ba f2an f2oa f2on f2bo f2bn f1b f1o f1a f1n f0 f00) {
+		echo [SetUp_boan_GrazynaElFlags] (S/N)_L > $SNline_lim | flag: $var: $(sum($var))
+		}
+
+	# Deleting some little used flags to save RAM!!
+	foreach var (f3boa f3bon f2ba f2an f2oa f2on f2bo f2bn f1b f1o f1a f1n f0 f00) {delete $var}
+	###################################################################
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X                                                                X
+	#X		END OF CID'S DEFINITIONS BLOCK!!                  X
+	#X                                                                X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	
+make_eps 1
+	lw 3
+	device postencap_color $1.eps
+	replot
+	lw 1
+	devbig
+
+all_graphs
+	test_graph
+
+test_graph
+	set sample = (ais_band == 3 & flag_MGS & El_W_6563 > 0 )
+	#set sample = (ais_band == 3 & flag_MGS & El_W_6563 > 0 & flag_1In10 )
+	set uv_color = (ais_fuv_mag - ais_nuv_mag) if (sample)
+	#set color2 = (ais_nuv_mag - m_r) if (sample)
+	#set color3 = (m_u - m_r) if (sample)
+	set delta_mag_nuv = ais_nuv_magErr if (sample)
+	set delta_mag_fuv = ais_fuv_magErr if (sample)
+
+	set sample_N2Ha = N2Ha if (sample)
+	set sample_O3Hb = O3Hb if (sample)
+	set sample_El_W_6563 = El_W_6563 if (sample)
+	set mag_nuv = ais_nuv_mag if (sample)
+	set mag_fuv = ais_fuv_mag if (sample)
+
+	lw 3
+	device postencap_color test.eps
+
+	#GM_plot_xyz uv_color color2 mag
+	#GM_plot_xyz sample_N2Ha sample_O3Hb color2 0 0 0 0 sample
+	GM_plot_xyz sample_N2Ha sample_O3Hb uv_color
+	#GM_plot_xyz sample_N2Ha ln(sample_El_W_6563) uv_color
+	#GM_plot_xyz delta_mag_nuv delta_mag_fuv red
+	#GM_plot_xyz delta_mag_fuv mag_fuv red
+	#GM_plot_xyz delta_mag_nuv mag_nuv red
+	#make_eps test
+
+	lw 1
+	devbig
+
+
+
+* EOF
+	################################################################# 
+
+
+

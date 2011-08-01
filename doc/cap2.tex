@@ -1,0 +1,244 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dissertacao de Mestrado / Dept Fisica, CFM, UFSC              %
+% Andre@UFSC - 2011                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::%
+%                                                               %
+%                          Capítulo 2                           %
+%                                                               %
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::%
+
+%***************************************************************%
+%                                                               %
+%                           Síntese                             %
+%                                                               %
+%***************************************************************%
+
+\chapter{Síntese de populações estelares}
+\label{sec:Sintese}
+
+
+
+%***************************************************************%
+%                                                               %
+%                     Síntese - Codigo e cuidados               %
+%                                                               %
+%***************************************************************%
+
+\section{O algoritmo de síntese Starlight}
+\label{sec:Sintese:codigo_etc}
+
+Como explanado na seção anterior, a abordagem matemática do código de
+síntese de populações estelares \starlight\ segue, de certa forma, a
+escola semi-empírica.  O nosso método consiste em modelar um espectro
+observado $O_\lambda$ usando uma combinação convexa (isto é, uma
+combinação linear com coeficientes positivos) dos elementos de uma
+base.  Incluímos também uma gaussiana para dar conta da dinâmica e um
+termo para a extinção por poeira, de acordo com a seguinte equação:
+
+\begin{equation}
+\label{eq:Sintese}
+M_\lambda = 
+   M_{\lambda_0}
+   \left[
+   \sum_{j=1}^{N} x_j T_{j,\lambda} r_\lambda
+   \right] 
+   \otimes G(v_\star,\sigma_\star)
+   \mbox{ ,}
+\end{equation}
+
+\ni onde:
+
+\begin{itemize}
+
+\item $M_\lambda$ é o espectro sintético.
+
+\item $M_{\lambda_0}$ é um fator de normalização, definido como o
+  fluxo total do espectro sintético no comprimento de onda
+  $\lambda_0$.
+
+\item $T_{j,\lambda}$ é o espectro da $j$-ésima ($j = 1\ldots
+  N_\star$) componente da base, normalizado em $\lambda_0$. A base
+  pode ser constituída tanto por estrelas ou combinações de estrelas
+  observadas quanto por estrelas ou populações estelares teóricas.
+  Pode-se até mesmo incluir, dependendo do problema estudado, outras
+  componentes na base, como quasares ou leis de potência.
+
+\item $x_j$ é a fração com que cada elemento $T_{j,\lambda}$ da base
+  contribui para o fluxo de $M_{\lambda_0}$.
+
+\item $r_\lambda \equiv \E{-0.4 (A_\lambda - A_{\lambda_0})}$ leva em
+  conta os efeitos de extinção por poeira.
+
+\item $G(v_\star,\sigma_\star)$ é uma distribuição gaussiana de
+  velocidades na linha de visada, centrada em $v_\star$ e alargada por
+  $\sigma_\star$.
+
+\item $\otimes$ expressa uma convolução.
+
+\end{itemize}
+
+Define-se como o melhor ajuste aquele que minimiza o $\chi^2$ entre o
+espectro observado e o modelo:
+
+\begin{equation}
+\label{eq:Sintese_chi2}
+\chi^2 =
+   \sum_{\lambda}
+   \left[
+   \left(O_\lambda - M_\lambda \right) w_\lambda
+   \right]^2
+   \mbox{ ,}
+\end{equation}
+
+\ni onde $w_\lambda$ é o inverso do ruído em $O_\lambda$.  Utilizamos
+o algoritmo de Metropolis em conjunto com o {\em simulated annealing}
+para tentar evitar que o ajuste prenda-se por mínimos locais do
+$\chi^2$.
+
+Características espectrais não desejáveis no ajuste, ou por serem
+muito ruidosas ou por não estarem contempladas na base, podem ser
+mascaradas com a simples definição de $w_\lambda = 0$.  A importância
+dessa simplicidade na definição de máscaras é explorada nas seções
+\ref{sec:CaT:DFM:masks} e \ref{sec:SLOAN:masks}.  Como regra geral,
+verificamos que máscaras baseadas em características gerais da amostra
+estudada produz uma boa primeira aproximação para os espectros
+modelados.  No entanto, para um refinamento dos ajustes é essencial a
+confecção de uma máscara individual para cada objeto estudado, levando
+em conta as peculiaridades de cada espectro a ser modelado.
+
+O fato das máscaras ``gerais'', isto é, aplicadas a todos os objetos
+de uma amostra, produzirem bons resultados em primeira aproximação
+reside nos mecanismos de controle desenhados no programa.  Um desses
+mecanismos, por exemplo, consiste em mascarar automaticamente partes
+do espectro que estejam de dois a três sigma (esse número é ajustável
+pelo usuário) acima do ruído.  Assim, espera-se diminuir a
+interferência no ajuste por linhas de emissão mais fortes ou pixeis
+ruins que eventualmente não foram mascarados {\em a priori} pelo
+usuário.
+
+Simulações e testes empíricos para verificar a confiabilidade deste
+método para a recuperar propriedades galáctica foram feitas por
+\citet{Jean05}.  Em uma análise dos resultados de qualquer aplicação
+do código de síntese, deve-se levar em conta, por exemplo, o efeito do
+multiplicidade de soluções.  Isto está ligado principalmente a
+degenerescências intrínsecas da base (como o efeito da
+idade-metalicidade, ou o uso de estrelas muito parecidas), ou mesmo
+degenerências estatísticas, isto é, a impossibilidade de diferenciar
+duas soluções distintas devido ao nível de ruído no espectro estudado.
+
+Nos Capítulos \ref{sec:CaT} e \ref{sec:SLOAN}, volto ao tema da
+confiabilidade dos resultados do código de síntese para cada uma das
+aplicações apresentadas neste trabalho.
+
+
+%***************************************************************%
+%                                                               %
+%                     Síntese - este trabalho                   %
+%                                                               %
+%***************************************************************%
+
+\section{Aplicações da Síntese de Populações Estelares neste trabalho}
+\label{sec:Sintese:este_trab}
+
+Apesar do código de síntese \starlight\ ter sido desenvolvido
+principalmente com o objetivo de recuperar a história de formação
+estelar de uma galáxia, ele mostrou-se muito mais versátil.  O
+algoritmo pode ser usado, por exemplo, para retirar toda a
+contribuição estelar a um espectro, de modo a se estudar o espectro
+puro de emissão nebular de uma galáxia.  Outra possibilidade é usá-lo
+para modelar apenas uma pequena faixa espectral que contém linhas de
+absorção e obter boas medidas para a dispersão de velocidades estelar
+dessas linhas.
+
+No Capítulo \ref{sec:CaT}, apresentamos a aplicação do \starlight\ à
+medida da dispersão de velocidades estelar na faixa do tripleto do
+cálcio.  Usamos bases de estrelas padrões de velocidades observadas na
+mesma mesma configuração instrumental dos nossos objetos.  As bases
+são constituídas principalmente por estrelas do tipo espectral K, com
+mais freqüência das do tipo K0III, e eventualmente algumas estrelas do
+tipo G e F.  Nesses casos, claramente temos o problema da dependência
+linear intrínseca da base.  Analisamos até que ponto isso afeta as
+nossas medidas da dispersão de velocidades e das incertezas
+correspondentes na Seção \ref{sec:CaT:DFM:uncertainties}.
+
+No Capítulo \ref{sec:SLOAN}, estudamos um procedimento para mascarar
+linhas de emissão para os objetos do \SDSS\ e \ojo {\bf não sei mais o
+quê porque não fiz ainda.} Para esse estudo, utilizamos uma base
+teórica de populações estelares simples do trabalho de \citet{BC03},
+de diferentes idades e metalicidades.  Dependendo do grau de precisão
+desejado, usamos bases reduzidas, que economizam bastante tempo de
+computação para as centenas de milhares de objetos do \SDSS, ou bases
+mais completas, incluindo uma grade mais refinada de populações de
+diferentes idades e metalicidades.  Neste trabalho utilizaremos uma
+amostra de 364\ojo galáxias modeladas com um base extensa e
+extremamente detalhada. Esta será de fato a primeira aplicação desta
+amostra gigante, cuja modelagem foi recentemente completada.
+
+
+A Figura \ref{fig:ex_sintese_CaT} mostra um exemplo da aplicação do
+nosso código de síntese para o estudo do tripleto do cálcio. As
+Figuras \ref{fig:ex_sintese_SDSS_elip} e
+\ref{fig:ex_sintese_SDSS_linh} trazem exemplos da síntese espectral
+para objetos da base de dados do \SDSS.
+
+%---------------------- Figura -------------------------
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Aplicação do \starlight: tripleto de cálcio.]  {Aplicação
+	    do código de síntese \starlight\ para o estudo do tripleto
+	    do cálcio.  No painel superior à esquerda, mostramos, em
+	    preto, o espectro observado da galáxia NGC 5929; em
+	    vermelho (linha mais suave), o espectro modelado.  Os
+	    comprimentos de onda do tripleto do cálcio estão marcados
+	    com o símbolo ``CaT''.  O painel inferior traz o espectro
+	    residual $O_\lambda - M_\lambda$.  As partes desenhadas em
+	    roxo (tom levemente mais claro) estão mascaradas e não
+	    foram consideradas no ajuste.  As linhas em amarelo (bem
+	    claras), com um $\times$ vermelho, foram excluídas do
+	    ajuste pelo programa de síntese.  O painel à direita
+	    mostra a contribuição de cada um dos elementos da base
+	    para o espectro modelado.  Acima deste painel estão
+	    algumas propriedades galácticas derivadas pelo programa de
+	    síntese.  Dentre elas, estamos especialmente interessados
+	    na dispersão de velocidades estelar $\sigma_\star$.}
+\label{fig:ex_sintese_CaT}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Aplicação do \starlight: galáxia {\em early-type} do
+	    \SDSS.]  {Aplicação do código de síntese \starlight\ para
+	    uma galáxia {\em early-type} da base da dados do \SDSS.
+	    No painel superior à esquerda, em preto, está o espectro
+	    da galáxia SDSS J131844.94-011108.20. Em vermelho (linha
+	    mais suave), mostramos o espectro modelado.  O painel
+	    inferior traz o espectro residual $O_\lambda - M_\lambda$.
+	    As partes desenhadas em violeta (tom levemente mais claro)
+	    estão mascaradas e não foram consideradas no ajuste.  As
+	    linhas em amarelo (bem claras), com um $\times$ vermelho,
+	    foram excluídas do ajuste pelo programa de síntese.  As
+	    linhas em verde (tom claro) são as regiões rotuladas como
+	    problemáticas pelo \SDSS\ e também não foram consideradas
+	    no ajuste.  Os paineis à direita mostram as frações de
+	    fluxo e de massa como função da idade.  Acima destes
+	    painéis estão algumas propriedades galácticas derivadas
+	    pelo programa de síntese.}
+\label{fig:ex_sintese_SDSS_elip}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=0.9\textwidth]
+		    {figuras/test.eps}
+    \caption[Aplicação do \starlight: galáxia {\em late-type} do
+	    \SDSS.]  {Como a Figura \ref{fig:ex_sintese_SDSS_elip},
+	    mas para a galáxia {\em late-type} SDSS
+	    J110756.33+002305.54.}
+\label{fig:ex_sintese_SDSS_linh}
+\end{figure}
+%---------------------- Figura -------------------------
+
+% End of this chapter

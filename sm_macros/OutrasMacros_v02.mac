@@ -1,0 +1,1744 @@
+	###################################################################
+	# Some general Calc/Save/Read & do-things macros not yet on GM nor ROT...
+	# Also, grid-, pairing- & mosaic-macros...
+	# Some still need trimming. (marked with +++)
+	#
+	# Cid@Odeon - 18/Jul/2008
+	###################################################################
+
+	#------------------------------------------------------------------
+ROT_CountNOkEmLines
+	# Read number of 1Angs pixels which are Ok (f_wei > -2) around main emission lines.
+	# The code used +/- 15 Angs windows, so NOK_* = 31 is the maximum
+	echo @@> [ROT_CountNOkEmLines] Reading CountNOkEmLines.$tab_prefix.$tab_suffix.out...
+	ROT_GoToTablesDir
+	data CountNOkEmLines.$tab_prefix.$tab_suffix.out
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {NOk_3727 2 NOk_4861 3 NOk_5007 4 NOk_6300 5 NOk_6563 6 NOk_6584 7 NOk_6716 8 NOk_6731 9}
+	ROT_GoToWorkDir 
+	#------------------------------------------------------------------
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X	                                               		  X
+	#X  ETA / ETAs , ZETA / ZETAs , XETA / XETAs: Calc / Save & Read  X
+	#X	                                               		  X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+	###################################################################
+	#		    Calc & Save ETA & ZETA                        #
+	###################################################################
+CalcAndSaveETAandZETAfunctions
+	echo [CalcAndSaveETAandZETAfunctions] ...tmp.ETA & tmp.ZETA...
+
+	# Read what's needed...
+	ROT_Read_Starlight_MAH_Tables 1 STE
+	ROT_Read_Starlight_MAH_Tables 2 STE
+	ROT_Read_Starlight_MAH_Tables 3 STE
+
+	# Setup ETA1...ETA50 & ZETA1...ZETA50 for all galaxies.
+	# This should speed up some of the MAH & chem. evol macros...
+	# OBS1: The 10**(Mcor_gal - Mini_gal) term in y* renormalizes MAH's from Mcor_gal to Mini_gal.
+	# OBS2: ZETA* is forced to be ZERO when there is no mass in the corresponding logtc bin
+	echo [CidsDefs] Defining ETA1...$N_logtc & ZETA1...$N_logtc for ALL galaxies...
+	do _j=1,$N_logtc {
+		set ETA$_j  = Mini_t$_j * 10**(Mcor_gal - Mini_gal)
+		set ZETA$_j = (Mste_t$_j > 0) ? (MZste_t$_j / (Mste_t$_j + 1e-30)) / 0.02 : 0 * MINUS999
+		}
+
+	# Save ETA* & ZETA* on temporary files...
+	print tmp.ETA     {sfile    \
+			    ETA1   ETA2   ETA3   ETA4   ETA5   ETA6   ETA7   ETA8   ETA9   ETA10 \
+			    ETA11  ETA12  ETA13  ETA14  ETA15  ETA16  ETA17  ETA18  ETA19  ETA20 \
+			    ETA21  ETA22  ETA23  ETA24  ETA25  ETA26  ETA27  ETA28  ETA29  ETA30 \
+			    ETA31  ETA32  ETA33  ETA34  ETA35  ETA36  ETA37  ETA38  ETA39  ETA40 \
+			    ETA41  ETA42  ETA43  ETA44  ETA45  ETA46  ETA47  ETA48  ETA49  ETA50}
+	print tmp.ZETA   {sfile    \
+			   ZETA1  ZETA2  ZETA3  ZETA4  ZETA5  ZETA6  ZETA7  ZETA8  ZETA9  ZETA10 \
+			   ZETA11 ZETA12 ZETA13 ZETA14 ZETA15 ZETA16 ZETA17 ZETA18 ZETA19 ZETA20 \
+			   ZETA21 ZETA22 ZETA23 ZETA24 ZETA25 ZETA26 ZETA27 ZETA28 ZETA29 ZETA30 \
+			   ZETA31 ZETA32 ZETA33 ZETA34 ZETA35 ZETA36 ZETA37 ZETA38 ZETA39 ZETA40 \
+			   ZETA41 ZETA42 ZETA43 ZETA44 ZETA45 ZETA46 ZETA47 ZETA48 ZETA49 ZETA50}
+	!chmod a-w tmp.ETA tmp.ZETA
+	###################################################################
+
+
+	###################################################################
+	#	ETAs & ZETAs: Compute & save in files!! (very slow!)	  #
+	###################################################################
+CalcAndSaveSmoothedETAandZETAfunctions
+	# This macro computes & saves the smoothed ETA* & ZETA* functions.
+	# It seems easier to run this once & then just read the files...
+	# Files are saved in tmp-names, so rename them yourself!
+	# Cid@Lagoa - 8/June/2008
+
+	echo [CalcAndSaveSmoothedETAandZETAfunctions] ...tmp.ETAs & tmp.ZETAs...
+
+	# Read what's needed...
+	ROT_Read_Starlight_MAH_Tables 1 STE
+	ROT_Read_Starlight_MAH_Tables 2 STE
+	ROT_Read_Starlight_MAH_Tables 3 STE
+
+	# Setup ETA1...ETA50 & ZETA1...ZETA50 for all galaxies.
+	# OBS1: The 10**(Mcor_gal - Mini_gal) term in y* renormalizes MAH's from Mcor_gal to Mini_gal.
+	# OBS2: ZETA* is forced to be ZERO when there is no mass in the corresponding logtc bin
+	echo [CalcAndSaveSmoothedETAandZETAfunctions] Defining ETA1...$N_logtc & ZETA1...$N_logtc for ALL galaxies...
+	do _j=1,$N_logtc {
+		set ETA$_j  = Mini_t$_j * 10**(Mcor_gal - Mini_gal)
+		set ZETA$_j = (Mste_t$_j > 0) ? (MZste_t$_j / (Mste_t$_j + 1e-30)) / 0.02 : 0 * MINUS999
+		}
+
+	# Define (Gaussian) smoothing length FWHM = 0.2 dex in logt
+	define FWHM_logt (0.2)
+	define sig_logt ($FWHM_logt / (sqrt(8 * ln(2))))
+
+	# Reset arrays
+	set dimen(y) = $N_logtc
+	set dimen(z) = $N_logtc
+	set N_LastNonZeroETA = int(0 * MINUS999)
+	do i_tc=1,$N_logtc {
+		set ETAs$i_tc  = 0 * MINUS999
+		set ZETAs$i_tc = 0 * MINUS999
+		}
+
+	# Loop over each galaxy, computing ETAs* & ZETAs* = smoothed functions
+	set ind_tc = 0,$N_logtc-1
+	do i_gal=1,dimen(sfile) {
+		# store ETA* & ZETA* for current galaxy in y & z arrays, & reset ETAs* & ZETAs* values
+		do i_tc=1,$N_logtc {
+			set y[$i_tc-1] = ETA$i_tc[$i_gal-1]
+			set z[$i_tc-1] = ZETA$i_tc[$i_gal-1]
+			set ETAs$i_tc[$i_gal-1]  = 0
+			set ZETAs$i_tc[$i_gal-1] = 0
+			}
+
+		# Figure out which is the last non-zero element (relevant to define smoothing weigths)
+		set aux = ind_tc if (y <= 0)
+		set N_LastNonZeroETA[$i_gal-1] = int(aux[0])
+		set yNonZero     = y     if (y > 0)
+		set zNonZero     = z     if (y > 0)
+		set logtcNonZero = logtc if (y > 0)
+
+		# Compute ETAs & ZETAs values for each non-zero element
+		# Note that the gaussian weight w considers only the non-zero entries.
+		do i_tc=1,$(N_LastNonZeroETA[$i_gal-1]) {
+			set aux = exp(-0.5 * (((logtcNonZero - logtc[$i_tc-1]) / $sig_logt)**2))
+			set w   = aux / sum(aux)
+			set ETAs$i_tc[$i_gal-1]  = sum(yNonZero * w)
+			set ZETAs$i_tc[$i_gal-1] = sum(zNonZero * w)
+			}
+
+		# echo progress...
+		if (($i_gal/10000) == int($i_gal/10000)) {
+			!date
+			echo [CalcAndSaveSmoothedETAandZETAfunctions] $i_gal : N_LastNonZeroETA = $(N_LastNonZeroETA[$i_gal-1]) 
+			}
+		}
+
+
+	# Save ETAs* & ZETAs* on temporary files...
+	print tmp.ETAs     {sfile    N_LastNonZeroETA \
+			    ETAs1   ETAs2   ETAs3   ETAs4   ETAs5   ETAs6   ETAs7   ETAs8   ETAs9   ETAs10 \
+			    ETAs11  ETAs12  ETAs13  ETAs14  ETAs15  ETAs16  ETAs17  ETAs18  ETAs19  ETAs20 \
+			    ETAs21  ETAs22  ETAs23  ETAs24  ETAs25  ETAs26  ETAs27  ETAs28  ETAs29  ETAs30 \
+			    ETAs31  ETAs32  ETAs33  ETAs34  ETAs35  ETAs36  ETAs37  ETAs38  ETAs39  ETAs40 \
+			    ETAs41  ETAs42  ETAs43  ETAs44  ETAs45  ETAs46  ETAs47  ETAs48  ETAs49  ETAs50}
+	print tmp.ZETAs   {sfile    N_LastNonZeroETA \
+			   ZETAs1  ZETAs2  ZETAs3  ZETAs4  ZETAs5  ZETAs6  ZETAs7  ZETAs8  ZETAs9  ZETAs10 \
+			   ZETAs11 ZETAs12 ZETAs13 ZETAs14 ZETAs15 ZETAs16 ZETAs17 ZETAs18 ZETAs19 ZETAs20 \
+			   ZETAs21 ZETAs22 ZETAs23 ZETAs24 ZETAs25 ZETAs26 ZETAs27 ZETAs28 ZETAs29 ZETAs30 \
+			   ZETAs31 ZETAs32 ZETAs33 ZETAs34 ZETAs35 ZETAs36 ZETAs37 ZETAs38 ZETAs39 ZETAs40 \
+			   ZETAs41 ZETAs42 ZETAs43 ZETAs44 ZETAs45 ZETAs46 ZETAs47 ZETAs48 ZETAs49 ZETAs50}
+	!chmod a-w tmp.ETAs tmp.ZETAs
+	###################################################################
+
+
+	###################################################################
+	#		        Calc & Save XETA                          #
+	###################################################################
+CalcAndSaveXETAfunction
+	# XETA$j is the cumulative light fraction from the 1st to the last logtc
+	# Cid@Odeon - 14/Juilet/2008
+
+	echo [CalcAndSaveXETAfunction] Defining XETA1...$N_logtc for ALL galaxies...
+
+	# Read what's needed & setup XETA1...XETA50 for all galaxies.
+	ROT_Read_Starlight_STE_Tables 1
+	set XETA1 = xc1
+	do _j=2,$N_logtc {
+		define _jprev ($_j - 1)
+		set XETA$_j  = XETA$_jprev + xc$_j
+		}
+
+	# Save XETA* on temporary file...
+	print tmp.XETA     {sfile    \
+			   XETA1  XETA2  XETA3  XETA4  XETA5  XETA6  XETA7  XETA8  XETA9  XETA10 \
+			   XETA11 XETA12 XETA13 XETA14 XETA15 XETA16 XETA17 XETA18 XETA19 XETA20 \
+			   XETA21 XETA22 XETA23 XETA24 XETA25 XETA26 XETA27 XETA28 XETA29 XETA30 \
+			   XETA31 XETA32 XETA33 XETA34 XETA35 XETA36 XETA37 XETA38 XETA39 XETA40 \
+			   XETA41 XETA42 XETA43 XETA44 XETA45 XETA46 XETA47 XETA48 XETA49 XETA50}
+	!chmod a-w tmp.XETA
+	###################################################################
+
+
+	###################################################################
+	#	    XETAs: Compute & save in files!! (very slow!)	  #
+	###################################################################
+CalcAndSaveSmoothedXETAfunction
+	# Smooth XETA by a FWHM = 0.2 dex gaussian in logtc
+	# OBS: NONE of those *NonZero* tricks use for ETAs & ZETAs are used, yet things work fine!!
+	#      But XETAs* may be > 0 for logtc < 6 & a bit less than 100 for the last tc within base...
+	#      Not a problem, I reckon.
+	#
+	# Cid@Paris - 15/Juilet/2008
+
+	echo [CalcAndSaveSmoothedXETAfunction] Defining XETA1...$N_logtc for ALL galaxies...
+
+	# Read what's needed & setup XETA1...XETA50 for all galaxies.
+	ROT_Read_Starlight_STE_Tables 1
+	set XETA1 = xc1
+	do _j=2,$N_logtc {
+		define _jprev ($_j - 1)
+		set XETA$_j  = XETA$_jprev + xc$_j
+		}
+
+	# Define (Gaussian) smoothing length FWHM = 0.2 dex in logt & reset arrays
+	define FWHM_logt (0.2)
+	define sig_logt ($FWHM_logt / (sqrt(8 * ln(2))))
+	set dimen(y) = $N_logtc
+	do i_tc=1,$N_logtc {set XETAs$i_tc = 0 * MINUS999}
+
+	# Loop over each galaxy, computing XETAs* = smoothed function
+	do i_gal=1,dimen(sfile) {
+		# store XETA* for current galaxy in y array & reset XETAs* values
+		do i_tc=1,$N_logtc {
+			set y[$i_tc-1] = XETA$i_tc[$i_gal-1]
+			set XETAs$i_tc[$i_gal-1] = 0
+			}
+
+		# for each tc, define weight array & compute XETAs(tc) 
+		do i_tc=1,$N_logtc {
+			set aux = exp(-0.5 * (((logtc - logtc[$i_tc-1]) / $sig_logt)**2))
+			set w   = aux / sum(aux)
+			set XETAs$i_tc[$i_gal-1] = sum(y * w)
+			}
+
+		# echo progress...
+		if (($i_gal/10000) == int($i_gal/10000)) {
+			!date
+			echo [CalcAndSaveSmoothedXETA] $i_gal : ...
+			}
+		}
+
+	# Save XETAs* on temporary file...
+	print tmp.XETAs    {sfile    \
+			   XETAs1  XETAs2  XETAs3  XETAs4  XETAs5  XETAs6  XETAs7  XETAs8  XETAs9  XETAs10 \
+			   XETAs11 XETAs12 XETAs13 XETAs14 XETAs15 XETAs16 XETAs17 XETAs18 XETAs19 XETAs20 \
+			   XETAs21 XETAs22 XETAs23 XETAs24 XETAs25 XETAs26 XETAs27 XETAs28 XETAs29 XETAs30 \
+			   XETAs31 XETAs32 XETAs33 XETAs34 XETAs35 XETAs36 XETAs37 XETAs38 XETAs39 XETAs40 \
+			   XETAs41 XETAs42 XETAs43 XETAs44 XETAs45 XETAs46 XETAs47 XETAs48 XETAs49 XETAs50}
+	#!chmod a-w tmp.XETAs
+	###################################################################
+
+
+
+
+
+	# Read macros for ETA/ZETA/XETA & ETAs/ZETAs/XETAs
+
+	###################################################################
+ReadETAandZETA
+	# ETA & ZETA sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadETAandZETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ETA & ZETA...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ETA*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ETA
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  \
+	   ETA1  2  ETA2  3  ETA3  4  ETA4  5  ETA5  6  ETA6  7 ETA7   8 ETA8   9 ETA9  10 ETA10 11 \
+	  ETA11 12 ETA12 13 ETA13 14 ETA14 15 ETA15 16 ETA16 17 ETA17 18 ETA18 19 ETA19 20 ETA20 21 \
+	  ETA21 22 ETA22 23 ETA23 24 ETA24 25 ETA25 26 ETA26 27 ETA27 28 ETA28 29 ETA29 30 ETA30 31 \
+	  ETA31 32 ETA32 33 ETA33 34 ETA34 35 ETA35 36 ETA36 37 ETA37 38 ETA38 39 ETA39 40 ETA40 41 \
+	  ETA41 42 ETA42 43 ETA43 44 ETA44 45 ETA45 46 ETA46 47 ETA47 48 ETA48 49 ETA49 50 ETA50 51}
+
+	# ZETA*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ZETA
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s \
+	  ZETA1  2  ZETA2  3  ZETA3  4  ZETA4  5  ZETA5  6  ZETA6  7 ZETA7   8 ZETA8   9 ZETA9  10 ZETA10 11 \
+	 ZETA11 12 ZETA12 13 ZETA13 14 ZETA14 15 ZETA15 16 ZETA16 17 ZETA17 18 ZETA18 19 ZETA19 20 ZETA20 21 \
+	 ZETA21 22 ZETA22 23 ZETA23 24 ZETA24 25 ZETA25 26 ZETA26 27 ZETA27 28 ZETA28 29 ZETA29 30 ZETA30 31 \
+	 ZETA31 32 ZETA32 33 ZETA33 34 ZETA34 35 ZETA35 36 ZETA36 37 ZETA37 38 ZETA38 39 ZETA39 40 ZETA40 41 \
+	 ZETA41 42 ZETA42 43 ZETA43 44 ZETA44 45 ZETA45 46 ZETA46 47 ZETA47 48 ZETA48 49 ZETA49 50 ZETA50 51}
+	delete sfile2
+
+	ROT_GoToWorkDir
+
+
+ReadSmoothedETAandZETA
+	# ETAs & ZETAs sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadSmoothedETAandZETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ETAs & ZETAs...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ETAs*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ETAs
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  N_LastNonZeroETA 2 \
+	   ETAs1  3  ETAs2  4  ETAs3  5  ETAs4  6  ETAs5  7  ETAs6  8 ETAs7   9 ETAs8  10 ETAs9  11 ETAs10 12 \
+	  ETAs11 13 ETAs12 14 ETAs13 15 ETAs14 16 ETAs15 17 ETAs16 18 ETAs17 19 ETAs18 20 ETAs19 21 ETAs20 22 \
+	  ETAs21 23 ETAs22 24 ETAs23 25 ETAs24 26 ETAs25 27 ETAs26 28 ETAs27 29 ETAs28 30 ETAs29 31 ETAs30 32 \
+	  ETAs31 33 ETAs32 34 ETAs33 35 ETAs34 36 ETAs35 37 ETAs36 38 ETAs37 39 ETAs38 40 ETAs39 41 ETAs40 42 \
+	  ETAs41 43 ETAs42 44 ETAs43 45 ETAs44 46 ETAs45 47 ETAs46 48 ETAs47 49 ETAs48 50 ETAs49 51 ETAs50 52}
+
+	# ZETAs*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ZETAs
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  N_LastNonZeroETA 2 \
+	  ZETAs1  3  ZETAs2  4  ZETAs3  5  ZETAs4  6  ZETAs5  7  ZETAs6  8 ZETAs7   9 ZETAs8  10 ZETAs9  11 ZETAs10 12 \
+	 ZETAs11 13 ZETAs12 14 ZETAs13 15 ZETAs14 16 ZETAs15 17 ZETAs16 18 ZETAs17 19 ZETAs18 20 ZETAs19 21 ZETAs20 22 \
+	 ZETAs21 23 ZETAs22 24 ZETAs23 25 ZETAs24 26 ZETAs25 27 ZETAs26 28 ZETAs27 29 ZETAs28 30 ZETAs29 31 ZETAs30 32 \
+	 ZETAs31 33 ZETAs32 34 ZETAs33 35 ZETAs34 36 ZETAs35 37 ZETAs36 38 ZETAs37 39 ZETAs38 40 ZETAs39 41 ZETAs40 42 \
+	 ZETAs41 43 ZETAs42 44 ZETAs43 45 ZETAs44 46 ZETAs45 47 ZETAs46 48 ZETAs47 49 ZETAs48 50 ZETAs49 51 ZETAs50 52}
+	delete sfile2
+
+	ROT_GoToWorkDir
+	###################################################################
+
+	###################################################################
+ReadXETA
+	# XETA sm-table.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadXETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.XETA...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	data $tab_prefix.Starlight.tab.$tab_suffix.XETA
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s \
+	  XETA1  2  XETA2  3  XETA3  4  XETA4  5  XETA5  6  XETA6  7 XETA7   8 XETA8   9 XETA9  10 XETA10 11 \
+	 XETA11 12 XETA12 13 XETA13 14 XETA14 15 XETA15 16 XETA16 17 XETA17 18 XETA18 19 XETA19 20 XETA20 21 \
+	 XETA21 22 XETA22 23 XETA23 24 XETA24 25 XETA25 26 XETA26 27 XETA27 28 XETA28 29 XETA29 30 XETA30 31 \
+	 XETA31 32 XETA32 33 XETA33 34 XETA34 35 XETA35 36 XETA36 37 XETA37 38 XETA38 39 XETA39 40 XETA40 41 \
+	 XETA41 42 XETA42 43 XETA43 44 XETA44 45 XETA45 46 XETA46 47 XETA47 48 XETA48 49 XETA49 50 XETA50 51}
+	delete sfile2
+
+	ROT_GoToWorkDir
+
+ReadSmoothedXETA
+	# XETAs sm-table.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadSmoothedXETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.XETAs...
+
+	# Skip 2 lines of the sm-header
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	data $tab_prefix.Starlight.tab.$tab_suffix.XETAs
+	read   {sfile2  1.s \
+	  XETAs1  2  XETAs2  3  XETAs3  4  XETAs4  5  XETAs5  6  XETAs6  7 XETAs7   8 XETAs8   9 XETAs9  10 XETAs10 11 \
+	 XETAs11 12 XETAs12 13 XETAs13 14 XETAs14 15 XETAs15 16 XETAs16 17 XETAs17 18 XETAs18 19 XETAs19 20 XETAs20 21 \
+	 XETAs21 22 XETAs22 23 XETAs23 24 XETAs24 25 XETAs25 26 XETAs26 27 XETAs27 28 XETAs28 29 XETAs29 30 XETAs30 31 \
+	 XETAs31 32 XETAs32 33 XETAs33 34 XETAs34 35 XETAs35 36 XETAs36 37 XETAs37 38 XETAs38 39 XETAs39 40 XETAs40 41 \
+	 XETAs41 42 XETAs42 43 XETAs43 44 XETAs44 45 XETAs45 46 XETAs46 47 XETAs47 48 XETAs48 49 XETAs49 50 XETAs50 51}
+	delete sfile2
+
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# The macros below simply split ReadETAandZETA and ReadSmoothedETAandZETA
+	# into four macros, ReadETA, ReadZETA, ReadSmoothedETA & ReadSmoothedZETA
+	# so that I can read just what I need (and save RAM!)
+	# Cid@Odeon - 30/Juin/2009
+
+ReadETA
+	# ETA sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ETA...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ETA*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ETA
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  \
+	   ETA1  2  ETA2  3  ETA3  4  ETA4  5  ETA5  6  ETA6  7 ETA7   8 ETA8   9 ETA9  10 ETA10 11 \
+	  ETA11 12 ETA12 13 ETA13 14 ETA14 15 ETA15 16 ETA16 17 ETA17 18 ETA18 19 ETA19 20 ETA20 21 \
+	  ETA21 22 ETA22 23 ETA23 24 ETA24 25 ETA25 26 ETA26 27 ETA27 28 ETA28 29 ETA29 30 ETA30 31 \
+	  ETA31 32 ETA32 33 ETA33 34 ETA34 35 ETA35 36 ETA36 37 ETA37 38 ETA38 39 ETA39 40 ETA40 41 \
+	  ETA41 42 ETA42 43 ETA43 44 ETA44 45 ETA45 46 ETA46 47 ETA47 48 ETA48 49 ETA49 50 ETA50 51}
+	delete sfile2
+
+	ROT_GoToWorkDir
+
+
+ReadZETA
+	# ZETA sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadZETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ZETA...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ZETA*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ZETA
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s \
+	  ZETA1  2  ZETA2  3  ZETA3  4  ZETA4  5  ZETA5  6  ZETA6  7 ZETA7   8 ZETA8   9 ZETA9  10 ZETA10 11 \
+	 ZETA11 12 ZETA12 13 ZETA13 14 ZETA14 15 ZETA15 16 ZETA16 17 ZETA17 18 ZETA18 19 ZETA19 20 ZETA20 21 \
+	 ZETA21 22 ZETA22 23 ZETA23 24 ZETA24 25 ZETA25 26 ZETA26 27 ZETA27 28 ZETA28 29 ZETA29 30 ZETA30 31 \
+	 ZETA31 32 ZETA32 33 ZETA33 34 ZETA34 35 ZETA35 36 ZETA36 37 ZETA37 38 ZETA38 39 ZETA39 40 ZETA40 41 \
+	 ZETA41 42 ZETA42 43 ZETA43 44 ZETA44 45 ZETA45 46 ZETA46 47 ZETA47 48 ZETA48 49 ZETA49 50 ZETA50 51}
+	delete sfile2
+
+	ROT_GoToWorkDir
+
+
+ReadSmoothedETA
+	# ETAs sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadSmoothedETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ETAs...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ETAs*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ETAs
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  N_LastNonZeroETA 2 \
+	   ETAs1  3  ETAs2  4  ETAs3  5  ETAs4  6  ETAs5  7  ETAs6  8 ETAs7   9 ETAs8  10 ETAs9  11 ETAs10 12 \
+	  ETAs11 13 ETAs12 14 ETAs13 15 ETAs14 16 ETAs15 17 ETAs16 18 ETAs17 19 ETAs18 20 ETAs19 21 ETAs20 22 \
+	  ETAs21 23 ETAs22 24 ETAs23 25 ETAs24 26 ETAs25 27 ETAs26 28 ETAs27 29 ETAs28 30 ETAs29 31 ETAs30 32 \
+	  ETAs31 33 ETAs32 34 ETAs33 35 ETAs34 36 ETAs35 37 ETAs36 38 ETAs37 39 ETAs38 40 ETAs39 41 ETAs40 42 \
+	  ETAs41 43 ETAs42 44 ETAs43 45 ETAs44 46 ETAs45 47 ETAs46 48 ETAs47 49 ETAs48 50 ETAs49 51 ETAs50 52}
+	delete sfile2
+
+	ROT_GoToWorkDir
+
+
+ReadSmoothedZETA
+	# ZETAs sm-tables.
+	ROT_GoToTablesDir
+	ROT_Read_Starlight_BInfo_Table
+	echo [ReadSmoothedZETA] Reading $tab_prefix.Starlight.tab.$tab_suffix.ZETAs...
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	# ZETAs*
+	data $tab_prefix.Starlight.tab.$tab_suffix.ZETAs
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read   {sfile2  1.s  N_LastNonZeroETA 2 \
+	  ZETAs1  3  ZETAs2  4  ZETAs3  5  ZETAs4  6  ZETAs5  7  ZETAs6  8 ZETAs7   9 ZETAs8  10 ZETAs9  11 ZETAs10 12 \
+	 ZETAs11 13 ZETAs12 14 ZETAs13 15 ZETAs14 16 ZETAs15 17 ZETAs16 18 ZETAs17 19 ZETAs18 20 ZETAs19 21 ZETAs20 22 \
+	 ZETAs21 23 ZETAs22 24 ZETAs23 25 ZETAs24 26 ZETAs25 27 ZETAs26 28 ZETAs27 29 ZETAs28 30 ZETAs29 31 ZETAs30 32 \
+	 ZETAs31 33 ZETAs32 34 ZETAs33 35 ZETAs34 36 ZETAs35 37 ZETAs36 38 ZETAs37 39 ZETAs38 40 ZETAs39 41 ZETAs40 42 \
+	 ZETAs41 43 ZETAs42 44 ZETAs43 45 ZETAs44 46 ZETAs45 47 ZETAs46 48 ZETAs47 49 ZETAs48 50 ZETAs49 51 ZETAs50 52}
+	delete sfile2
+
+	ROT_GoToWorkDir
+	###################################################################
+
+
+
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#X	                                               		  X
+	#X End of ETA/ETAs , ZETA/ZETAs , XETA/XETAs  Calc/Save/Read  	  X
+	#X	                                               		  X
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+
+	# x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x
+
+
+
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        		Ionizing Photons Stuff	 		 @@
+	#@@        		                         		 @@
+	#@@			Cid@Paris / July/02/2008       		 @@
+	#@@        		                         		 @@
+	#@@        		                         		 @@
+	#@@ ION_ReadBaseAndCalcIonizingFluxesPerUnitMass       		 @@
+	#@@ ION_CalcIntegralNumPhotons 5	        		 @@
+	#@@ ION_CalcAndSaveION_Stuff		        		 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+	###################################################################
+	#-----------------------------------------------------------------#
+ION_plot_base
+	# plots ION-things x age & Z for the base...
+	# Cid@Paris - 04/July/2008
+
+	ION_ReadBaseAndCalcIonizingFluxesPerUnitMass
+
+	# Define constants
+	define clight  (2.99792458)	# * 10**18 angstrom/s
+	define hplanck (6.6260755)	# * 10**(-27) erg s
+	define lsun    (3.826)		# * 10**33 erg/s
+	define _k_q    (lg($lsun / ($clight * $hplanck)) + 33 + 27 - 18)
+	define _k0     (1 / (2.226 * 6562.80))
+
+	set EWHa_base = $_k0 * 10**(q_H0_base - $_k_q) / cHa_base
+	set EWHb_base = ($_k0/3) * 10**(q_H0_base - $_k_q) / cHb_base
+
+	set aux = uniq(Z_base)
+	set z_color = {magenta cyan blue green default red}
+	ptype 10 3 lw 2 expand 0.7
+
+	do i=0,5{
+		set x   = lg(age_base)   if (Z_base == aux[$i])
+		set y1  = q_H0_base      if (Z_base == aux[$i])
+		set y2  = q_He0_base     if (Z_base == aux[$i])
+		set y3  = q_HeI_base     if (Z_base == aux[$i])
+		set lca = lg(cHa_base)   if (Z_base == aux[$i])
+		set lcb = lg(cHb_base)   if (Z_base == aux[$i])
+		set ewa = EWHa_base      if (Z_base == aux[$i])
+		set ewb = EWHb_base      if (Z_base == aux[$i])
+		set fr  = fret_base      if (Z_base == aux[$i])
+
+		window 1 -4 1 4 lim 5.5 10.5 0 1.1 box 0 2
+			ylabel {ret. fraction}
+			lty 1 grid lty 0
+			ctype $(z_color[$i])	poi x fr	con x fr	ctype default
+		window 1 -4 1 3 lim 5.5 10.5 39.0 47.5 box 0 2
+			ylabel {log q(H0) [s^{-1}M_\odot^{-1}]}
+			ctype $(z_color[$i])	poi x y1	con x y1	ctype default
+		window 1 -4 1 2 lim 5.5 10.5 -5.5 -1.5 box 0 2
+			ylabel {log c(H\alpha) [L_\odot\AA^{-1}]M_\odot^{-1}]}
+			ctype $(z_color[$i])	poi x lca	con x lca	ctype default
+		lty 1
+			ctype $(z_color[$i])	con x lcb	ctype default
+		lty 0
+
+		window 1 -4 1 1 lim 5.5 10.5 -0.2 1.3 box
+			ylabel {EW(H\alpha) [\AA]}
+			xlabel {log t(SSP) [yr]}
+			ctype $(z_color[$i])	poi x ewa	con x ewa	ctype default
+		lty 1
+			ctype $(z_color[$i])	con x ewb	ctype default
+		lty 0
+
+		}
+	#-----------------------------------------------------------------#
+
+
+	#-----------------------------------------------------------------#
+ION_ReadBaseAndCalcIonizingFluxesPerUnitMass
+	# Calculates ionizing fluxes (per unit initial mass) & Ha continuum from base spectra.
+	# Returns: q_H0_base, q_He0_base, q_HeI_base = [log s^-1 M_sun^-1] & cHa_base [Lsun/Angs/Msun]
+	#
+	# Cid@Paris - 02/July/2008 - adapted from Natalia's macros
+	#
+ 	# NEW: Added Hb continuum & EW! (Windows already checked visually)
+	# Cid@Paris - 15/July/2008
+
+	# Reads the N_base base spectra in arq_base
+	# Store them in lbase, fbase.1, fbase.2... fbase.150.
+	# Ages & Z's stored in age_base & Z_base
+	define bases_dir  ('/home/cid/BasesDir/')
+	define arq_base ('Base.BC03.S')
+	cd $bases_dir
+	data $arq_base
+	lines 2 10000	read {arq_base 1.s age_base 2 Z_base 3 fret_base 5}
+	define N_base (dimen(arq_base))
+
+	do i_base=1,$N_base {
+		data $(arq_base[$i_base-1])
+		read {lbase 1 aux1 2}
+		set fbase.$i_base = aux1
+		}
+	delete aux1
+	cd $work_dir
+
+	# Define constants
+	define clight  (2.99792458)	# * 10**18 angstrom/s
+	define hplanck (6.6260755)	# * 10**(-27) erg s
+	define lsun    (3.826)		# * 10**33 erg/s
+	define _k_q    (lg($lsun / ($clight * $hplanck)) + 33 + 27 - 18)
+
+	# Reset q*_base & cHa_base arrays
+	foreach var (q_H0_base q_He0_base q_HeI_base cHa_base cHb_base) {set $var = 0 * age_base - 999}
+
+	# Calculate cHa, q(H0), q(He0) & q(He+) for all SSPs in BC03.
+	# OBS: q*'s are IN LOG!!
+	do i_base=1,$N_base {
+		# Calc continuum in Ha for base
+		set lix = fbase.$i_base if (abs(lbase-6563) < 100 & abs(lbase-6563) > 10) 
+		stats lix lix1 lix2 lix3
+		set cHa_base[$i_base-1] = $lix1
+
+		set lix = fbase.$i_base if (abs(lbase-4861) < 51 & abs(lbase-4861) > 33) 
+		stats lix lix1 lix2 lix3
+		set cHb_base[$i_base-1] = $lix1
+
+		# Hydrogen: 13.6 eV >> 912 angstroms
+		ION_CalcIntegralNumPhotons 0 912 lbase fbase.$i_base aux
+		if ($aux > 0) {set q_H0_base[$i_base-1] = lg($aux) + $_k_q}
+
+		# Neutral Helium: 24.6 eV >> 504 angstroms
+		ION_CalcIntegralNumPhotons 0 504 lbase fbase.$i_base aux
+		if ($aux > 0) {set q_He0_base[$i_base-1] = lg($aux) + $_k_q}
+
+		# Singly ionized helium: 54.4 eV >> 228 angstroms
+		ION_CalcIntegralNumPhotons 0 228 lbase fbase.$i_base aux
+		if ($aux > 0) {set q_HeI_base[$i_base-1] = lg($aux) + $_k_q}
+		}
+	delete lix	delete aux1	do i_base=1,$N_base {delete fbase.$i_base}
+	
+	cd $work_dir
+	#print {age_base Z_base q_H0_base q_He0_base q_HeI_base fret_base}
+	#-----------------------------------------------------------------#
+
+
+	#-----------------------------------------------------------------#
+ION_CalcIntegralNumPhotons 5
+	# $1 = (input)  llow = lower limit in lambda
+	# $2 = (input)  lupp = upper limit in lambda
+	# $3 = (input)  l    = lambda
+	# $4 = (input)  F    = F(l) = a spectrum (in per lambda units)
+	# $5 = (output) q    = integral of F * l * dl from llow to lupp
+
+	# define aux's vectors: lambdas, dlambdas & flux
+	set aux_l   = $3      if ($3 >= $1 & $3 <= $2)
+	set aux_dl  = $3 * 0  if ($3 >= $1 & $3 <= $2)
+	set aux_f   = $4      if ($3 >= $1 & $3 <= $2)
+
+	# Set delta lambda's :CID's version with end points fixed! CHECK!
+	define _Nint  (dimen(aux_l))
+	do i_int=1,$_Nint-2 {set aux_dl[$i_int]  = (aux_l[$i_int+1] - aux_l[$i_int-1]) / 2}
+	set aux_dl[0]         = (aux_l[1] - aux_l[0]) / 2
+	set aux_dl[$_Nint-1]  = ($2 - (aux_l[$_Nint-2] + aux_l[$_Nint-1]) / 2)
+
+	# Compute integral, clean aux stuff & return
+	define $5 (sum(aux_f * aux_l * aux_dl))
+	foreach _aux (aux_f aux_l aux_dl _Nint) {delete $_aux}
+	#-----------------------------------------------------------------#
+	###################################################################
+
+
+	###################################################################
+	# Computes & saves ionizing flux related stuff:
+	#	- q_H , q_He0 & q_HeI = ionizing photon rate per unit (initial mass)
+	#	- expected L(Ha) & EW(Ha)
+	#	- Observed/Expected ratios (not saved)
+	# Everything computed for total ionizing spectrum & broken into 5 POPulations
+	#
+	# OBS: 1) Must run ReadBaseAndCalcIonizingFluxesPerUnitMass before!
+	#      2) Needs mu_ini*, MINUS999 & mu_ini* (from ROT_Read_Starlight_FPV_Tables 3)
+	#
+	# ATT: The idea is to run this ONCE and then only read the table & recompute
+	#      the Obs/Exp ratios actually needed.
+	#
+	# Cid@Odeon - 02/July/2008
+	#
+ION_CalcAndSaveION_Stuff
+
+	echo [ION_CalcAndSaveION_Stuff] Starting ...
+        #ROT_Read_Starlight_FPV_Tables 3
+	ION_ReadBaseAndCalcIonizingFluxesPerUnitMass
+
+	#-----------------------------------------------------------------#
+	# Setup POP* age ranges to break up ionizing fluxes... 
+	# Working with 5 ranges (from Natalia). The most interesting are 
+	# POP1 (young stars) and POP5 (post-AGB)
+	set age_base_low   = {0       1.01e7   1.016e8  1.279e9  9.99e7}
+	set age_base_upp   = {1.01e7  1.016e8  1.279e9  1.00e20 1.00e20}
+
+	# Initialize vectors
+	foreach _q (q_H0 q_He0 q_HeI cHa) {set $_q  = 0 * MINUS999}
+	do _i=1,dimen(age_base_low) {
+		set q_H0_POP$_i  = 0 * MINUS999
+		set q_He0_POP$_i = 0 * MINUS999
+		set q_HeI_POP$_i = 0 * MINUS999
+		}
+	#-----------------------------------------------------------------#
+
+
+	#-------------------- cHa, q_H0, q_He0, q_HeI --------------------#
+	# Adds upp ionizing fluxes & cHa for each base component (& for each galaxy implicitly),
+	# weighted by its (previsouly read) mu_ini* initial mas fraction.
+	# This is done both for total fluxes and for the ones broken up by age ranges (q_*_POP*)
+	# The q_* summation is linear, of course... Further down we go back to q -> log q.
+	# OBS: Beware of trick to avoid numerical overflow: - 40!!
+	do _j=1,dimen(age_base) {
+	    set cHa = cHa + mu_ini$_j/100 * cHa_base[$_j-1]
+
+	    foreach _q {q_H0 q_He0 q_HeI} {
+	    if ($($_q""_base[$_j-1]) > -999) {
+		set aux  = mu_ini$_j > 0 ? mu_ini$_j/100 * 10**$($_q""_base[$_j-1] - 40) : 0 * MINUS999
+		set $_q = $_q + aux
+
+		do _i=1,dimen(age_base_low) {
+			set aux = (age_base[$_j-1] >= age_base_low[$_i-1] & \
+			     	   age_base[$_j-1] <  age_base_upp[$_i-1] & \
+			     	   mu_ini$_j > 0) ? mu_ini$_j/100 * 10**$($_q""_base[$_j-1] - 40) : 0 * MINUS999
+		        set $_q""_POP$_i = $_q""_POP$_i + aux
+			}
+		  }
+	          }
+		}
+
+	# Transform q_* back to log scale (adding the +40 back where it belongs)
+	foreach _q {q_H0 q_He0 q_HeI} {
+	  set $_q = $_q > 0 ? lg(abs($_q) + 1e-30) + 40 : MINUS999
+	  do _i=1,dimen(age_base_low) {
+	   	  set $_q""_POP$_i = $_q""_POP$_i > 0 ? lg(abs($_q""_POP$_i) + 1e-30) + 40 : MINUS999
+		  }
+		}
+	#-----------------------------------------------------------------#
+
+
+	#----------------------- Qg_H0, Qg_He0, Qg_He1 -------------------#
+	# Calc Qg_* for galaxies by multiplying q_* by the mass (10**Mini_fib)
+	# Qg_* = log(photons/s)
+	set Qg_H0  = (q_H0  > -999) ? Mini_fib + q_H0  : MINUS999
+	set Qg_He0 = (q_He0 > -999) ? Mini_fib + q_He0 : MINUS999
+	set Qg_He1 = (q_HeI > -999) ? Mini_fib + q_HeI : MINUS999
+	do _i=1,dimen(age_base_low) {
+		set Qg_H0_POP$_i  = (q_H0_POP$_i  > -999) ? Mini_fib + q_H0_POP$_i  : MINUS999
+		set Qg_He0_POP$_i = (q_He0_POP$_i > -999) ? Mini_fib + q_He0_POP$_i : MINUS999
+		set Qg_HeI_POP$_i = (q_HeI_POP$_i > -999) ? Mini_fib + q_HeI_POP$_i : MINUS999
+		}
+	#-----------------------------------------------------------------#
+
+
+	#------------------- LHa_Exp & LHa_Exp_POP* ----------------------#
+	# Calc Expected L(Ha) & its log, both total and for age ranges.
+	# Define constants
+	define clight  (2.99792458)	# * 10**18 angstrom/s
+	define hplanck (6.6260755)	# * 10**(-27) erg s
+	define lsun    (3.826)		# * 10**33 erg/s
+	define _k_q    (lg($lsun / ($clight * $hplanck)) + 33 + 27 - 18)
+	define _k0     (1 / (2.226 * 6562.80))
+
+	set LHa_Exp     = (Qg_H0 > -999) ? $_k0 * 10**(Qg_H0 - $_k_q) : MINUS999
+	set log_LHa_Exp = (LHa_Exp > -999) ? lg(1e-30 + abs(LHa_Exp)) : MINUS999
+	do _i=1,dimen(age_base_low) {
+		set LHa_Exp_POP$_i     = (Qg_H0_POP$_i > -999) ? $_k0 * 10**(Qg_H0_POP$_i - $_k_q) : MINUS999
+		set log_LHa_Exp_POP$_i = (Qg_H0_POP$_i > -999) ? lg(1e-30 +abs(LHa_Exp_POP$_i))    : MINUS999
+		}
+	#-----------------------------------------------------------------#
+
+
+	#----------------- EWHa_Exp & EWHa_Exp_POP*  ---------------------#
+	# Calc Expected EW(Ha), both total and for age ranges.
+	set CHa = cHa * 10**Mini_fib
+	set EWHa_Exp   = (LHa_Exp > -999 & CHa > -999) ? LHa_Exp / CHa : MINUS999
+	do _i=1,dimen(age_base_low) {
+		set EWHa_Exp_POP$_i = (LHa_Exp_POP$_i > -999 & CHa > -999) ? LHa_Exp_POP$_i / CHa : MINUS999
+		}
+	#-----------------------------------------------------------------#
+
+
+	#--------------- Obs/Exp ratios in L(Ha) & EW(Ha) ----------------#
+	# Calc Observed/Expected ratios in log L(Ha) & EW(Ha).
+	# The log L(Ha) Obs/Exp ratios come in deredened (_dr) and raw versions
+	# This is not saved in a file below. (Should be recomputed elsewhere)
+
+	set log_LHaObsExp_dr = (log_LHa_Exp > -999 & log_LHa_dr > -999) ? (log_LHa_dr - log_LHa_Exp) : MINUS999
+	set log_LHaObsExp    = (log_LHa_Exp > -999 & log_LHa    > -999) ? (log_LHa    - log_LHa_Exp) : MINUS999
+	set EWHaObsExp       = (EWHa_Exp > 0 & El_W_6563 > -999) ? (El_W_6563 / (EWHa_Exp + 1e-30))  : MINUS999
+
+	do _i=1,dimen(age_base_low) {
+		set log_LHaObsExp_dr_POP$_i = (log_LHa_Exp_POP$_i > 0 & log_LHa_dr > -999) ? (log_LHa_dr - log_LHa_Exp_POP$_i) : MINUS999
+		set log_LHaObsExp_POP$_i    = (log_LHa_Exp_POP$_i > 0 & log_LHa    > -999) ? (log_LHa    - log_LHa_Exp_POP$_i) : MINUS999
+		set EWHa_Exp_POP$_i   = (LHa_Exp_POP$_i > -999 & CHa > -999) ? LHa_Exp_POP$_i / CHa : MINUS999
+		set EWHaObsExp_POP$_i = (EWHa_Exp_POP$_i > 0 & El_W_6563 > -999) ? (El_W_6563 / (EWHa_Exp_POP$_i + 1e-30)) : MINUS999
+		}
+	#-----------------------------------------------------------------#
+
+
+	#-----------------------------------------------------------------#
+	# Save stuff & protect file!
+	# Only POPs 1 & 5 are saved.
+	print tmp.ION_Stuff {sfile \
+		cHa q_H0 q_H0_POP1 q_H0_POP5 q_He0 q_He0_POP1 q_He0_POP5 q_HeI q_HeI_POP1 q_HeI_POP5 \
+		CHa log_LHa_Exp log_LHa_Exp_POP1 log_LHa_Exp_POP5 EWHa_Exp EWHa_Exp_POP1 EWHa_Exp_POP5}
+
+	!chmod a-w tmp.ION_Stuff
+
+
+	#print sample.FULL.573k.f.Starlight.tab.BS.ION_Stuff {sfile \
+	#	cHa q_H0 q_H0_POP1 q_H0_POP5 q_He0 q_He0_POP1 q_He0_POP5 q_HeI q_HeI_POP1 q_HeI_POP5 \
+	#	CHa log_LHa_Exp log_LHa_Exp_POP1 log_LHa_Exp_POP5 EWHa_Exp EWHa_Exp_POP1 EWHa_Exp_POP5}
+	#
+	#!chmod a-w sample.FULL.573k.f.Starlight.tab.BS.ION_Stuff
+	echo [ION_CalcAndSaveION_Stuff] Done!
+	#-----------------------------------------------------------------#
+	###################################################################
+
+
+
+	###################################################################
+ION_Read_ION_Stuff_tab_and_CalcObsExpThings
+	# Read ION_Stuff table.
+	# Then Calc Observed/Expected ratios in log L(Ha) & EW(Ha).
+	# The log L(Ha) Obs/Exp ratios come in deredened (_dr) and raw versions
+	# Things are done for the total, POP1 & POP5.
+	#
+	# Cid@Odeon - 16/July/2008
+
+	ROT_GoToTablesDir
+	echo [ION_Read_ION_Stuff_tab_and_CalcObsExpThings] Reading $tab_prefix.Starlight.tab.$tab_suffix.ION_Stuff
+
+	# Skip 2 lines of the sm-header
+	define line_read_low_PlusTwo ($line_read_low + 2)
+	define line_read_upp_PlusTwo ($line_read_upp + 2)
+
+	data $tab_prefix.Starlight.tab.$tab_suffix.ION_Stuff
+	lines $line_read_low_PlusTwo $line_read_upp_PlusTwo
+	read {cHa 2 q_H0 3 q_H0_POP1 4 q_H0_POP5 5 q_He0 6 q_He0_POP1 7 q_He0_POP5 8 q_HeI 9 q_HeI_POP1 10 q_HeI_POP5 11\
+	      CHa 12 log_LHa_Exp 13 log_LHa_Exp_POP1 14 log_LHa_Exp_POP5 15 EWHa_Exp 16 EWHa_Exp_POP1 17 EWHa_Exp_POP5 18}
+
+	ROT_GoToWorkDir
+
+	set log_LHaObsExp_dr = (log_LHa_Exp > -999 & log_LHa_dr > -999) ? (log_LHa_dr - log_LHa_Exp) : MINUS999
+	set log_LHaObsExp    = (log_LHa_Exp > -999 & log_LHa    > -999) ? (log_LHa    - log_LHa_Exp) : MINUS999
+	set EWHaObsExp       = (EWHa_Exp > 0 & El_W_6563 > -999) ? (El_W_6563 / (EWHa_Exp + 1e-30))  : MINUS999
+
+	set log_LHaObsExp_dr_POP1 = (log_LHa_Exp_POP1 > 0 & log_LHa_dr> -999) ? (log_LHa_dr - log_LHa_Exp_POP1) : MINUS999
+	set log_LHaObsExp_POP1    = (log_LHa_Exp_POP1 > 0 & log_LHa   > -999) ? (log_LHa    - log_LHa_Exp_POP1) : MINUS999
+	set EWHa_Exp_POP1   = (log_LHa_Exp_POP1 > -999 & CHa > -999) ? 10**log_LHa_Exp_POP1 / CHa               : MINUS999
+	set EWHaObsExp_POP1 = (EWHa_Exp_POP1 > 0 & El_W_6563 > -999) ? (El_W_6563 / (EWHa_Exp_POP1 + 1e-30)) : MINUS999
+
+	set log_LHaObsExp_dr_POP5 = (log_LHa_Exp_POP5 > 0 & log_LHa_dr> -999) ? (log_LHa_dr - log_LHa_Exp_POP5) : MINUS999
+	set log_LHaObsExp_POP5    = (log_LHa_Exp_POP5 > 0 & log_LHa   > -999) ? (log_LHa    - log_LHa_Exp_POP5) : MINUS999
+	set EWHa_Exp_POP5   = (log_LHa_Exp_POP5 > -999 & CHa > -999) ? 10**log_LHa_Exp_POP5 / CHa               : MINUS999
+	set EWHaObsExp_POP5 = (EWHa_Exp_POP5 > 0 & El_W_6563 > -999) ? (El_W_6563 / (EWHa_Exp_POP5 + 1e-30)) : MINUS999
+
+	set log_EWHaObsExp      = (EWHaObsExp      > 0) ? lg(abs(EWHaObsExp)      + 1e-30) : MINUS999
+	set log_EWHaObsExp_POP1 = (EWHaObsExp_POP1 > 0) ? lg(abs(EWHaObsExp_POP1) + 1e-30) : MINUS999
+	set log_EWHaObsExp_POP5 = (EWHaObsExp_POP5 > 0) ? lg(abs(EWHaObsExp_POP5) + 1e-30) : MINUS999
+	###################################################################
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        	    End of Ionizing Photons Stuff 		 @@
+	#@@        		                         		 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+	# x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x
+
+
+
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        		Plot Stats of z on x X y 		 @@
+	#@@        		                         		 @@
+	#@@			Cid@Lagoa / June/07/2008       		 @@
+	#@@        		                         		 @@
+	#@@        		                         		 @@
+	#@@ Plot_StatsOnXYGrid_AutoScale 19              		 @@
+	#@@ Plot_StatsOnXYGrid_FixScale 7              			 @@
+	#@@ Plot_StatsOnXYGrid 17              				 @@
+	#@@ DefineGeneralXYgrid 1                			 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+	###################################################################
+Plot_StatsOnXYGrid_AutoScale 19
+	# Driver for macro Plot_StatsOnXYGrid!
+	# As in Plot_StatsOnXYGrid, $1 = z, $2 = x, $3 & y & $4 = a flag.
+	# $5...9 are **optional**, and mean:
+	# $5 & $6 = nx & ny
+	# $7 & $8 = lower & upper percentiles (eg, 0.01 & 0.99),
+	# 	    used to defined lower & upper x/y-limits.
+	# $9 = n_gals_per_pix_min = min number of gals per bin/box
+
+	# Setup default values for optional parameters ($5-->$9):
+	# nx & nx & low/upp percentile ranges, used for an 
+	# auto-scaling definition of grid_pars array.
+	define nx                 (10)
+	define ny                 (10)
+	define plow               (0.05)
+	define pupp               (0.95)
+	define n_gals_per_pix_min (100)
+	if ($?5) {define nx ($5)}
+	if ($?6) {define ny ($6)}
+	if ($?7) {define plow ($7)}
+	if ($?8) {define pupp ($8)}
+	if ($?9) {define n_gals_per_pix_min ($9)}
+
+	# Define "auto-scale" limits for x & y, with low & upp bin-centers 
+	# located at the $plow & $pupp percentiles. All this to define grid_pars[]
+	# OBS: eliminate -999's from $1 & $2 & $3.
+	set aux_f = ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+	set x = $2 if (aux_f)
+		sort {x}
+		define xlow (x[int(dimen(x) * $plow + 0.5)])
+		define xupp (x[int(dimen(x) * $pupp + 0.5)])
+		define dx   (($xupp - $xlow) / ($nx - 1))
+	set y = $3 if (aux_f)
+		sort {y}
+		define ylow (y[int(dimen(y) * $plow + 0.5)])
+		define yupp (y[int(dimen(y) * $pupp + 0.5)])
+		define dy   (($yupp - $ylow) / ($ny - 1))
+	delete aux_f
+
+	# Fill in grid_pars array (used by macro DefineGeneralXYgrid)
+	set dimen(grid_pars) = 6
+	set grid_pars[0] = $dx	   set grid_pars[1] = $xlow	set grid_pars[2] = $xupp 
+	set grid_pars[3] = $dy	   set grid_pars[4] = $ylow	set grid_pars[5] = $yupp 
+
+	echo [Plot_StatsOnXYGrid_AutoScale] Auto-scale grid_par array:
+	print {grid_pars}
+
+	# Finally, do the bloody plot! ATT: fixed 2 decimals... 
+	Plot_StatsOnXYGrid $1 $2 $3 $4 grid_pars 2 $n_gals_per_pix_min
+
+
+Plot_StatsOnXYGrid_FixScale 7
+	# Driver for macro Plot_StatsOnXYGrid!
+	# As Plot_StatsOnXYGrid_AutoScale above, but with 
+	# 	$5 = grid_pars-array 
+	# 	$6 = number of decimals  
+	# 	$7 = n_gals_per_pix_min 
+	# all given on input!
+	Plot_StatsOnXYGrid $1 $2 $3 $4 $5 $6 $7
+	###################################################################
+
+
+ 	###################################################################
+Plot_StatsOnXYGrid 18
+	# Plot median (& stats) of z = $1 in pixels/bins/boxes/grid in a 
+	# x = $2 X y = $3 diagram, selecting objects which satisfy flag $4. 
+	# The 6 pixels/bins/boxes/grid parameters are in array $5, and
+	# $6 = the number of decimals.
+	# OPTIONAL: $7 = min number of gals per bin/box = n_gals_per_pix_min
+	# OPTIONAL: $8 = color for median label
+	set zzz = $1
+	set xxx = $2
+	set yyy = $3
+	set fff = $4
+	DefineGeneralXYgrid $5
+
+	# Stipulates smallest acceptables number of galaxies in a pixel
+	define n_gals_per_pix_min (250)
+	if ($?7) {define n_gals_per_pix_min ($7)}
+	echo [Plot_StatsOnXYGrid]  n_gals_per_pix_min = $n_gals_per_pix_min
+
+	# Aux variable to skip box labeling if wanted...
+	if (!$?_DoNotLabelBoxes_) {define _DoNotLabelBoxes_ (0)}
+
+	#------------------------- Plot points on x X y -------------------
+	define exp_factor (0.45)
+        expand $exp_factor
+	ptype 1 1
+	ticksize 0 0 0 0
+	window 1 1 1 1 lim 0 1 0 1 
+		lw 2 rel 0 1.03 
+		set aux = ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+		label {\2$1 stats in $2 X $3 with flag $4  | (n\ge$n_gals_per_pix_min per bin) ; N=$(sum(aux)) galaxies}
+		delete aux
+
+	define xlow (xbin_low[0])	define xupp (xbin_upp[$n_xbins-1])
+	define ylow (ybin_low[0])	define yupp (ybin_upp[$n_ybins-1])
+	window 1 1 1 1 lim $xlow $xupp $ylow $yupp box
+		lw 1 ctype orange #lavender
+		poi xxx yyy if (fff)
+		lw 3 ctype default
+		xlabel {\3 $2}
+		ylabel {\3 $3}
+	#------------------------------------------------------------------
+
+	#------------------------------------------------------------------
+	# Define x (=$2), y (=$3)& z (=$1) in Ok sample
+	set x = xxx if (fff & xxx > -999 & yyy > -999 & zzz > -999)
+	set y = yyy if (fff & xxx > -999 & yyy > -999 & zzz > -999)
+	set z = zzz if (fff & xxx > -999 & yyy > -999 & zzz > -999)
+
+	do k=0,$n_grid-1 {
+		# x & y pixel indices
+		define ix (indx_grid[$k]+1)
+		define iy (indy_grid[$k]+1)
+
+		# Define flag to select sample-galaxies in the pixel/bin
+		set _auxx = (x >= xgrid_low[$k] & x < xgrid_upp[$k])
+		set _auxy = (y >= ygrid_low[$k] & y < ygrid_upp[$k])
+		set IsInBinAndOk  = (_auxx & _auxy)
+		define n (sum(IsInBinAndOk))
+		echo [Plot_StatsOnXYGrid] [$1 x $2 x $3] [$ix,$iy] $k/$n_grid ; $(xgrid_cen[$k])  $(ygrid_cen[$k]) ; n=$n 
+
+		# Draw pixel box & label it with stats of zzz (filtered to z), only if there're enough points
+		if ($n >= $n_gals_per_pix_min) {
+			lw 1
+			if ($_DoNotLabelBoxes_ != 1) {
+				window -$n_xbins -$n_ybins $ix $iy lim 0 1 0 1 box 3 3 3 3
+				set lix = z if (IsInBinAndOk & z > -999)
+				stats_med lix lix1 lix2
+				lw 3 ctype default	if ($?8) {ctype $8}
+					rel 0.5 0.8 putlabel 5 {\3$(sprintf('%.$6f',float($lix1)))}
+				ctype default
+			#	GM_CalcMedAndPercentiles lix p05 p10 p16 p50 p84 p90 p95
+			#	rel 0.5 0.2	expand $(0.7 * $exp_factor)	lw 2	ctype red
+			#	putlabel 5 {$(sprintf('%.1f',float($p10)))->$(sprintf('%.1f',float($p90)))}
+			#        expand $exp_factor
+				lw 1	ctype default
+				}
+			}
+		}
+
+	# Clean up & Restore scale
+	foreach var (x y z xxx yyy zzz fff  _auxx _auxx IsInBinAndOk lix) {delete $var}
+	window 1 1 1 1 lim $xlow $xupp $ylow $yupp box
+	#------------------------------------------------------------------
+	###################################################################
+
+
+	###################################################################
+	# This macro constructs a grid of boxes in a x-y plane, useful
+	# for other macros where in-box-statistics are computed and plotted
+	# (like BPT diagrams, for instance).
+	#	
+	# Each box has a center, lower & upper limits in x & y.
+	# The grid is defined by the following 6 input parameters, 
+	# passed as the arguments of a single input array $1:
+	#
+	# 	$1[0] = dx = the box x-width ($dx)
+	# 	$1[1] = xbin_cen_low the smallest x-bin center
+	# 	$1[2] = xbin_cen_upp the largest x-bin center
+	# 	$1[3] = dy           (as above but for y)
+	# 	$1[4] = ybin_cen_low (as above but for y)
+	# 	$1[5] = ybin_cen_upp (as above but for y)
+	#
+	# This defines $n_grid = $n_xbins X $n_ybins boxex in x-y.
+	# I then build a "matrix" indexed by one single pixel index
+	# k = 0....$n_grid - 1, which points to the x,y coordinates of
+	# each pixel via arrays xgrid_cen[$k], xgrid_low[$k] and 
+	# xgrid_upp[$k] (and likewise for y). Another useful array is
+	# indx_grid[$k], which maps $k onto the x-index in the x-grid
+	# (and likewise for y). 
+	#
+	# Main output variables:
+	#	n_grid
+	#	xgrid_cen[0...$n_grid-1]	ygrid_cen[0...$n_grid-1]
+	#	xgrid_low[0...$n_grid-1]	ygrid_low[0...$n_grid-1]
+	#	xgrid_upp[0...$n_grid-1]	ygrid_upp[0...$n_grid-1]
+	#	indx_grid[0...$n_grid-1]	indy_grid[0...$n_grid-1]
+	# Other output variables:
+	#	n_xbins & n_ybins
+	#	xbin_cen[0...$n_xbins-1]	ybin_cen[0...$n_ybins-1]
+	#	xbin_lon[0...$n_xbins-1]	ybin_lon[0...$n_ybins-1]
+	#	xbin_cen[0...$n_xbins-1]	ybin_cen[0...$n_ybins-1]
+	#
+	# Example usage:
+	#
+	#	set grid_pars = {0.2 -1.2 0.5 0.2 -1.0 1.2}
+	# 	DefineGeneralXYgrid grid_pars
+	#
+	# Cid@Lagoa - 07/June/2008
+
+	#--------------------- Define general x-y grid --------------------
+	#-    x/y grid: dx, xbin_cen_low, xbin_cen_upp & likewise for y   -
+DefineGeneralXYgrid 1
+	# Define (x,y)-bins ("boxes"): pixel width, low & upper bin centers. 
+	# OBS: These are passed in a ("grid_pars") array $1 of 6 elements (0-1)
+	define dx  ($1[0])	define xbin_cen_low  ($1[1])	define xbin_cen_upp  ($1[2])
+	define dy  ($1[3])	define ybin_cen_low  ($1[4])	define ybin_cen_upp  ($1[5])
+
+	# Define (x,y) bins: xbin_cen, xbin_low, xbin_upp & likewise for y.
+	set xbin_cen = $xbin_cen_low,$xbin_cen_upp,$dx
+	set xbin_low = xbin_cen - $dx / 2
+	set xbin_upp = xbin_cen + $dx / 2
+	define n_xbins (dimen(xbin_cen))
+	set ybin_cen = $ybin_cen_low,$ybin_cen_upp,$dy
+	set ybin_low = ybin_cen - $dy / 2
+	set ybin_upp = ybin_cen + $dy / 2
+	define n_ybins (dimen(ybin_cen))
+
+	# Define grid-arrays
+	define n_grid ($n_xbins * $n_ybins)
+	set lix = 1,$n_grid
+	foreach var (xgrid_cen xgrid_low xgrid_upp ygrid_cen ygrid_low ygrid_upp) {set $var = 0 * lix}
+	foreach var (indx_grid indy_grid) {set $var = 0 * lix}
+
+	# Now define a one index x-y-grid; k = 0 ... $n_grid - 1
+	define k (-1)
+	do ix=0,$n_xbins-1 {
+	do iy=0,$n_ybins-1 {
+		define k ($k + 1)
+		set xgrid_cen[$k] = xbin_cen[$ix]
+		set xgrid_low[$k] = xbin_low[$ix]
+		set xgrid_upp[$k] = xbin_upp[$ix]
+		set ygrid_cen[$k] = ybin_cen[$iy]
+		set ygrid_low[$k] = ybin_low[$iy]
+		set ygrid_upp[$k] = ybin_upp[$iy]
+		set indx_grid[$k] = $ix
+		set indy_grid[$k] = $iy
+		}
+		}
+	###################################################################
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        End of Plot Stats of z on x X y things		 @@
+	#@@        		                         		 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+	# x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x
+
+
+
+
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        		   PAIRING macros		 	 @@
+	#@@        		                         		 @@
+	#@@		 Cid+Grazyna+David@Jurere - 11/05/2007           @@
+	#@@        	  (Revised by Cid@Paris - 17/072008)		 @@
+	#@@        		                         		 @@
+	#@@        		                         		 @@
+	#@@ SetPairingProps 3	                        		 @@
+	#@@ FindPairs4Mothers 3	                         		 @@
+	#@@ FindPairs4OneGalaxy 1                         		 @@
+	#@@ PmM 13     		                         		 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+	###################################################################
+	# Want to pair/match a Mother galaxy (or a set of them) in terms of
+	# of a set of Pairing Properties (PP*). Pairs are searched among a 
+	# subset of galaxies satisfying a certain flag.
+	#
+	# Input:
+	# $1 = PAIR   sample flag (can be modified!)
+	# $2 = MOTHER sample flag (NOT modified!)
+	# $3 = 'DMAX' or 'AUTO' = method do define PP_range
+	#
+	# Main products of this macro: PP_name, PP_wei, PP_dmax, PP_range 
+	# Also, **modifies** input flag-array $1 to = PP_flag
+
+SetPairingProps 3
+	# This macro ASSUMES that arrays PP_name PP_dmax & PP_wei have been defined elsewhere!!!
+
+	# Normalize weigths (just in case)
+	define _lix (sum(PP_wei))
+	set PP_wei = PP_wei / $_lix
+
+	# Define flag for the pair sample = $1 & excluding from it objects 
+	# for which any of the PP_name variables is = -999 (undefined).
+	# Then exclude from the PP_flag galaxies for which at least one of the 
+	# pairing properties is more than PP_dmax away from either the minimum
+	# or maximum value found among the MOTHER galaxies (flag = $2)
+	# This is just a trick to redice the size of the pair sample.
+	set PP_flag  = $1
+	foreach var PP_name {
+		set _aux = ($var > -999)
+		set PP_flag = PP_flag * _aux
+		}
+
+	set _aux = PP_flag
+	define i_cp (-1)
+	foreach var PP_name {
+		define i_cp ($i_cp + 1)
+		set lix = $var if ($2)
+		vecminmax lix a b
+		set lix = PP_flag & ($var >= ($a-PP_dmax[$i_cp])) & ($var <= ($b+PP_dmax[$i_cp]))
+		set _aux = _aux * lix
+		echo ==>> $var  $(sum(PP_flag))  |  $(sum(_aux))
+		}
+		set PP_flag = _aux
+
+
+	# REDEFINES the INPUT PAIR SAMPLE FLAG $1!!
+	echo [SetPairingProps]  Pair Sample reduced from $(sum($1)) to $(sum(PP_flag)) galaxies.
+	set $1 = PP_flag
+	delete _aux
+
+	# Define **range** in each pairing property (PP_range): Using 1%->99%
+	# PP_range is used to define a natural scale for adimentional distances!
+	# OBS: In the DMAX method ranges is simply = dmax! 
+	set PP_range = PP_dmax
+	if ('$3' == 'AUTO') {
+		set PP_range = 0 * PP_wei
+		define ip (-1)
+		foreach var PP_name {
+			set _aux = $var if (PP_flag)
+			sort {_aux}
+			define _p01 (_aux[int(0.01 * dimen(_aux) - 1)])
+			define _p99 (_aux[int(0.99 * dimen(_aux) - 1)])
+			define ip ($ip + 1)
+			set PP_range[$ip] = $_p99 - $_p01
+			vecminmax _aux a b
+			define lix (PP_dmax[$ip] * PP_range[$ip]) 
+			echo [PP_range] $var:   $a -> $b   | 1%=$_p01  < 99%=$_p99   ($(PP_range[$ip])) : d < $lix
+			}
+		delete _aux
+		}
+
+	# Blablabla
+	echo [SetPairingProps]  Pair Sample has N = $(sum(PP_flag)) galaxies
+	echo [SetPairingProps]  Will pair on the following $(dimen(PP_name)) variables:
+	do ip=0,dimen(PP_name)-1 {
+		echo [SetPairingProps] $ip: $(PP_name[$ip]) ; range=$(PP_range[$ip]) ; dmax=$(PP_dmax[$ip]) ; wei=$(PP_wei[$ip])
+		}
+	###################################################################
+
+
+
+	###################################################################
+FindPairs4Mothers 3
+	# Input:
+	#   $1 & $2 = flag for Mothers & Pairs, defined for ALL 573k galaxies.
+	#   $3 = 'DMAX' or 'AUTO' = method do define PP_range (passed to SetPairingProps)
+	#   + ASSUMES that arrays PP_name PP_dmax & PP_wei have been defined elsewhere!!!
+	# Output:
+	#   Files tmp.pairs.ID & tmp.pairs.DP with 10 pairs for each mother
+	#   ID* contain the pairs indices (from ind_gal) & DP* their distances
+	#
+	# Cid@Odeon - July/05/2008
+
+	# Check if $3 is Ok
+	if ('$3' != 'DMAX' & '$3' != 'AUTO') {
+		echo [FindPairs4Mothers] OOPS! 3rd Bad should be DMAX or AUTO, but it's $3 !!
+		echo [FindPairs4Mothers] Aborted :-(
+		}
+
+	# Define flags for Mother & Pair samples (the latter may be changed by SetPairingProps)
+	set flag_Mother = $1
+	set flag_Pair   = $2
+
+	# Define gal-mothers indices array 
+	set ind_gal_Mother = ind_gal if (flag_Mother)
+	define N_Mother (sum(flag_Mother))
+	echo [FindPairs4Mothers] Mother Sample has $N_Mother galaxies!
+
+	# Reset Pair indices & distances (IP & DP) for the 10 best pairs (0...9)
+	# OBS: Indices IP* defined as integers (can recall why, but it's a SM thing)
+	do _i=0,9 {
+		set IP$_i = int(0 * ind_gal_Mother - 999)
+		set DP$_i = 0 * ind_gal_Mother - 999
+		}
+
+	# Setup pairing properties.
+	# OBS1: The input pair flag may be altered by macro SetPairingProps.
+	# OBS2: Exclusion of Mother = Pair cases is made in macro FindPairs4OneGalaxy!
+ 	SetPairingProps flag_Pair flag_Mother $3
+	define N_Pair (sum(flag_Pair))
+
+	# Store pairing properties for pair sample in PAIRING_* arrays.
+	# This makes pairing **much faster** than using the full 573k arrays!
+	foreach var PP_name {set PAIRING_$var = $var if (flag_Pair)}
+	set PAIRING_ind_gal_pair          = ind_gal    if (flag_Pair)
+	set PAIRING_flag_pair_within_dmax = flag_Pair  if (flag_Pair)
+	set PAIRING_dist_pair             = 0 * PAIRING_flag_pair_within_dmax
+
+	# Loop over Mothers, find pairs & store (indices & distances) for the 10 
+	# best ones for each Mother galaxy (=> IP_0...IP_9 & DP_0...DP_9)
+	# OBS: IP_* & DP_* arrays will have the size of the Mother sample!
+	do iM=0,$N_Mother-1 {
+
+		# Pick the $iM'th mother from the ind_gal_Mother list
+		# and reset ind_gal_pair, flag_pair_within_dmax & dist_pair arrays
+		define ind_Mother (ind_gal_Mother[$iM])
+		set ind_gal_pair          = PAIRING_ind_gal_pair
+		set flag_pair_within_dmax = PAIRING_flag_pair_within_dmax
+		set dist_pair             = PAIRING_dist_pair
+
+		# Find pairs for current mother & store their indices & distances
+		# in IP* & DP* arrays
+		FindPairs4OneGalaxy $ind_Mother
+		do _i=0,9 {
+			set IP$_i[$iM] = ind_gal_pair[$_i]
+			set DP$_i[$iM] = dist_pair[$_i]
+			}
+		echo [FindPairs4Mothers] [$($iM+1)/$N_Mother/$N_Pair] $ind_Mother : DP0=$(DP0[$iM]) --> DP9=$(DP9[$iM]) ; $(sum(flag_pair_within_dmax))
+		}
+
+	# Just spit out how many clones 
+	define _n (0)	do _i=0,9 {set aux = (DP$_i > 0)  define _n ($_n + sum(aux))}
+	echo _n = $_n of possible $(10 * $N_Mother) | effiency = $(100 * $_n / (10 * $N_Mother))%}
+
+	# Save pairs in tmp.pair.IP & tmp.pair.DP files!
+	set iM = 1,$N_Mother
+	print tmp.pairs.IP '%6d   %6d   %6d  %6d  %6d  %6d  %6d  %6d  %6d  %6d  %6d  %6d\n' {iM ind_gal_Mother IP0 IP1 IP2 IP3 IP4 IP5 IP6 IP7 IP8 IP9}
+	print tmp.pairs.DP '%6d   %6d   %6f  %6f  %6f  %6f  %6f  %6f  %6f  %6f  %6f  %6f\n' {iM ind_gal_Mother DP0 DP1 DP2 DP3 DP4 DP5 DP6 DP7 DP8 DP9}
+	echo [FindPairs4Mothers] Done! Don't forget to rename tmp.pairs.IP &* .DP!!
+	###################################################################
+
+
+
+	###################################################################
+FindPairs4OneGalaxy 1
+	# This macro is called from FindPairs4Mothers and relies on arrays defined there!!
+	# Input:
+	# 	$1 = ind_gal for the Mother (from list of ALL 573141 galaxies!)
+	# Output:
+	# 	ind_gal_pair , dist_pair, flag_pair_within_dmax
+	#
+	# OBS1: pair-arrays have the dimension of the pair-sample!
+	# OBS2: the within_dmax flag is computed with ABSOLUTE distances = PP_dmax
+	#	but dist_pair is range & weight scaled distance.
+
+	define i_cp (-1)
+	foreach var PP_name {
+		define i_cp ($i_cp + 1)
+		set _aux = (abs($var[$1] - PAIRING_$var) <= PP_dmax[$i_cp])
+		set flag_pair_within_dmax = flag_pair_within_dmax * _aux
+		set dist_pair = dist_pair + abs(($var[$1] - PAIRING_$var)/PP_range[$i_cp]) * PP_wei[$i_cp]
+		#echo [FindPairs4OneGalaxy] >> Mother $var = $($var[$1])  ;  $(sum(flag_pair_within_dmax))
+		}
+
+	# Alter dist_pair to a huge value whenever Pair = Mother!
+	set _aux = dist_pair
+	set dist_pair = (ind_gal_pair != $1) ? _aux : 0 * _aux + 1e30
+
+	# Here I first split the pairs into those WITHIN the dmax-box and
+	# those OUTSIDE. Each bunch is sorted by its distance to the mother.
+	# Then I concat the two lists, such that the within-the-box appear
+	# first. Finaly, the outside-the-box ones are signaled with a negative distance.
+	# Messy but working:)
+	set _aux1 = dist_pair    if (flag_pair_within_dmax) 
+	set _aux2 = ind_gal_pair if (flag_pair_within_dmax) 
+	set _aux3 = dist_pair    if (!flag_pair_within_dmax) 
+	set _aux4 = ind_gal_pair if (!flag_pair_within_dmax) 
+	sort {_aux1 _aux2}
+	sort {_aux3 _aux4}
+	set _aux5 = _aux1 concat -_aux3
+	set _aux6 = _aux2 concat _aux4
+	set dist_pair    = _aux5
+	set ind_gal_pair = _aux6
+
+	foreach var (_aux _aux1 _aux2 _aux3 _aux4 _aux5 _aux6) {delete $var}
+	###################################################################
+
+
+	###################################################################
+PmM 13
+	# Delta (Pair - Mother) X x Y plot!
+	# Cid&Grazyna&David@Jurere - Dec/08/2007
+	# + Cid@Odeon - July/16/2008
+
+	# $1 & $2 = x & y, variables to be used in the Pair - Mother comparison
+	# $3 = an OPTIONAL prefix for the pairs tables. If not given, it is
+	#      **ASSUMED** that you do not have to reread the table!
+
+	# Read pair tables
+	if ($?3) {
+		data $3.pairs.IP
+		read {ind_gal_Mother 2 IP0 3 IP1 4 IP2 5 IP3 6 IP4 7 IP5 8 IP6 9 IP7 10 IP8 11 IP9 12}
+		data $3.pairs.DP
+		read {ind_gal_Mother 2 DP0 3 DP1 4 DP2 5 DP3 6 DP4 7 DP5 8 DP6 9 DP7 10 DP8 11 DP9 12}
+		define N_Mother (dimen(ind_gal_Mother))
+	} else {
+		echo [PmM] ATT: I am NOT re-reading the *.pairs.IP & *.pairs.DP tables!!
+		}
+
+	# Store $1 & $2 in xM xP yM yP dP... [slow!]
+	set lix = 1,(10*$N_Mother)
+	foreach var (xM yM xP yP dP) {set $var = 0 * lix}
+	define i_tot (-1)
+	do iM=0,$N_Mother-1 {
+	do iC=0,9 {
+		define i_tot ($i_tot+1)
+		set xM[$i_tot] = $1[ind_gal_Mother[$iM]]
+		set yM[$i_tot] = $2[ind_gal_Mother[$iM]]
+		set xP[$i_tot] = $1[IP$iC[$iM]]
+		set yP[$i_tot] = $2[IP$iC[$iM]]
+		set dP[$i_tot] = DP$iC[$iM]
+	#	echo $iM/$iC/$i_tot | x: $(xM[$i_tot]) $(xP[$i_tot]) | y: $(yM[$i_tot]) $(yP[$i_tot])
+		}
+		}
+
+
+	# Plot pair-mother diffs in $1 x diffs in $2
+	set f = (xM > -999 & xP > -999 & yM > -999 & yP > -999 & dP >= 0)
+	set x = (xP - xM) if (f)
+	set y = (yP - yM) if (f)
+	set d = dP        if (f)
+	vecminmax x xlow xupp
+	vecminmax y ylow yupp
+	ptype 1 1
+	lw 1
+	ticksize 0 0 0 0
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp box poi x y
+		stats_med d d_med lix1
+		ctype red poi x y if (d <= $d_med) ctype default
+		GM_plot_ranges x y
+		ctype yellow rel -1000 0 draw 1000 0 rel 0 -1000 draw 0 1000 ctype default
+
+		xlabel {\Delta $1 (P-M)}
+		ylabel {\Delta $2 (P-M)}
+
+
+	# Projected Histograms
+	define Nx_bin (100)
+	define dx_bin (($xupp - $xlow) / ($Nx_bin - 1))
+	set x_bin = $xlow,$xupp,$dx_bin
+	set hx = histogram(x:x_bin)
+	window -5 -5 1:4 5 lim $xlow $xupp hx box 0 2
+		hist x_bin hx
+		lim $xlow $xupp 0 1 ctype yellow rel 0 0 draw 0 1 ctype default
+
+	define Ny_bin (100)
+	define dy_bin (($yupp - $ylow) / ($Ny_bin - 1))
+	set y_bin = $ylow,$yupp,$dy_bin
+	set hy = histogram(y:y_bin)
+	window -5 -5 5 1:4 lim hy $ylow $yupp box 0 0 1 0
+		hist hy y_bin
+		lim 0 1 $ylow $yupp ctype yellow rel 0 0 draw 1 0 ctype default
+
+	# Reset to main window (in case you wanna use the cursor)
+	window -5 -5 1:4 1:4 lim $xlow $xupp $ylow $yupp
+	###################################################################
+
+
+	#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ExampleDriverForParingMacros
+	# setup Mother & Pair flags
+	set fMae = flag_VOL & log_LHaObsExp_dr_POP5 > -999 & log_LHaObsExp_dr_POP5 <= 0.5
+	set fFil = flag_VOL & log_LHaObsExp_dr_POP5 >  0.5
+
+	# Define pairing properties (PP*), maximum allowed distances & weights. 
+	set PP_name = {N2Ha  O3Hb  redshift  log_vd  deVAB_r}
+	set PP_dmax = {0.1   0.2   0.005     0.1     0.3    }
+	set PP_wei  = {1     1     1         1       0.3    }
+
+	# Now run ... & change file names
+	FindPairs4Mothers fMae fFil DMAX
+	#!mv tmp.pairs.IP TEST.v01.pairs.IP 
+	#!mv tmp.pairs.DP TEST.v01.pairs.DP 
+	#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+	#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	#+++ UEPA! Arrumar!!
+UEPA___TP_plot 3
+	GM_locwin 1 2 1 2 
+		PmM $1 $2 $3
+
+	GM_locwin 1 2 1 1
+		set f = (xM > -999 & xP > -999 & yM > -999 & yP > -999 & dP >= 0)
+		set xxP = xP if (f)	set xxM = xM if (f)	set xx = xxP concat xxM
+		set yyP = yP if (f)	set yyM = yM if (f)	set yy = yyP concat yyM
+		vecminmax xx xxlow xxupp	define xxlow ($xxlow - 0.1)	define xxupp ($xxupp + 0.1)
+		vecminmax yy yylow yyupp	define yylow ($yylow - 0.1)	define yyupp ($yyupp + 0.1)
+		GM_plot_xyz xxP yyP default	$xxlow $xxupp $yylow $yyupp
+			set d = dP   if (f)
+			stats_med d d_med lix1
+			echo [TP_plot] Median distance = $d_med (among d>0's) [$(dimen(d)) out of $(dimen(dP))]
+			set lix = (d > $d_med)
+			GM_plot_xyz xxP yyP red $xxlow $xxupp $yylow $yyupp lix
+		GM_plot_xyz xxM yyM green	$xxlow $xxupp $yylow $yyupp
+			ctype green	ptype 1 1 poi xxM yyM
+			ctype default	ptype 1 1
+
+UEPA___qd_test
+	define llow 4700 define lupp 5400
+	do iM=0,$N_Mother-1{
+		erase 	GM_plot_fits_and_SFH $(sfile[ind_gal_Mother[$iM]]) 1
+		echo Esta eh a mae...
+		define lix ?
+		erase	GM_plot_fits_and_SFH $(sfile[IP0[$iM]]) 1
+		echo ..este eh o par 0
+		define lix ?
+		erase 	GM_plot_fits_and_SFH $(sfile[IP1[$iM]]) 1
+		echo ..este eh o par 1
+		define lix ?
+		}
+	#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@        		                         		 @@
+	#@@        	    END OF PAIRING macros BLOCK		 	 @@
+	#@@        		                         		 @@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+	# x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x
+
+
+
+
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+
+
+	###################################################################
+Example_DRIVER4MOS_Make_XYZ_JPG_mosaics
+	# Example macro to drive MOS_Make_XYZ_JPG_mosaics & odeon2008_mosaic.sh.
+	# Partly based on my & Natalia's old macros.
+	# OBS: makes 3 plots (X 3 versions for each)
+	#
+	# Cid@Odeon - 18/Jul/2008
+
+	data JPGsHereOnVaio.list
+	read {flag_taki 2}
+	set f_uepa = flag_taki & flag_general
+	echo [Example_DRIVER4MOS_Make_XYZ_JPG_mosaics] = > $(sum(f_uepa))
+
+	set fall = f_uepa & flag_general & flag_AGN_Kew & log_LHaObsExp_dr_POP5 > -999 & fSN_6563
+	set f1   = fall & log_LHaObsExp_dr_POP5 <= 0.0
+	set f2   = fall & log_LHaObsExp_dr_POP5 >  0.0 & log_LHaObsExp_dr_POP5 <= 0.7
+	set f3   = fall & log_LHaObsExp_dr_POP5 >  0.7
+
+	define n_gals_per_pix_min (10)
+	define n_versions         (3)
+
+	set grid_pars = {0.2   9.0  10.3   0.2   -0.3   0.5}	# [dx xlow xupp dy ylow yupp]
+	MOS_Make_XYZ_JPG_mosaics Mcor_gal at_flux AV f1 grid_pars P1.list P1 $n_gals_per_pix_min $n_versions
+	MOS_Make_XYZ_JPG_mosaics Mcor_gal at_flux AV f2 grid_pars P2.list P2 $n_gals_per_pix_min $n_versions
+	MOS_Make_XYZ_JPG_mosaics Mcor_gal at_flux AV f3 grid_pars P3.list P3 $n_gals_per_pix_min $n_versions
+	###################################################################
+
+
+	###################################################################
+MOS_Make_XYZ_JPG_mosaics 19
+	# Macro to create jpg mosaics (and auxiliary eps frames) with
+	# galaxies in a x-y plane. A third variable z is used to chose which
+	# galaxy to pick, and if n_versions > 1, we produce n_versions of the
+	# mosaic, sorted according to z.
+	#
+	#
+	# Input:
+	# 	$1 = z = a sorting variable (if n_versions = 1 pick median in z)
+	# 	$2 = x
+	# 	$3 = y
+	# 	$4 = a flag
+	# 	$5 = grid_pars array (for macro DefineGeneralXYgrid)
+	# 	$6 = output list name
+	# 	$7 = prefix for mosaic images & auxiliary eps plots with image-info.
+	# 	$8 = OPTIONAL n_gals_per_pix_min
+	# 	$9 = OPTIONAL n_versions
+	#
+	# Output:
+	# 	$6 = file used by the mosaicing script
+	#	$7_version*.jpg = jpg mosaics
+	#	$7_version*.eps = eps plots with infor about galaxies in each mosaic.
+	#
+	# Cid@Odeon - July/18/2008
+
+	#------------------------- Initialization -------------------------
+	# Define x (=$2), y (=$3)& z (=$1) in Ok sample
+	set z		= $1 if ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+	set x		= $2 if ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+	set y 		= $3 if ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+	set aux_ind_gal = ind_gal if ($1 > -999 & $2 > -999 & $3 > -999 & $4)
+
+	# Setup grid variables [use macro DefineGeneralXYgrid]
+	DefineGeneralXYgrid $5
+
+	# Stipulates smallest acceptables number of galaxies in a pixel & number of versions
+	# (in case they are not defined)
+	if ($?8) {define n_gals_per_pix_min ($8)} else {define n_gals_per_pix_min (100)}
+	if ($?9) {define n_versions         ($9)} else {define n_versions           (1)}
+	echo [MOS_Make_XYZ_JPG_mosaics] n_gals_per_pix_min = $n_gals_per_pix_min   &   n_versions = $n_versions
+	#------------------------------------------------------------------
+
+
+	#------------------------- Plot points on grid --------------------
+	# This bit is actually **SUPERFLUOS**! It just makes a plot
+	# which shows the scale & boxes of the mosaic...
+	expand 1	ptype 1 1	lw 2
+	define xlow (xbin_low[0])	define xupp (xbin_upp[$n_xbins-1])
+	define ylow (ybin_low[0])	define yupp (ybin_upp[$n_ybins-1])
+	window 1 1 1 1 lim $xlow $xupp $ylow $yupp box
+		lw 1	ctype MediumSlateBlue	poi x y
+		lw 2	ctype default
+		xlabel {$2}
+		ylabel {$3}
+		lim 0 1 0 1 rel 0 1.02 label {(z=$1)}
+	#------------------------------------------------------------------
+
+
+	#--------------- Creat List of images for each pixel --------------
+	# Reset ind_gal_in_grid_v* arrays (for all versions). To use in auxiliary eps plots.
+	set lix = 1,$n_grid
+	do i_version=1,$n_versions {set ind_gal_in_grid_v$i_version = int(0 * lix - 999)}
+	
+	# Clean output list name & start writing it 
+	!rm $6
+	write $6 \# $n_versions $n_xbins $n_ybins
+
+	# Loop over x-y-grid, picking representative galaxies in each pix and
+	# producing a file $6 with the info needed for the mosaicing-script...
+	do k=0,$n_grid-1 {
+		# x & y pixel indices
+		define ix (indx_grid[$k]+1)
+		define iy (indy_grid[$k]+1)
+
+		# Define flag to select sample-galaxies in the pixel/bin
+		set _auxx = (x >= xgrid_low[$k] & x < xgrid_upp[$k])
+		set _auxy = (y >= ygrid_low[$k] & y < ygrid_upp[$k])
+		set IsInBinAndOk = (_auxx & _auxy)
+		define n (sum(IsInBinAndOk))
+		echo [$ix,$iy] $k/$n_grid ; $(xgrid_cen[$k])  $(ygrid_cen[$k]) ; n=$n 
+
+		# For bins with enough galaxies...
+		if ($n > $n_gals_per_pix_min) {
+
+			#.......................................................
+			# Draw pixel box & label it with stats of the z variable
+			# This bit is actually **SUPERFLUOS**!
+			window -$n_xbins -$n_ybins $ix $iy lim 0 1 0 1 box 3 3 3 3
+				set lix = z if (IsInBinAndOk)
+				stats_med lix lix1 lix2
+				define lix1 (sprintf('%.2f',float($lix1)))
+
+				GM_CalcMedAndPercentiles lix p05 p10 p15 p50 p84 p90 p95
+				define p10 (sprintf('%.2f',float($p10)))
+				define p90 (sprintf('%.2f',float($p90)))
+				expand 0.6
+				lw 2 ctype default	rel 0.50 0.80 putlabel 5 {[$ix/$iy] $lix1}
+				expand 0.5
+				lw 1 ctype red		rel 0.50 0.45 putlabel 5 {$p10..$p90}
+				     ctype magenta	rel 0.50 0.15 putlabel 5 {$n gals}
+				expand 1 ctype default 
+			#.......................................................
+
+			#.......................................................
+			# Sort in-pixel galaxies by the z variable
+			set lix1 = z 		if (IsInBinAndOk)
+			set lix2 = aux_ind_gal	if (IsInBinAndOk)
+			sort {lix1 lix2}
+
+  			# Select $n_versions equally spread in z & save names in $6... (or else just pick median!)
+			do i_version=1,$n_versions {
+				define iaux (int(0.5 + 0.5 * dimen(lix1)))
+				if ($n_versions > 1) {
+					define iaux (int(0.5 + ($i_version - 1) * dimen(lix1) / ($n_versions - 1)))
+					if ($iaux < 0) {define iaux (0)}
+					if ($iaux > dimen(lix1)-1) {define iaux (dimen(lix1)-1)}
+					}
+
+				define gal (aid[lix2[$iaux]])
+				echo ...saving v$i_version: $gal  ===>  x$ix.y$iy
+				write + $6 $(sprintf('%02i',$i_version)) $(sprintf('%02i',$ix)) $(sprintf('%02i',$iy)) $gal.jpg
+
+				# Store index of this galaxy (in this version) for latter auxiliary eps plots...
+				set ind_gal_in_grid_v$i_version[$k] = lix2[$iaux]
+			#.......................................................
+				}
+
+		} else {
+
+		# Pixel is "empty", so I create black frames to represent it in the mosaic
+			do i_version=1,$n_versions {
+				write + $6 $(sprintf('%02i',$i_version)) $(sprintf('%02i',$ix)) $(sprintf('%02i',$iy)) black.jpg
+				}
+		}
+		}
+	foreach var (_auxx _auxx IsInBinAndOk aux_ind_gal lix1 lix2) {delete $var}
+	#------------------------------------------------------------------
+
+
+	#----------------- Creat Auxiliary eps plox w/info ----------------
+	# Auxiliary plots
+	do i_version=1,$n_versions {
+
+		# Initialization
+		expand 1	ptype 1 1	lw 2
+		device postencap $7_version$i_version.eps
+
+		# Draw main outer-frame
+		define xlow (xbin_low[0])	define xupp (xbin_upp[$n_xbins-1])
+		define ylow (ybin_low[0])	define yupp (ybin_upp[$n_ybins-1])
+		window 1 1 1 1 lim $xlow $xupp $ylow $yupp box
+			lw 1	ctype MediumSlateBlue	poi x y
+			lw 2	ctype default
+			xlabel {$2}
+			ylabel {$3}
+			lim 0 1 0 1	rel 0 1.02 label {Z=$1 | version = $i_version}
+					rel 1 1.02 putlabel 4 {[MOS\_Make\_XYZ\_JPG\_mosaics]}
+
+		# Print, in each pixel, its respective galaxy info (name, x, y & z)
+		do k=0,$n_grid-1 {
+			define ix (indx_grid[$k]+1)
+			define iy (indy_grid[$k]+1)
+			define ig (ind_gal_in_grid_v$i_version[$k])
+
+			if ($ig >= 0) {
+				window -$n_xbins -$n_ybins $ix $iy lim 0 1 0 1 box 3 3 3 3
+					define z4gal (sprintf('%.2f',float($1[$ig])))
+					define x4gal (sprintf('%.2f',float($2[$ig])))
+					define y4gal (sprintf('%.2f',float($3[$ig])))
+					define n4gal (aid[$ig])
+					define redshift4gal (sprintf('%.4f',float($(redshift[$ig]))))
+
+					expand 0.6 lw 1 
+					ctype blue	rel 0.00 0.90 putlabel 6 { [$ix/$iy]}
+					ctype dgreen	rel 1.00 0.90 putlabel 4 {z=$redshift4gal }
+					ctype default	rel 0.50 0.65 putlabel 5 {$n4gal}
+					expand 0.7
+					ctype magenta	rel 0.50 0.40 putlabel 5 {Z=$z4gal}
+					ctype red	rel 0.50 0.25 putlabel 5 {X=$x4gal}
+							rel 0.50 0.10 putlabel 5 {Y=$y4gal}
+					expand 1 ctype default lw 2
+				}
+			}
+		devcid
+		}
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# Do mosaic with external script...
+	echo [MOS_Make_XYZ_JPG_mosaics] Done! Listed all images for the mosaic. 
+	echo [MOS_Make_XYZ_JPG_mosaics]       Now running mosaic script odeon2008_mosaic.sh ...
+	!./odeon2008_mosaic.sh $6 $7
+	#------------------------------------------------------------------
+	###################################################################
+
+
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+	#--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--MOSAIC--
+
+

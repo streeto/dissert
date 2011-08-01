@@ -1,0 +1,1328 @@
+	#------------------------------------------------------------------
+	#   ReadOurTables_v09.mac - Revised by Cid@Odeon -  Jul/04/2009   #
+	#   Added macros
+	#	ROT_Read_Starlight_Dn4000Hda_Tables
+	#	ROT_Read_Starlight_LineResiduals_Tables 
+	#   (previously part of ROT_Read_Starlight_SYN_Tables.)
+	#
+	#   Added also a MGS & LRG flag table produce by Abilio 
+	#	ROT_Read_Abilio_MGS_LRG_Tables 
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	#   ReadOurTables_v08.mac - Revised by Cid@Odeon -  Jul/19/2008   #
+	#   Added reading of ETC01* & ETC02* tables 
+	#  (computed with from DoSomeExtraTablesAndFixOthers.mac)  
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	#   ReadOurTables_v06.mac - Revised by Cid@Lagoa -  Jul/13/2007   #
+	#   Modifying some em line & dereddening things...
+	#------------------------------------------------------------------
+
+	# This file contains a bunch of table-reading & starlight-reading
+	# macros:
+	#
+	# ROT_ReadMe
+	# ROT_StandardWelcome
+	# ROT_Read_Starlight_SYN_Tables 
+	# ROT_Read_Starlight_Dn4000Hda_Tables
+	# ROT_Read_Starlight_LineResiduals_Tables 
+	# ROT_Read_Starlight_zmax_Tables 
+	# ROT_Read_Starlight_STE_Tables 1
+	# ROT_Read_Starlight_COS_Tables 1
+	# ROT_Read_Starlight_MAH_Tables 1
+	# ROT_Read_Starlight_FPV_Tables 1
+	# ROT_Read_Abilio_Tables
+	# ROT_Read_Abilio_MGS_LRG_Tables 
+
+	# ROT_SetUpExtLaw 11  (new-July/2007)
+
+	# ROT_GoToTablesDir, ROT_GoToWorkDir & ROT_GoToFitsDir (internal use)
+	# ROT_Read_Starlight_BInfo_Table                       (internal use)
+	# ROT_Read_FullPopVector_BT                            (internal use)
+	# ROT_Read_FullPopVector_BS                            (internal use)
+	# ROT_Read_FullPopVector_B25ages                       (internal use)
+
+	# ROT_Read_Output_of_Starlight 1
+	# ROT_BuildAgeBinnedArrays              (may be abandoned...)
+	# ROT_BinFullPopVectorInAge 15          (may be abandoned...)
+	# ROT_BinFullPopVectorInZ 15            (may be abandoned...)
+
+
+	# REMOVED Natalia's line stuff (including Grazyna's flags & Zneb)
+	# from Read_Abilio_Tables... That stuff is now read separately!
+	# Cid@Lagoa - Feb/28/2007
+
+	# Added...
+	# ROT_Read_ETC01_Table
+	# ROT_Read_ETC02_Table
+	# Cid@Lagoa - Apr/13/2007
+	#------------------------------------------------------------------
+
+
+	###################################################################
+ROT_ReadMe
+	# Macro to list macros in this file!
+	# Cid@Lagoa - 29/April/2007
+	echo -------------------------------------------------------------------
+	echo [ROT_ReadMe] These are the GM_* macros:
+	echo
+	echo
+	echo ROT_StandardWelcome
+	echo ROT_Read_Starlight_SYN_Tables 
+	echo ROT_Read_Starlight_Dn4000Hda_Tables                 (new-July/2009)
+	echo ROT_Read_Starlight_LineResiduals_Tables             (new-July/2009)
+	echo ROT_Read_Starlight_zmax_Tables 
+	echo ROT_Read_Starlight_STE_Tables 1
+	echo ROT_Read_Starlight_COS_Tables 1
+	echo ROT_Read_Starlight_MAH_Tables 1
+	echo ROT_Read_Starlight_FPV_Tables 1
+	echo ROT_Read_Abilio_Tables
+	echo ROT_Read_Abilio_MGS_LRG_Tables                      (new-July/2009)
+	echo
+	echo ROT_SetUpExtLaw 11                                  (new-July/2007)
+	echo 
+	echo ROT_GoToTablesDir, ROT_GoToWorkDir & ROT_GoToFitsDir (internal use)
+	echo ROT_Read_Starlight_BInfo_Table                       (internal use)
+	echo ROT_Read_FullPopVector_BT                            (internal use)
+	echo ROT_Read_FullPopVector_BS                            (internal use)
+	echo ROT_Read_FullPopVector_B25ages                       (internal use)
+	echo
+	echo ROT_Read_Output_of_Starlight 1
+	echo ROT_BuildAgeBinnedArrays                      (may be abandoned...)
+	echo ROT_BinFullPopVectorInAge 15                  (may be abandoned...)
+	echo ROT_BinFullPopVectorInZ 15                    (may be abandoned...)
+	echo
+	echo ROT_Read_ETC01_Table       (from DoSomeExtraTablesAndFixOthers.mac)
+	echo ROT_Read_ETC02_Table       (from DoSomeExtraTablesAndFixOthers.mac)
+	echo -------------------------------------------------------------------
+	###################################################################
+
+
+
+	###################################################################
+	# These macro read our MANY tables with general properties,
+	# synthesis results, emission & absorption line properties for SDSS
+	# galaxies. It requires some explaining, so here it goes.
+
+	# It ASSUMES that when called, 3 variables are defined:
+	# tables_dir, where the tables are stored, fits_dir, which is
+	# where the fits are, and work_dir, which is where your are supposed
+	# to be working, and where we go back to after reading the tables.
+
+	# INCLUDING IT IN YOUR SM-MACRO-FILE: To run the macros here define
+	# them by reading this file, including it in your macro-file with the 
+	# following line:
+	#
+	# macro read "/home/cid/SDSS/ReadOurTables_v05.mac"
+
+	# My recommended way of setting up dirs are defining the reading-macros is
+	# to run before-anything-else a "StartUpDefs" macro like this:
+	#
+	#StartUpDefs
+	#	define tables_dir ('~/SDSS/StarlightFiles/Tables/')
+	#	define work_dir   ('~/SDSS/work/')
+	#	define fits_dir   ('~/SDSS/StarlightFiles/BS/')
+	#	macro read "/home/cid/SDSS/StarlightFiles/Tables/ReadOurTables_v05.mac"
+
+
+	# FILE-NAME NOTATION: It is assumed that all tables have been
+	# named according to an uniform preffix + table-id + suffix
+	# notation.  The prefix identifies the sample (eg, volume or
+	# flux limited, DR2, DR3, etc).  The table-id string defines
+	# which table we're talking about (eg, Starlight.SYN01.tab;
+	# emission lines, lick-indices, etc).  The suffix
+	# identifies which combination of base, mask, configuration, 
+	# version-of-the-code, ... was used. Here are two examples:
+	#
+	#	 Prefix   = sample.20k.f
+	#	 Table-id = Starlight.SYN01.tab;
+	#	 Suffix   = BT
+	# ==> File-name = sample.DR2.20k.f.Starlight.SYN01.tab.BT
+	# This table contains the condensed pop-vector, AV, vd, chi2 & etc
+	# for the 20k-flux limited sample modeled with Base T.
+	#
+	#	 Prefix   = sample.DR2.50k.v
+	#	 Table-id = auxtable.lines.dat
+	#	 Suffix   = BS
+	# ==> File-name = sample.DR2.50k.v.auxtable.lines.dat.BS
+	# This table contains emission line fluxes, ew's & etc
+	# for the flux limited sample modeled with Base S.
+	#
+	#
+	# The table-id strings were defined by Abilio & myself and
+	# should NOT be changed. Prefix & suffix strings may are also
+	# standardized, so don't mess with them either!
+	#
+	# At the time of writing, 2 of the tables are independent of
+	# the synthesis version, namely the "SDSS-parameters" table
+	# (which contans redshift, magnitudes, radii, etc), and the
+	# table with Lick indices (which are presumably computed form
+	# the original spectra). Hence, these 2 tables do NOT have any
+	# suffix.
+
+	# In previous versions I had a single read-everything macro.
+	# As sample and table sizes increased, I've opted to go for a
+	# read-only-what-you-really-want style. Hence the
+	# 	ROT_Read_Starlight_SYN_Tables
+	# 	ROT_Read_Starlight_STE_Tables 1
+	# 	ROT_Read_Starlight_COS_Tables 1
+	#	ROT_Read_Abilio_Tables
+	# macros below should be called **separately**. Notice that the parameter
+	# in the ROT_Read_Starlight_STE_Tables & ROT_Read_Starlight_COS_Tables 
+	# determines which table is actually going to be read.
+
+	# OBS: Things have been adapted to the new format of the *Starlight* tables!
+	#
+	# Cid@Lagoa - 22/May/2006
+
+	# I now introduced the ROT_ prefix for ALL macros here, where
+	# "ROT means ReadOurTables"
+	# Cid@Lagoa - 29/April/2007
+	###################################################################
+
+
+
+	#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+	#T 		     START OF TABLES-READ-BLOCK		  	  T
+	#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+	#
+	# Variables $tab_prefix & $tab_suffix MUST be defined elsewhere,
+	# (eg 'sample.DR2.20k.f' & 'BS' respectively). Directory paths
+	# $tables_dir, $fits_dir & $work_dir should also be defined
+	# beforehand, but are not strictly necessary. The table-reading
+	# macros assume you're already in $tables_dir!  
+
+	# [Produced by Cid's MakeSCv02Tables_SDSS6.f & other codes...]
+
+	# Cid@Lagoa - May/16/2006
+
+
+	###################################################################
+	# Welcome blurb for the Table-reading macros.
+	# The optional parameter define how many galaxies are read. 
+	# Use small #1 = line_read_upp to read a small/fast subsample,
+	# if needed for speed or memory reasons.
+	# Cid@Lagoa - 29/April/2007
+ 	###################################################################
+ROT_StandardWelcome 11
+	echo
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	echo @@     Welcome to ReadOurTables_v08  -  Cid@Odeon  -   July/19/2008     @@
+	echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	echo
+
+	# Warn if dirs are not defined..
+	if (!$?tables_dir) {echo @@> ATT: \$tables_dir NOT defined!}
+	if (!$?fits_dir)   {echo @@> ATT: \$fits_dir NOT defined!}
+	if (!$?work_dir)   {echo @@> ATT: \$work_dir NOT defined!}
+	if ($?tables_dir)  {echo @@> Fits   directory = $fits_dir}
+	if ($?fits_dir)    {echo @@> Tables directory = $tables_dir}
+	if ($?work_dir)    {echo @@> Work   directory = $work_dir}
+	echo
+	if (!$?tab_prefix) {echo @@> ATT: \$tab_prefix NOT defined!}
+	if (!$?tab_suffix) {echo @@> ATT: \$tab_prefix NOT defined!}
+	if ($?tab_prefix)  {echo @@> tab_prefix = $tab_prefix}
+	if ($?tab_suffix)  {echo @@> tab_suffix = $tab_suffix}
+	echo
+
+	# Trick to read less galaxies (if needed...) Use all or $1 lines
+	define line_read_low (1)
+	define line_read_upp (1000000)
+	if ($?1) {define line_read_upp ($1)}
+
+	define line_read_low_PlusOne ($line_read_low + 1)
+	define line_read_upp_PlusOne ($line_read_upp + 1)
+	echo @@> Will read stuff for up to $line_read_upp galaxies...
+	echo
+	###################################################################
+
+
+	###################################################################
+	# 		      Silly change dir macros			  #
+	###################################################################
+ROT_GoToTablesDir
+	# chdir to tables-directory (if one is defined)
+	if ($?tables_dir) {
+		cd $tables_dir
+		echo ==> We are now in $tables_dir:)
+		} else {
+		echo ==> ATT: \$tables_dir NOT defined!
+		}
+
+ROT_GoToWorkDir
+	# chdir to work-directory (if one is defined)
+	if ($?work_dir) {
+		cd $work_dir
+		echo ==> We are now back in $work_dir:)
+		} else {
+		echo ==> ATT: \$work_dir NOT defined!
+		}
+
+ROT_GoToFitsDir
+	# chdir to fits-directory (if one is defined)
+	if ($?fits_dir) {
+		cd $fits_dir
+		echo ==> We are now in $fits_dir:)
+		} else {
+		echo ==> ATT: \$fits_dir NOT defined!
+		}
+	###################################################################
+
+
+	###################################################################
+	# 		READ Starlight.SYN* tables (short-version)        #
+ 	###################################################################
+	# Read selected quantitities from my *Starlight.SYN*, 
+	# *Starlight.LineResiduals* and *Starlight.Dn4000HdA* tables
+	# 
+	# New things:
+	#  1) Set-up ind_gal array
+	#  2) Set-up MINUS999 array to use for undefined/screwup-up entries!
+	#  3) Set-up fraction of z-band light IN-THE-FIBER = array
+	#
+	# Cid@Lagoa - 13/July/2007
+
+ROT_Read_Starlight_SYN_Tables 
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_SYN_Tables] Reading selected $tab_prefix.Starlight.SYN*.tab.$tab_suffix tables!
+
+	# SYN01 - Basic info (sfile, AV, vd, adev ...)
+	data $tab_prefix.Starlight.SYN01.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {sfile 1.s AV 9 v0 10 vd 11 chi2 12 adev 13 SN_w 14 SN_n 15}
+		set ind_gal  = 0,dimen(AV)-1
+		set MINUS999 = 0 * AV - 999
+
+	# SYN02 - t & Z stats. Also, convert m to log scale!
+	data $tab_prefix.Starlight.SYN02.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {at_flux 2 at_mass 3 am_flux 6 am_mass 7}
+		set am_mass = lg(am_mass)
+		set am_flux = lg(am_flux)
+
+	# SYN03 - M/L's in different bands
+	data $tab_prefix.Starlight.SYN03.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	#read {M2L_u 2 M2L_g 3 M2L_r 4 M2L_i 5 M2L_z 6 M2L_JB 7 M2L_JV 8 M2L_BOL 9}
+	#
+	read {M2L_r 4 M2L_z 6}
+
+	# SYN04 - Masses & other info - ATT: SurfDen* ARE WRONG!!
+	data $tab_prefix.Starlight.SYN04.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	#read {Mcor_fib 2 Mini_fib 3 Mret_fib 4 Mcor_gal 5 Mini_gal 6 Mret_gal 7 \
+	#      SurfDen_cor 8 SurfDen_ini 9 Mphot_gal 10 FibCor 17 tz_lookback 20}
+	#
+	read {Mcor_fib 2 Mini_fib 3 Mcor_gal 5 Mini_gal 6 SurfDen_cor 8 Mphot_gal 10 FibCor 17 tz_lookback 20}
+	echo @@> [ROT_Read_Starlight_SYN_Tables] Converting FibCor to frac_z_in_fib (& deleting FibCor)
+	set frac_z_in_fib = 1 / 10**FibCor
+	delete FibCor
+
+
+	#------------------------------------------------------------------
+	# SYN05 -  t-group stats - ATT: Just TESTING...
+	echo ... skipping SYN05-table ...
+	#data $tab_prefix.Starlight.SYN05.tab.$tab_suffix
+	#lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	#read {tstb_flux  2 tstb_mass  3 Zstb_flux  4 Zstb_mass  5 mstb_flux  6 mstb_mass  7 \
+	#      told_flux  8 told_mass  9 Zold_flux 10 Zold_mass 11 mold_flux 12 mold_mass 13 \
+	#      aZY_flux  14 aZI_flux  15 aZO_flux  16 aZY_mass  17 aZI_mass  18 aZO_mass  19 \
+	#      amY_flux  20 amI_flux  21 amO_flux  22 amY_mass  23 amI_mass  24 amO_mass  25}
+
+	# SYN06 - MAH time scales
+	echo ... skipping SYN06-table ...MAH time scales ARE WRONG here, but fixed in ETC02 table!
+	#data $tab_prefix.Starlight.SYN06.tab.$tab_suffix
+	#lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	#read {tau_MAH_STE_10 2 tau_MAH_STE_25 3 tau_MAH_STE_50 4 tau_MAH_STE_75 5 tau_MAH_STE_90 6 \
+	#      tau_MAH_COS_10 7 tau_MAH_COS_25 8 tau_MAH_COS_50 9 tau_MAH_COS_75 10 tau_MAH_COS_90 11}
+	#read {tau_MAH_STE_10 2 tau_MAH_STE_25 3 tau_MAH_STE_50 4 tau_MAH_STE_75 5 tau_MAH_STE_90 6}
+
+	# Done
+	define _ngals (dimen(sfile))
+	echo @@> [ROT_Read_Starlight_SYN_Tables] Done:) Read all $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	#	READ Starlight.Dn4000Hda* & LineResiduals*_Tables 	  #
+ 	###################################################################
+	# Up to ReadOurTables_v08.mac these tables were read inside
+	# ROT_Read_Starlight_SYN_Tables. Now I've split them to help
+	# saving RAM...
+	#
+	# Cid@Odeon - 02/Juillet/2009
+
+ROT_Read_Starlight_Dn4000Hda_Tables 
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_Dn4000Hda_Tables] Reading $tab_prefix.Starlight.Dn4000HdA.$tab_suffix ...
+
+	# Dn4000HdA: **SYNTHETIC** values (ie, measured from f_syn)
+	data $tab_prefix.Starlight.Dn4000HdA.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {Dn4000_synt 2 HdA_synt 3}
+
+	# Done
+	define _ngals (dimen(HdA_synt))
+	echo @@> [ROT_Read_Starlight_Dn4000Hda_Tables] Done:) Read $tab_prefix.Starlight.Dn4000HdA.$tab_suffix table ($_ngals galaxies)
+	ROT_GoToWorkDir
+
+ROT_Read_Starlight_LineResiduals_Tables 
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_LineResiduals_Tables] Reading $tab_prefix.Starlight.LineResiduals.$tab_suffix ...
+
+	# LineResiduals - alpha & Hb residual EWs (in Angs)
+	data $tab_prefix.Starlight.LineResiduals.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {CNResid 2 HbResid 3 MgResid 4 NanResid 6}
+
+	# Done
+	define _ngals (dimen(CNResid))
+	echo @@> [ROT_Read_Starlight_LineResiduals_Tables] Done:) Read $tab_prefix.Starlight.LineResiduals.$tab_suffix table ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# 		READ *.Starlight.zmax* tables                     #
+ 	###################################################################
+	# Read "oficcial" zmax & Vmax from my *Starlight.zmax* tables!
+	# Cid@Lagoa - 08/July/2006
+
+ROT_Read_Starlight_zmax_Tables 
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_zmax_Tables] Reading selected $tab_prefix.Starlight.SYN*.tab.$tab_suffix tables!
+
+	data $tab_prefix.Starlight.zmax.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	#read {zmr1  2 zmr2  3 zmr3  4 zSBr1  5 zSBr2  6 zSBr3  7 \
+        #      Vmr1  8 Vmr2  9 Vmr3 10 VSBr1 11 VSBr2 12 VSBr3 13 \
+	#      flag_Which_zmax 14 zmax 15 Vmax 16 z_gal 17 V_gal 18 }
+	read {zmax 15 Vmax 16}
+	set Vmax = 10**Vmax
+
+	# Done
+	define _ngals (dimen(sfile))
+	echo @@> [ROT_Read_Starlight_zmax_Tables] Done:) Read all $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# 			READ Starlight.STE* tables                #
+ 	###################################################################
+	# Reads pop-vector or SSFR. Which table is actually read is decided
+	# by $1. 
+	# For $1 = 1, 2, 3 or 4 we read resampled population vectors (xc, 
+	# muc_cor, muc_ini, SSFRc respectively), sampled at our age grid logtc.
+	# For $1 = 5, 6, 7 or 8 we read a SMOOTHED population vector (xs, 
+	# mus_cor or mus_ini) or the corresponding smoothed SSFR, also 
+	# sampled at an age grid logtc.
+	# 
+	# All pop vectors are renormalized to sum = 100%. This is just to
+	# ensure we get exactly 100% sum, which will not be the case (by a
+	# tiny difference) in general because of the limited precision in
+	# the pop vectors in the tables. (SSFR is not renormalize, obviosuly).
+	#
+	# This macro calls ROT_Read_Starlight_BInfo_Table.
+	# OBS: There is no "short" version of these tables!
+	#
+	# Cid@Lagoa - 22/May/2006
+
+ROT_Read_Starlight_STE_Tables 1
+	#----------------------------------------------------------------#
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_STE_Tables] Reading selected $tab_prefix.Starlight.STE0$1.tab.$tab_suffix table!
+
+	# Sanity/safety check!
+	if ($1 <= 0 | $1 >=9) {
+		echo @@> [ROT_Read_Starlight_STE_Tables] RED-ALERT: STE(0)$1 tables are NOT defined!
+		ROT_GoToWorkDir
+		return
+		}
+
+	# Read BInfo-table. (Need only logtc grid from there)
+	ROT_Read_Starlight_BInfo_Table
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Read Starlight STE$1 resampled/smoothed tables ... (01--08)
+	#----------------------------------------------------------------#
+	if ($N_logtc != 50) {
+		echo @@@@> [ROT_Read_Starlight_STE_Tables] RED-ALERT: N_logtc = $N_logtc != 50!!
+		ROT_GoToWorkDir
+		return
+		}
+
+	data $tab_prefix.Starlight.STE0$1.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+		read { z1  2  z2  3  z3  4  z4  5  z5  6  z6  7  z7  8  z8  9  z9 10 z10 11 \
+		      z11 12 z12 13 z13 14 z14 15 z15 16 z16 17 z17 18 z18 19 z19 20 z20 21 \
+		      z21 22 z22 23 z23 24 z24 25 z25 26 z26 27 z27 28 z28 29 z29 30 z30 31 \
+		      z31 32 z32 33 z33 34 z34 35 z35 36 z36 37 z37 38 z38 39 z39 40 z40 41 \
+		      z41 42 z42 43 z43 44 z44 45 z45 46 z46 47 z47 48 z48 49 z49 50 z50 51}
+
+	# Compute sum to renormalize things to 100% (except SSFR!)
+	set sum_z = 0 * z1
+	do _i=1,$N_logtc {set sum_z = sum_z + z$_i}
+
+	# mv z* to xc*, muc_cor*, muc_ini*, xs*, mus_cor*, mus_ini* or SSFR* according to $1
+	define _ngals (dimen(z1))
+	if ($1 == 1) {do _i=1,$N_logtc {set xc$_i      = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 2) {do _i=1,$N_logtc {set muc_cor$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 3) {do _i=1,$N_logtc {set muc_ini$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 4) {do _i=1,$N_logtc {set SSFRc$_i   = z$_i			delete z$_i}}
+	if ($1 == 5) {do _i=1,$N_logtc {set xs$_i      = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 6) {do _i=1,$N_logtc {set mus_cor$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 7) {do _i=1,$N_logtc {set mus_ini$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 8) {do _i=1,$N_logtc {set SSFRs$_i   = z$_i			delete z$_i}}
+	#----------------------------------------------------------------#
+
+	echo @@> [ROT_Read_Starlight_STE_Tables] Done:) Read $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# 			READ Starlight.COS* tables                #
+ 	###################################################################
+	# Reads pop-vector or SSFR. Which table is actually read is decided
+	# by $1. 
+	# For $1 = 1, 2, 3 or 4 we read a population vector (xc_cosmo, 
+	# muc_cor_cosmo, muc_ini_cosmo or SSFRc_cosmo respectively) SHIFTED TO A 
+	# COSMOLOGICAL TIME-FRAME, and sampled at an age grid logtc.
+	#
+	# For $1 = 5, 6, 7 or 8 we read a SMOOTHED population vector 
+	# (xs_cosmo, mus_cor_cosmo or mus_ini_cosmo) or the corresponding 
+	# smoothed SSFR, (SSFRs_cosmo) SHIFTED TO A COSMOLOGICAL TIME-FRAME, 
+	# also sampled at an age grid logtc.
+	# 
+	# As above, all pop vectors are renormalized to sum = 100%.
+	#
+	# This macro calls ROT_Read_Starlight_BInfo_Table to read logtc.
+	# OBS: There is no "short" version of this macro!
+	#
+	# Cid@Lagoa - 22/May/2006
+
+ROT_Read_Starlight_COS_Tables 1
+	#----------------------------------------------------------------#
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_COS_Tables] Reading selected $tab_prefix.Starlight.COS0$1.tab.$tab_suffix table!
+
+	# Sanity/safety check!
+	if ($1 <= 0 | $1 >=9) {
+		echo @@@@> [ROT_Read_Starlight_COS_Tables] RED-ALERT: COS(0)$1 tables are NOT defined!
+		ROT_GoToWorkDir
+		return
+		}
+
+	# Read BInfo-table. (Need only logtc grid from there)
+	ROT_Read_Starlight_BInfo_Table
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Read Starlight COS$1 resampled/smoothed tables ... (01--08)
+	#----------------------------------------------------------------#
+	if ($N_logtc != 50) {
+		echo @@> [ROT_Read_Starlight_COS_Tables] RED-ALERT: N_logtc = $N_logtc != 50!!
+		ROT_GoToWorkDir
+		return
+		}
+
+	data $tab_prefix.Starlight.COS0$1.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+		read { z1  2  z2  3  z3  4  z4  5  z5  6  z6  7  z7  8  z8  9  z9 10 z10 11 \
+		      z11 12 z12 13 z13 14 z14 15 z15 16 z16 17 z17 18 z18 19 z19 20 z20 21 \
+		      z21 22 z22 23 z23 24 z24 25 z25 26 z26 27 z27 28 z28 29 z29 30 z30 31 \
+		      z31 32 z32 33 z33 34 z34 35 z35 36 z36 37 z37 38 z38 39 z39 40 z40 41 \
+		      z41 42 z42 43 z43 44 z44 45 z45 46 z46 47 z47 48 z48 49 z49 50 z50 51}
+
+	# Compute sum to renormalize things to 100% (except SSFR!)
+	set sum_z = 0 * z1
+	do _i=1,$N_logtc {set sum_z = sum_z + z$_i}
+
+	# mv z* to xc_cosmo*, muc_cor_cosmo*, ... according to $1
+	define _ngals (dimen(z1))
+	if ($1 == 1) {do _i=1,$N_logtc {set xc_cosmo$_i       = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 2) {do _i=1,$N_logtc {set muc_cor_cosmo$_i  = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 3) {do _i=1,$N_logtc {set muc_ini_cosmo$_i  = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 4) {do _i=1,$N_logtc {set SSFRc_cosmo$_i    = z$_i	 		delete z$_i}}
+	if ($1 == 5) {do _i=1,$N_logtc {set xs_cosmo$_i      = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 6) {do _i=1,$N_logtc {set mus_cor_cosmo$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 7) {do _i=1,$N_logtc {set mus_ini_cosmo$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 8) {do _i=1,$N_logtc {set SSFRs_cosmo$_i   = z$_i	 		delete z$_i}}
+	#----------------------------------------------------------------#
+
+	echo @@> [ROT_Read_Starlight_COS_Tables] Done:) Read $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+ 	###################################################################
+
+
+	###################################################################
+	# 		READ Starlight.MAH_STE/COS* tables                #
+ 	###################################################################
+	# Read Mass-Assembly-Histories on a STEllar ($2 = 'STE') or 
+	# COSmological ($2 = 'COS') time-frame
+	# $1 = 1, 2, 3 & 4 ==> Mste_t*, Mini_t*, MZste_t* & Mret_t* 
+	# [or *_cosmo if '$2' == 'COS'], all in Msun, and sampled at an age
+	# grid logtc.
+	# OBS: Notice the 2 parameters!
+	# There is no smoothed version of these numbers as yet...
+	#
+	# Cid@Lagoa - 22/May/2006.
+
+ROT_Read_Starlight_MAH_Tables 2
+	#----------------------------------------------------------------#
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_MAH_Tables] Reading selected $tab_prefix.Starlight.MAH_$2"0"$1.tab.$tab_suffix table!
+
+	# Sanity/safety check!
+	if (($1 <= 0 | $1 >=5) | ('$2' != 'STE' & '$2' != 'COS')) {
+		echo @@> [ROT_Read_Starlight_MAH_Tables] RED-ALERT: MAH_$2(0)$1 tables are NOT defined!
+		ROT_GoToWorkDir
+		return
+		}
+
+	# Read BInfo-table. (Need only logtc grid from there)
+	ROT_Read_Starlight_BInfo_Table
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Read Starlight MAH_$2"0"$1 Mass-Assembly-History tables (01--04)
+	#----------------------------------------------------------------#
+	if ($N_logtc != 50) {
+		echo @@@@> [ROT_Read_Starlight_MAH_Tables] RED-ALERT: N_logtc = $N_logtc != 50!!
+		ROT_GoToWorkDir
+		return
+		}
+
+	data $tab_prefix.Starlight.MAH_$2"0"$1.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+		read { z1  2  z2  3  z3  4  z4  5  z5  6  z6  7  z7  8  z8  9  z9 10 z10 11 \
+		      z11 12 z12 13 z13 14 z14 15 z15 16 z16 17 z17 18 z18 19 z19 20 z20 21 \
+		      z21 22 z22 23 z23 24 z24 25 z25 26 z26 27 z27 28 z28 29 z29 30 z30 31 \
+		      z31 32 z32 33 z33 34 z34 35 z35 36 z36 37 z37 38 z38 39 z39 40 z40 41 \
+		      z41 42 z42 43 z43 44 z44 45 z45 46 z46 47 z47 48 z48 49 z49 50 z50 51}
+
+	# mv z* to Mste_t*, Mini_t*, MZste_t* or Mret_t* (or *_cosmo for '$2' == 'COS') 
+	# according to $1 & $2
+	define _ngals (dimen(z1))
+	if ('$2' == 'STE') {
+		if ($1 == 1) {do _i=1,$N_logtc {set Mste_t$_i   = z$_i	delete z$_i}}
+		if ($1 == 2) {do _i=1,$N_logtc {set Mini_t$_i   = z$_i	delete z$_i}}
+		if ($1 == 3) {do _i=1,$N_logtc {set MZste_t$_i  = z$_i	delete z$_i}}
+		if ($1 == 4) {do _i=1,$N_logtc {set Mret_t$_i   = z$_i	delete z$_i}}
+		} 
+	if ('$2' == 'COS') {
+		if ($1 == 1) {do _i=1,$N_logtc {set Mste_t_cosmo$_i   = z$_i	delete z$_i}}
+		if ($1 == 2) {do _i=1,$N_logtc {set Mini_t_cosmo$_i   = z$_i	delete z$_i}}
+		if ($1 == 3) {do _i=1,$N_logtc {set MZste_t_cosmo$_i  = z$_i	delete z$_i}}
+		if ($1 == 4) {do _i=1,$N_logtc {set Mret_t_cosmo$_i   = z$_i	delete z$_i}}
+		}
+	#----------------------------------------------------------------#
+
+	echo @@> [ROT_Read_Starlight_MAH_Tables] Done:) Read $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# 			READ Starlight.FPV* tables                #
+	###################################################################
+	# Reads Full pop-vector. 
+	# For $1 = 1, 2 or 3 we read x, mu_cor or mu_ini, respectively,
+	# sampled at all ages and Zs of the orignal base used in the 
+	# Starlight fits.
+	#
+	# All pop vectors are renormalized to sum = 100%. This is just to
+	# ensure we get exactly 100% sum, which will not be the case (by a
+	# tiny difference) in general because of the limited precision in
+	# the pop vectors in the tables. (SSFR is not renormalize, obviosuly).
+	#
+	# This macro calls ROT_Read_Starlight_BInfo_Table and also the
+	# stupid ROT_Read_FullPopVector_BT, _BS or _something-else macros.
+	#
+	# OBS: Since this macro read full pop-vectors there is no "short"
+	#      version of it!
+	#
+	# Cid@Lagoa - 16/May/2006
+
+ROT_Read_Starlight_FPV_Tables 1
+	#----------------------------------------------------------------#
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Starlight_FPV_Tables] Reading selected $tab_prefix.Starlight.FPV0$1.tab.$tab_suffix table!
+
+	# Sanity/safety check!
+	if ($1 <= 0 | $1 >=4) {
+		echo @@> [ROT_Read_Starlight_FPV_Tables] RED-ALERT: FPV(0)$1 tables are NOT defined!
+		ROT_GoToWorkDir
+		return
+		}
+
+	# Read BInfo-table. (Need age_base & Z_base from there)
+	ROT_Read_Starlight_BInfo_Table
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Read Starlight FPV$1 FullPopVector tables  (01--03)
+	#----------------------------------------------------------------#
+	# Check N_base...
+	if ($N_base != 150 & $N_base != 100 & $N_base != 25) {
+		echo @@@@> [ROT_Read_Starlight_FPV_Tables] This only works for bases S or T or 25, stupid!
+		ROT_GoToWorkDir
+		return
+		}
+
+	data $tab_prefix.Starlight.FPV0$1.tab.$tab_suffix
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	if ($N_base == 150) {ROT_Read_FullPopVector_BS}
+	if ($N_base == 100) {ROT_Read_FullPopVector_BT}
+	if ($N_base == 25)  {ROT_Read_FullPopVector_B25Ages}
+
+	# Compute sum to renormalize things to 100%.
+	set sum_z = 0 * z1
+	do _i=1,$N_base {set sum_z = sum_z + z$_i}
+
+	# mv z* to x*, mu_cor* or mu_ini* according to $1
+	define _ngals (dimen(z1))
+	if ($1 == 1) {do _i=1,$N_base {set x$_i      = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 2) {do _i=1,$N_base {set mu_cor$_i = 100 * z$_i / sum_z	delete z$_i}}
+	if ($1 == 3) {do _i=1,$N_base {set mu_ini$_i = 100 * z$_i / sum_z	delete z$_i}}
+	#----------------------------------------------------------------#
+
+	echo @@> [ROT_Read_Starlight_FPV_Tables] Done:) Read $tab_prefix & $tab_suffix tables ($_ngals galaxies)
+	ROT_GoToWorkDir
+	###################################################################
+
+
+	###################################################################
+	# 			READ BInfo table			  #
+	###################################################################
+	# This macro is supposed to be called when reading Starlight.STE*
+	# and Starlight.COS* tables. 
+	# OBS: It may be read more times than needed but no harm in that!
+	# ATT: **>It is assumed that you are already in tables_dir!! <**
+	#
+	# ATT: age_base & Z_base ALSO used by macro ROT_Read_Output_of_Starlight!!
+	#      Be carefull! There may be conflicts...
+
+ROT_Read_Starlight_BInfo_Table
+	# Read base-info from BInfo-table: 
+	# => N_base, N_ages, N_Zs, age_base() & Z_base()
+	data $tab_prefix.Starlight.BInfo.tab.$tab_suffix
+	define N_base read 3 1 
+	define N_ages read 3 2 
+	define N_Zs   read 3 3
+	define _l2 ($N_base + 3)
+	lines 4 $_l2 
+	read {age_base 2 Z_base 3 zoft_base 4}
+
+	# Read logtc grid from BInfo-table: 
+	# => N_logtc & logtc
+	define _l1 ($N_base + 6)
+	define N_logtc read $_l1 1
+	define _l1 ($N_base + 7)
+	define _l2 ($N_base + $N_logtc + 6)
+	lines $_l1 $_l2
+	read {logtc 1 zoft_logtc 2}
+	echo --> [ROT_Read_Starlight_BInfo_Table] N_base=$N_base  N_ages=$N_ages  N_Zs=$N_Zs | N_logtc=$N_logtc
+	###################################################################
+
+
+	###################################################################
+	#		Auxiliar Full Pop Vector Reading macros!	  #
+	###################################################################
+	# These macros are supposed to be called when reading Starlight.STE*
+	# tables. 
+	# ATT: It is assumed that you are already in tables_dir!!
+ROT_Read_FullPopVector_BT
+	echo --> [ROT_Read_FullPopVector_BT] reading a BT vector...
+	read {  z1   2   z2   3   z3   4   z4   5   z5   6   z6   7   z7   8  z8    9   z9  10  z10  11 \
+	       z11  12  z12  13  z13  14  z14  15  z15  16  z16  17  z17  18  z18  19  z19  20  z20  21 \
+	       z21  22  z22  23  z23  24  z24  25  z25  26  z26  27  z27  28  z28  29  z29  30  z30  31 \
+	       z31  32  z32  33  z33  34  z34  35  z35  36  z36  37  z37  38  z38  39  z39  40  z40  41 \
+	       z41  42  z42  43  z43  44  z44  45  z45  46  z46  47  z47  48  z48  49  z49  50  z50  51 \
+	       z51  52  z52  53  z53  54  z54  55  z55  56  z56  57  z57  58  z58  59  z59  60  z60  61 \
+	       z61  62  z62  63  z63  64  z64  65  z65  66  z66  67  z67  68  z68  69  z69  70  z70  71 \
+	       z71  72  z72  73  z73  74  z74  75  z75  76  z76  77  z77  78  z78  79  z79  80  z80  81 \
+	       z81  82  z82  83  z83  84  z84  85  z85  86  z86  87  z87  88  z88  89  z89  90  z90  91 \
+	       z91  92  z92  93  z93  94  z94  95  z95  96  z96  97  z97  98  z98  99  z99 100 z100 101}
+
+ROT_Read_FullPopVector_BS
+	echo --> [ROT_Read_FullPopVector_BS] reading a BS vector...
+	read {  z1   2   z2   3   z3   4   z4   5   z5   6   z6   7   z7   8  z8    9   z9  10  z10  11 \
+	       z11  12  z12  13  z13  14  z14  15  z15  16  z16  17  z17  18  z18  19  z19  20  z20  21 \
+	       z21  22  z22  23  z23  24  z24  25  z25  26  z26  27  z27  28  z28  29  z29  30  z30  31 \
+	       z31  32  z32  33  z33  34  z34  35  z35  36  z36  37  z37  38  z38  39  z39  40  z40  41 \
+	       z41  42  z42  43  z43  44  z44  45  z45  46  z46  47  z47  48  z48  49  z49  50  z50  51 \
+	       z51  52  z52  53  z53  54  z54  55  z55  56  z56  57  z57  58  z58  59  z59  60  z60  61 \
+	       z61  62  z62  63  z63  64  z64  65  z65  66  z66  67  z67  68  z68  69  z69  70  z70  71 \
+	       z71  72  z72  73  z73  74  z74  75  z75  76  z76  77  z77  78  z78  79  z79  80  z80  81 \
+	       z81  82  z82  83  z83  84  z84  85  z85  86  z86  87  z87  88  z88  89  z89  90  z90  91 \
+	       z91  92  z92  93  z93  94  z94  95  z95  96  z96  97  z97  98  z98  99  z99 100 z100 101 \
+	      z101 102 z102 103 z103 104 z104 105 z105 106 z106 107 z107 108 z108 109 z109 110 z110 111 \
+	      z111 112 z112 113 z113 114 z114 115 z115 116 z116 117 z117 118 z118 119 z119 120 z120 121 \
+	      z121 122 z122 123 z123 124 z124 125 z125 126 z126 127 z127 128 z128 129 z129 130 z130 131 \
+	      z131 132 z132 133 z133 134 z134 135 z135 136 z136 137 z137 138 z138 139 z139 140 z140 141 \
+	      z141 142 z142 143 z143 144 z144 145 z145 146 z146 147 z147 148 z148 149 z149 150 z150 151}
+
+ROT_Read_FullPopVector_B25ages
+	echo --> [ROT_Read_FullPopVector_B25Ages] reading a 25Ages vector... (eg, single Z fits...)
+	read {  z1   2   z2   3   z3   4   z4   5   z5   6   z6   7   z7   8  z8    9   z9  10  z10  11 \
+	       z11  12  z12  13  z13  14  z14  15  z15  16  z16  17  z17  18  z18  19  z19  20  z20  21 \
+	       z21  22  z22  23  z23  24  z24  25  z25  26}
+	###################################################################
+
+
+
+	###################################################################
+	# 		    READ Abilio's tables                          #
+ 	###################################################################
+	# Read selected quantitities from Abilio's tables
+	# Cid@Lagoa - 16/May/2006
+ROT_Read_Abilio_Tables
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Abilio_Tables] Reading selected $tab_prefix...$tab_suffix tables! **ATT: JUST A FEW**
+
+	#----------------------------------------------------------------#
+	# Read SDSS-parameters (no-suffix!)
+	data $tab_prefix.parameters.dat
+	lines $line_read_low $line_read_upp
+	read {aid 1.s plateID 2 mjdID 3 fiberID 4 ra 5 dec 6 redshift 7 eClass 8 m_u 9 m_g 10 \
+	      m_r 11 m_i 12 m_z 13 fm_u 14 fm_g 15 fm_r 16 fm_i 17 fm_z 18 Mu 19 Mg 20 \
+	      Mr 21 Mi 22 Mz 23 SB_50 24 CI 25 petrorad_r 26 petroR50_r 27 petroR90_r 28 expAB_r 29 deVAB_r 30 \
+	      D 31 DA 32 R50 33 R90 34 DL 35 log_L 36 Mr_fiber 37 log_L_fiber 38 Mz_fiber 39 log_L_fiber_z 40 \
+	      petrorad_z 41 petroR50_z 42 petroR90_z 43 petroR50_z_kpc 45 petroR90_z_kpc 46}
+	# short version...
+	#read {aid 1.s redshift 7 eClass 8 m_r 11 m_z 13 Mr 21 Mz 23 SB_50 24 CI 25 \
+	#      expAB_r 29 DA 32 R50 33 R90 34 DL 35}
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Emission line fluxes, EWs, v0, vd's...  
+	#
+	# ATT: [ArIII]7135 NOT available for all tables, so I read it
+	#      with a separate macro
+	#
+      	# El_F_*  (emission line flux)
+      	# El_W_*  (emission line equivalent width)
+      	# El_vd_* (emission line velocity dispersion)
+      	# El_v0_* (displacement relative to rest-frame wavelength)
+      	# El_SN_* (signal-to-noise ratio of the fit)
+      	# El_fc_* (flux at the continuum)
+	#
+	# Example:   El_F_5007  79 El_W_5007  81 El_vd_5007  83 El_v0_5007  85 El_SN_5007  87
+
+	data $tab_prefix.lines.dat.$tab_suffix
+	lines $line_read_low $line_read_upp
+	# This version reads O2, Hb, O3, Ha & N2 only. 
+	#read { El_F_3727   2 El_W_3727   4 El_vd_3727   6 El_SN_3727  10 \
+	#       El_F_4861  57 El_W_4861  59 El_vd_4861  61 El_SN_4861  65 \
+	#       El_F_5007  79 El_W_5007  81 El_vd_5007  83 El_SN_5007  87 \
+	#       El_F_6563 112 El_W_6563 114 El_vd_6563 116 El_SN_6563 120 \
+	#       El_F_6584 123 El_W_6584 125 El_vd_6584 127 El_SN_6584 131 }
+
+	# This version reads O2, Hb, O3, O1, Ha, N2, S2s => good for AGN:)
+	#read { El_F_3727   2 El_W_3727   4 El_vd_3727   6 El_SN_3727  10 \
+	#       El_F_4363  46 El_W_4363  48 El_vd_4363  50 El_SN_4363  54 \
+	#       El_F_4861  57 El_W_4861  59 El_vd_4861  61 El_SN_4861  65 \
+	#       El_F_5007  79 El_W_5007  81 El_vd_5007  83 El_SN_5007  87 \
+	#       El_F_6300  90 El_W_6300  92 El_vd_6300  94 El_SN_6300  98 \
+	#       El_F_6563 112 El_W_6563 114 El_vd_6563 116 El_SN_6563 120 \
+	#       El_F_6584 123 El_W_6584 125 El_vd_6584 127 El_SN_6584 131 \
+	#       El_F_6716 134 El_W_6716 136 El_vd_6716 138 El_SN_6716 142 \
+	#       El_F_6731 145 El_W_6731 147 El_vd_6731 149 El_SN_6731 153 }
+
+	# This version reads [OIII]4363 too!
+	# Added El_v0_* reading... (Cid@Paris - Juin/16/2007)
+	read { El_F_3727   2 El_W_3727   4 El_vd_3727   6 El_v0_3727   8 El_SN_3727  10 \
+	       El_F_4340  35 El_W_4340  37 El_vd_4340  39 El_v0_4340  41 El_SN_4340  43 \
+	       El_F_4363  46 El_W_4363  48 El_vd_4363  50 El_v0_4363  52 El_SN_4363  54 \
+	       El_F_4861  57 El_W_4861  59 El_vd_4861  61 El_v0_4861  63 El_SN_4861  65 \
+	       El_F_5007  79 El_W_5007  81 El_vd_5007  83 El_v0_5007  85 El_SN_5007  87 \
+	       El_F_6300  90 El_W_6300  92 El_vd_6300  94 El_v0_6300  96 El_SN_6300  98 \
+	       El_F_6563 112 El_W_6563 114 El_vd_6563 116 El_v0_6563 118 El_SN_6563 120 \
+	       El_F_6584 123 El_W_6584 125 El_vd_6584 127 El_v0_6584 129 El_SN_6584 131 \
+	       El_F_6716 134 El_W_6716 136 El_vd_6716 138 El_v0_6716 140 El_SN_6716 142 \
+	       El_F_6731 145 El_W_6731 147 El_vd_6731 149 El_v0_6731 151 El_SN_6731 153 }
+
+	# ATT! Abilio has put -997, -998 and other -99* in the line fluxes, EWs & etc!
+	# Here I revert it to -999!!!
+	# Cid@Odeon - 15/Juilet/2008
+	echo @@> [ROT_Read_Abilio_Tables] ATT: Reseting El_F_* < -990 to -999!!!
+	foreach _l (3727 4340 4363 4861 5007 6300 6563 6584 6716 6731) {
+		echo .............................Fixing El_F_$_l ....
+		set El_F_$_l  = (El_F_$_l  > -900) ? El_F_$_l  : MINUS999
+		set El_W_$_l  = (El_W_$_l  > -900) ? El_W_$_l  : MINUS999
+		set El_vd_$_l = (El_vd_$_l > -900) ? El_vd_$_l : MINUS999
+		set El_v0_$_l = (El_v0_$_l > -900) ? El_v0_$_l : MINUS999
+		set El_SN_$_l = (El_SN_$_l > -900) ? El_SN_$_l : MINUS999
+		}
+	#----------------------------------------------------------------#
+
+
+	#--Abilio measured lick-ind's over OBSERVED spectrum :( FORGET!--#
+	# Read "Lick" indices: D4000, Mg2 ... (no suffix!)
+	#data $tab_prefix.lick.dat
+	#lines $line_read_low $line_read_upp
+	#read { Dn4000 137 }
+	#----------------------------------------------------------------#
+
+	echo 
+	echo @@> [ROT_Read_Abilio_Tables] ATT: Read just parameters and lines and lick tables!
+	echo @@>                               Skipping abund & auxtable.etc...
+
+	#----------------------------------------------------------------#
+	# Emission line abundances according to different recipes...
+	#data $tab_prefix.abund.dat.$tab_suffix
+	#lines $line_read_low $line_read_upp
+	#read {A_DTT 10 A_SDSS 12}
+	#----------------------------------------------------------------#
+
+	#----------------------------------------------------------------#
+	# Etc... flagAGN AV_Balmer
+	# ATT: ABilio's AV_Balmer doesn't seem right!!!
+	#    Meaning of flagAGN:
+	#      flagAGN = 0: star-forming (with all 4 lines of BPT diagram)
+	#      flagAGN = 1: AGN (with all 4 lines of BPT diagram)
+	#      flagAGN = 3: Low Luminosity AGN (with 2 lines only, NII e Halpha)
+	#      flagAGN = -1: emission-line without classification
+	#      flagAGN = -9: Passive galaxy, without all four lines
+	#      flagAGN = -10: Composite galaxy
+	#data $tab_prefix.auxtable.etc.dat.$tab_suffix
+	#lines $line_read_low $line_read_upp
+	#read { flagAGN 2 AV_Balmer 4 }
+	#read { flagAGN 2 }
+	#----------------------------------------------------------------#
+
+	# Done:)
+	define _ngals (dimen(redshift))
+	echo @@> [ROT_Read_Abilio_Tables] Done:) ($_ngals galaxies)
+	ROT_GoToWorkDir
+
+
+	#----------------------------------------------------------------#
+ROT_Read_ArIII_line
+	# The [ArIII]7135 is NOT available for all tables/samples, 
+	# so we read it separately with this macro...
+	# Cid@Lagoa - 13/July/2007
+	echo
+	echo @@> [ROT_Read_ArIII_line] Reading [ArIII]7135 line info..
+
+	ROT_GoToTablesDir
+	data $tab_prefix.lines.dat.$tab_suffix
+	lines $line_read_low $line_read_upp
+	read {El_F_7135 2 El_W_7135 3 El_vd_7135 4 El_SN_7135 5}
+	#read {El_F_7135 2 El_SN_7135 5}
+	ROT_GoToWorkDir
+	#----------------------------------------------------------------#
+
+
+	#----------------------------------------------------------------#
+	# Read Abilio's flags_MGS_LRG.dat (so far available only for DR7)
+	# defining flag_IsInMGS flag_IsInLRG Y/N flags.
+	# Cid@Odeon - 04/July/2009
+ROT_Read_Abilio_MGS_LRG_Tables 
+	echo
+	ROT_GoToTablesDir
+	echo @@> [ROT_Read_Abilio_MGS_LRG_Tables] Reading $tab_prefix.flags_MGS_LRG.dat table...
+
+	data $tab_prefix.flags_MGS_LRG.dat 
+	lines $line_read_low_PlusOne $line_read_upp_PlusOne
+	read {flag_IsInMGS 2 flag_IsInLRG 3}
+
+	# Done:)
+	define _ngals (dimen(flag_IsInLRG))
+	echo @@> [ROT_Read_Abilio_MGS_LRG_Tables] Done:) ($_ngals galaxies)
+	ROT_GoToWorkDir
+	#----------------------------------------------------------------#
+	###################################################################
+
+
+	###################################################################
+	#  READ ETC01 02 tables (from DoSomeExtraTablesAndFixOthers.mac)  #
+ 	###################################################################
+	# Cid@Lagoa - 13/April/2008
+
+ROT_Read_ETC01_Table
+	echo @@> [ROT_Read_ETC01_Table] Reading ETC01.$tab_prefix.Starlight.tab.$tab_suffix ...
+	ROT_GoToTablesDir
+		data ETC01.$tab_prefix.Starlight.tab.$tab_suffix
+		read {log_b 2 SSFRb 3 SSFRc 4 log_smd 5 log_smd_fib 6}
+	ROT_GoToWorkDir
+
+ROT_Read_ETC02_Table
+	echo @@> [ROT_Read_ETC02_Table] Reading ETC02.$tab_prefix.Starlight.tab.$tab_suffix ...
+	ROT_GoToTablesDir
+		data ETC02.$tab_prefix.Starlight.tab.$tab_suffix
+		read {tau_MAH_STE_10 2 tau_MAH_STE_25 3 tau_MAH_STE_50 4 tau_MAH_STE_75 5 tau_MAH_STE_90 6}
+	ROT_GoToWorkDir
+ 	###################################################################
+
+
+	#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+	#T 		      END OF TABLES-READ-BLOCK		  	  T
+	#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+
+
+
+
+	#RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+	#R		 START OF REDDENING/DE-REDDENING BLOCK		  R
+	#R		      (Cid@Lagoa - July/13/2007)     		  R
+	#RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+	# Run thing in this order:
+	# 	ROT_SetUpExtLaw 1
+	# 	ROT_CalcNebularAV
+	# 	ROT_CalcDeredLuminosities
+	# or do them all together with
+	#	ROT_DeRedBasics 1
+
+
+	###################################################################
+	#------------------------------------------------------------------
+	# Run all 3 macros below in one go
+	#------------------------------------------------------------------
+ROT_DeRedBasics 2
+	ROT_SetUpExtLaw  $1
+	ROT_CalcNebularAV $2
+	ROT_CalcDeredLuminosities
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# Set-up red_law_option & q_ext[lambda] array, used to deredden things
+	#------------------------------------------------------------------
+ROT_SetUpExtLaw 1
+	echo 
+	echo [ROT_SetUpExtLaw] Reading extinction laws & defining q_ext[lambda] array!!
+	define red_law_option ('$1')
+
+	# OBS: Assuming lambdas sampled in 1 Angs step!
+	ROT_GoToTablesDir
+	data ExtLaws.out
+        read {lambda 1 q_CCM 2 q_CAL 3 q_HZ1 4 q_HZ2 5 q_HZ3 6 q_HZ4 7 q_HZ5 8 q_GD1 9 q_GD2 10 q_GD3 11}
+	set lix = q_$red_law_option  if (lambda >= 3322 & lambda <= 9300)
+	set dimen(q_ext) = 9301
+	do i=3322,9300 {set q_ext[$i] = lix[$i-3322]}
+	ROT_GoToWorkDir
+
+	# Clean up auxiliary variables
+	foreach var (lix lambda q_CCM q_CAL q_HZ1 q_HZ2 q_HZ3 q_HZ4 q_HZ5 q_GD1 q_GD2 q_GD3) {delete $var}
+	echo [ROT_SetUpExtLaw] Done! Defined q_ext[3322...9300] for extinction law = $red_law_option
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# Define AV_Balmer & AV_lines arrays containting the Balmer extinction
+	#------------------------------------------------------------------
+ROT_CalcNebularAV 1
+	# Check if $red_law_option (and thus indirectly q_ext[]) is defined
+	if (!$?red_law_option) {
+		echo [ROT_DefineAVlines] OOPS! you must 1st define red_law_option!!!
+		echo                     Run ROT_SetUpExtLaw macro before...
+		return
+		}
+
+	# $1 = assumed intrinsic Ha/Hb = 2.86
+	define HaHb_intrinsic ($1)
+
+	# Define AV_Balmer, adjusting the coeficient according to the chosen extinction law
+	define coef_AV (2.5 / (q_ext[4861] - q_ext[6563]))
+	set lix = ( (abs(El_F_6563) + 1e-30) / (abs(El_F_4861) + 1e-30) ) / $HaHb_intrinsic
+	set AV_Balmer = (El_F_6563 > 0 & El_F_4861 > 0) ? $coef_AV * lg(lix) : MINUS999
+
+	# Define AV_lines = the AV to use to deredden emission lines
+	# AV_lines = AV_Balmer, but changing it to 0 when AV_Balmer is only slightly negative
+	#            and to -999 when AV_Balmer < -0.1!
+	# In practice, when AV_Balmer >= -0.1, we set AV_lines = 0.
+	set lix      = (AV_Balmer < 0 & AV_Balmer >= -0.1) ? 0 * AV_Balmer : AV_Balmer
+	set AV_lines = (AV_Balmer < -0.1) ? MINUS999 : lix
+
+	# Clean up auxiliary variables...
+	delete lix
+	echo [ROT_CalcNebularAV] Done! AV_Balmer & AV_lines defined using (Ha/Hb)_int = $HaHb_intrinsic
+	#------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------
+	# Define raw & extinction corrected log_LHa, log_LO3 & log_LO2, in Lsun
+	# ATT: We keep the **observed** luminosity when AV_lines < 0!!
+ROT_CalcDeredLuminosities
+	# Check if $red_law_option (and thus indirectly q_ext[]) is defined
+	if (!$?red_law_option) {
+		echo [ROT_DefineAVlines] OOPS! you must 1st define red_law_option!!!
+		echo                     Run ROT_SetUpExtLaw macro before...
+		return
+		}
+
+	# Check if AV_lines is defined
+	if (whatis(AV_lines) != 41) {
+		echo [ROT_CalcDeredLuminosities] OOPS! AV_lines undefined!!
+		echo                     Run ROT_DefineAVlines macro before...
+		return
+		}
+
+	set log_4PId2  = lg(4 * PI * DL**2) + 2 * lg(1e6 * 3.086e18)
+	set log_LHa    = (El_F_6563 > 0) ? lg(abs(El_F_6563*1e-17) + 1e-30) + log_4PId2 - lg(3.826e33) : MINUS999
+	set log_LO3    = (El_F_5007 > 0) ? lg(abs(El_F_5007*1e-17) + 1e-30) + log_4PId2 - lg(3.826e33) : MINUS999
+	set log_LO2    = (El_F_3727 > 0) ? lg(abs(El_F_3727*1e-17) + 1e-30) + log_4PId2 - lg(3.826e33) : MINUS999
+	set log_LHa_dr = (log_LHa > 0 & AV_lines >= 0) ? log_LHa + 0.4 * AV_lines * q_ext[6563] : log_LHa
+	set log_LO3_dr = (log_LO3 > 0 & AV_lines >= 0) ? log_LO3 + 0.4 * AV_lines * q_ext[5007] : log_LO3
+	set log_LO2_dr = (log_LO2 > 0 & AV_lines >= 0) ? log_LO2 + 0.4 * AV_lines * q_ext[3727] : log_LO2
+
+	# Clean up auxiliary variables...
+	delete log_4PId2
+
+	echo [ROT_CalcDeredLuminosities] Done! log_L* & log_L*_dr defined for Ha, O3 & O2
+	#------------------------------------------------------------------
+	###################################################################
+
+	#RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+	#R		 END OF REDDENING/DE-REDDENING BLOCK		  R
+	#RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+
+
+
+	#FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+	#F		 START OF READ-STARLIGHT-FITS BLOCK		  F
+	#FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+	# Read I read a Starlight-fit file for a single galaxy. 
+	# There are also a couple of macros to bin things this or that way...
+	# Cid@Lagoa - May/16/2006
+
+	#####################################################################
+	# READS OUTPUT OF StarlightChains_v01.for  (Cid@INAOE - 28/June/05) #
+	#####################################################################
+	# Read a synthesis-file. It is assumed that we're talking about 
+	# StarlightChains* formatted output! 
+	# (Old, Starlight03_v0* format no longer supported).
+	# We now cd to $fits_dir (if defined) to read the file and
+	# then back to $work_dir (if defined).
+	# Cid@Lagoa - May/16/2006
+
+	# Introduced check if file exists! If not, just go back!
+	# Cid@Lagoa - May/05/2007
+
+ROT_Read_Output_of_Starlight 1
+	echo @@> [ROT_Read_Output_of_Starlight] Reading output of StarlightChains: Galaxy $1
+	ROT_GoToFitsDir
+
+	if (!is_file($1)) {
+		echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		echo @@> [ROT_Read_Output_of_Starlight] OOPS! File $1 is NOT here!! <@@
+		echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		ROT_GoToWorkDir
+		return
+		}
+
+	data $1
+	define arq_spec          read  6 1
+	define arq_base          read  7 1
+	define arq_masks         read  8 1
+	define arq_config        read  9 1
+	define N_base            read 10 1
+	define N_YAV_components  read 11 1
+	define iFitPowerLaw      read 12 1
+	define alpha_PowerLaw    read 13 1
+	define red_law_option    read 14 1
+	define q_norm            read 15 1
+
+	define l_ini           read 18 1
+	define l_fin           read 19 1
+	define dl              read 20 1
+
+	define l_norm          read 23 1
+	define llow_norm       read 24 1
+	define lupp_norm       read 25 1
+	define fobs_norm       read 26 1
+
+	define llow_SN         read 29 1
+	define lupp_SN         read 30 1
+	define SN_snwin        read 31 1
+	define SN_normwin      read 32 1
+	define SNerr_snwin     read 33 1
+	define SNerr_normwin   read 34 1
+	define fscale_chi2     read 35 1
+
+	define idum_orig       read 38 1
+	define NOl_eff         read 39 1
+	define Nl_eff          read 40 1
+	define Ntot_clipped    read 41 1
+	define Nglobal_steps   read 42 1
+	define N_chains        read 43 1
+	define NEX0s_base      read 44 1
+
+	define chi2            read 50 1
+	define adev            read 51 1
+
+	define sum_x           read 53 1
+	define Flux_tot        read 54 1
+	define Mini_tot        read 55 1
+	define Mcor_tot        read 56 1
+
+	define v_0             read 58 1
+	define v_d             read 59 1
+	define A_V             read 60 1
+	define YA_V            read 61 1
+
+	# Read/define x, mu_ini, mu_cor, age_base, Z_base & YAV_flag arrays.
+	# OBS: Notation modified by Cid@Lagoa - 28/Feb/2007
+	echo @@> [ROT_Read_Output_of_Starlight] x, mu_ini, mu_cor, age_base, Z_base & etc arrays
+	echo @@> [ROT_Read_Output_of_Starlight] defined as pop* to avoid conflict with other macros!
+	define _nlast (63 + $N_base)
+	lines 64 $_nlast
+	read {popx 2 popmu_ini 3 popmu_cor 4 popage_base 5 popZ_base 6	popYAV_flag 8 popMstars 9}
+
+	# Renormalize x to 100% sum!!
+	define _sum (sum(popx))
+	set popx = 100 * popx / $_sum
+
+	# OBS: PL have age = 0 in the Starlight output file:(
+	#      Here I change it so that age_PL = 5e5 yr... & Z_PL = solar
+	#      This is all obsolete anyway. The built-in PL is not used anymore.
+	if ($iFitPowerLaw > 0) {
+		echo @@> [ROT_Read_Output_of_Starlight] ...Fixing PL age & Z ...????? CHECK THIS ?????
+		set popage_base[$N_base - 1] = 5e5
+		set popZ_base[$N_base - 1]   = 0.02
+		}
+
+	# Read spectra (l_obs, f_obs, f_syn & f_wei)
+	define iaux1 (63 + $N_base + 5 + $N_base + 2 + $N_base + 11)
+	define Nl_obs read $iaux1 1
+	define iaux2 ($iaux1 + 1)
+	define iaux3 ($iaux1 + $Nl_obs)
+	lines $iaux2 $iaux3
+	read {l_obs 1 f_obs 2 f_syn 3 f_wei 4}
+
+	echo @@> [ROT_Read_Output_of_Starlight] Done:) Read Starlight-fit in $1
+	ROT_GoToWorkDir
+	#####################################################################
+
+
+	#####################################################################
+	# Macro used to bin pop-vector for Star-Formation-History plotting.
+	# Adapted to use pop* arrays read by ROT_Read_Output_of_Starlight
+	# Cid@Lagoa - 28/Feb/2007
+
+ROT_BuildAgeBinnedArrays
+	# If N_ages is NOT defined, then 1st find how many different ages there 
+	# are in the N_base components & construct a sorted age_bin array 
+	# with these n_ages ages.
+	# OBS: The crazy mix of n_ages & N_ages is a result of different
+	#      generations of my macros...
+	if (!$?N_ages) {
+		set lix = popage_base
+		sort {lix}
+		define n_ages (1)
+		do i=0,$N_base-2 {
+			if (lix[$i] != lix[$i+1]) {define n_ages ($n_ages + 1)}
+			}
+
+		# Define age_bin array with the $n_ages different ages in the base
+		set dimen(age_bin) = $n_ages
+		define i_age (0)
+		do i=0,$N_base-2 {
+			if (lix[$i] != lix[$i+1]) {
+				set age_bin[$i_age] = lix[$i]
+				define i_age ($i_age + 1)
+				}
+			}
+		set age_bin[$n_ages-1] = lix[$N_base-1]
+
+	} else {
+		set i_lix = 1,$N_base
+		set age_bin = popage_base if (i_lix <= $N_ages)
+		define n_ages ($N_ages)
+		echo @@> [ROT_BuildAgeBinnedArrays] There are $n_ages different ages in this base!
+	}
+
+
+	# Find n_Zs & define Z_bin array with the $n_Zs different Zs in the base
+	# (Helps with coloured-histogram of SFH)
+	set lix = popZ_base
+	sort {lix}
+	define n_Zs (1)
+	do i=0,$N_base-2 {if (lix[$i] != lix[$i+1]) {define n_Zs ($n_Zs + 1)}}
+	set dimen(Z_bin) = $n_Zs
+	define i_Z (0)
+	do i=0,$N_base-2 {
+		if (lix[$i] != lix[$i+1]) {
+			set Z_bin[$i_Z] = lix[$i]
+			define i_Z ($i_Z + 1)
+			}
+		}
+	set Z_bin[$n_Zs-1] = lix[$N_base-1]
+	echo @@> [ROT_BuildAgeBinnedArrays] There are $n_Zs different metallicities in this base!
+
+
+	# Bin x & mu population vectors in age. Produce xbin & mubin arrays.
+	set dimen(x_bin)     = $n_ages
+	set dimen(muini_bin) = $n_ages
+	set dimen(mucor_bin) = $n_ages
+	do i_age=0,$n_ages-1 {
+	do j=0,$N_base-1 {
+		if (popage_base[$j] == age_bin[$i_age]) {
+			set x_bin[$i_age]     = x_bin[$i_age]     + popx[$j]
+			set muini_bin[$i_age] = muini_bin[$i_age] + popmu_ini[$j]
+			set mucor_bin[$i_age] = mucor_bin[$i_age] + popmu_cor[$j]
+			}
+		}
+		}
+	#####################################################################
+
+
+	###################################################################
+	# My full pop vectors are stored like, p. ex., x1, x2... x150.
+	# To build an Z-binned version y1...y25 (assuming 25 ages), use:
+	# ROT_BinFullPopVectorInAge x 25 6 y
+	# where 25 & 6 are the number of ages & Z's in the base.
+	# To build an age binned version y1...y6 (assuming 6 Z's), use:
+	# ROT_BinFullPopVectorInZ x 25 6 y.
+	# 
+	# The optional 5th argument is a flag.
+	#
+	# Cid@Lagoa - 05/May/2006
+ROT_BinFullPopVectorInAge 15
+	do _it=1,$2 {
+		set _aux = 0 * $1"1"
+		do _iZ=1,$3 {
+			define j ((($_iZ - 1) * $2) + $_it)
+			set _aux = _aux + $1""$j
+			}
+		set $4$_it  = _aux
+		if ($?5) {set $4$_it = _aux if ($5)}
+		}
+	delete _aux
+
+ROT_BinFullPopVectorInZ 15
+	do _iZ=1,$3 {
+		set _aux = 0 * $1"1"
+		do _it=1,$2 {
+			define j ((($_iZ - 1) * $2) + $_it)
+			set _aux = _aux + $1""$j
+			}
+		set $4$_iZ  = _aux
+		if ($?5) {set $4$_iZ = _aux if ($5)}
+		}
+	delete _aux
+	###################################################################
+
+	#FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+	#F		END OF READ-STARLIGHT-FITS BLOCK		  F
+	#FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF

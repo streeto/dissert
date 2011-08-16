@@ -1,5 +1,5 @@
 #TeXlipse project settings
-#Wed Apr 27 19:29:13 BRT 2011
+#Thu Aug 11 22:56:38 BRT 2011
 builderNum=0
 outputDir=
 makeIndSty=
@@ -8,6 +8,6 @@ outputFormat=dvi
 tempDir=tmp
 mainTexFile=dissert.tex
 outputFile=dissert.dvi
-langSpell=pt
+langSpell=pt_BR
 markDer=true
 srcDir=

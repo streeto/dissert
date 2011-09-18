@@ -34,3 +34,6 @@
 
 % My definitions
 \usepackage{nadefinitions}
+
+% URL and hyperlinks
+\usepackage{hyperref}

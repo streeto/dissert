@@ -1,6 +1,8 @@
 glob:*~
 doc/tmp
 doc/texput.log
+doc/dissert.dvi
 .metadata
 .DS_Store
 .smhist
+Test

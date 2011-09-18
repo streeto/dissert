@@ -30,16 +30,16 @@
 
 O {\em Galaxy Evolution Explorer} (\galex) é um telescópio espacial de pequeno
 porte da NASA\footnote{{\em NASA Small Explorer} ({\em SMEX}) -
-http://explorers.gsfc.nasa.gov/missions.html}, lançado em 28 de abril de 2003
-para conduzir um {\em survey} de todo o céu numa faixa espectral do ultravioleta
-(1350--2750\AA). O objetivo principal do \galex é estudar a evolução da taxa de
-formação estelar em galáxias \citep{Martin2005}. Os dados coletados pela missão
-são publicados em {\em Data Releases} periódicos, denominados \galex {\em
-Releases}. Este trabalho foi realizado sobre os dados do sexto \galex {\em
-Release}, GR6.
+\url{http://explorers.gsfc.nasa.gov/missions.html}}, lançado em 28 de abril de
+2003 para conduzir um {\em survey} de todo o céu numa faixa espectral do
+ultravioleta (1350--2750\AA). O objetivo principal do \galex{} é estudar a
+evolução da taxa de formação estelar em galáxias \citep{Martin2005}. Os dados
+coletados pela missão são publicados em {\em Data Releases} periódicos,
+denominados {\em General Releases}. Este trabalho foi realizado sobre os dados
+do sexto {\em General Release}, GR6.
 
 A missão consiste em uma série de {\em surveys} fotométricos e espectroscópicos
-(ver tabela \ref{tab:GalexSurveys}). Destes, os principais {/em surveys} são o
+(ver tabela \ref{tab:GalexSurveys}). Destes, os principais {\em surveys} são o
 All Sky Survey (AIS) e o Medium Imaging Survey (MIS), que foram utilizados neste
 trabalho. O imageamento é feito em duas bandas espectrais: ultravioleta distante
 ({\em far ultraviolet}, FUV), de 1350 a 1750\AA, e ultravioleta próximo ({\em
@@ -52,11 +52,13 @@ espectro de baixa resolução para cada objeto na imagem, conforme descrito por
 
 \begin{table}
 	\caption[{\em Surveys} realizados pelo \galex.]{{\em Surveys} realizados pelo
-	\galex. No caso do NGS, a magnitude limite é dada em unidades de densidade
-	superficial de magnitude. Informações retiradas de \cite{Martin2005}.}
+	\galex. O CAI consiste em observações de anãs brancas para calibração. No caso
+	do NGS, a magnitude limite é dada em unidades de densidade superficial de
+	magnitude. Informações retiradas de \cite{Martin2005}.}
 	\begin{tabular}{l r r}
 		{\em Survey} & Cobertura do céu ($graus^2$) & Magnitude AB limite \\ 
 		\midrule
+		{\em Calibration Imaging (CAI)} & - & - \\
 		{\em All-sky Imaging Survey (AIS)} & 26000 & 20.5 \\
 		{\em Medium Imaging Survey (MIS)} & 1000 & 23 \\
 		{\em Deep Imaging Survey (DIS)} & 80 & 25 \\
@@ -79,15 +81,16 @@ espectro de baixa resolução para cada objeto na imagem, conforme descrito por
 
 
 
-Os {\em surveys} do \galex foram planejados de forma a se valer de outros {\em
+Os {\em surveys} do \galex{} foram planejados de forma a se valer de outros {\em
 surveys} já existentes em outros comprimentos de onda. A figura
-\ref{fig:GalexSDSSOverlap} mostra a sobreposição dos {\em
-footprints}\footnote{TODO: Foot.} dos surveys AIS e MIS do \galex e do {\em
-Sloan Digital Sky Survey} (SDSS). Os objetivos primários da missão do \galex são
-a calibração da taxa de formação estelar no universo local, e então determinar o
-histórico cosmológico de formação estelar entre os redshifts $0 < z < 2$
-\citep{Martin2005}. A comparação com dados de surveys em outros comprimentos de
-onda tem um papel fundamental no cumprimento deste objetivo.
+\ref{fig:GalexSDSSOverlap} mostra a sobreposição da área observada
+\footnote{{\em Footprint}, no linguajar astronômico.} pelos surveys AIS e MIS do
+\galex{} e do {\em Sloan Digital Sky Survey} (\SDSS). Os objetivos primários da
+missão do \galex{} são a calibração da taxa de formação estelar no universo
+local, e então determinar o histórico cosmológico de formação estelar entre os
+redshifts $0 < z < 2$ \citep{Martin2005}. A comparação com dados de surveys em
+outros comprimentos de onda tem um papel fundamental no cumprimento deste
+objetivo.
 
 % FIXME: Adicionar figura.
 \begin{figure}
@@ -106,11 +109,131 @@ onda tem um papel fundamental no cumprimento deste objetivo.
 %                                                               %
 %***************************************************************%
 
-\section{O céu no ultravioleta}
+\section{Histórico do estudo do céu no ultravioleta}
 \label{sec:Galex:CeuUV}
 
-% TODO: Escrever sobre céu no UV.
-Copiar e colar 1.2 do \cite{Martin2005}.
+A camada de ozônio, tão desejável pela proteção que oferece aos seres vivos,
+cobra a sua taxa na astronomia. Observações na banda ultravioleta precisam ser
+feitas fora da atmosfera terreste, portanto não é de se estranhar que o trabalho
+nesta faixa espectral tenha progredido menos do que na faixa do óptico e do
+infravermelho.\citneed
+
+
+% FIXME: adicionar referências.
+O primeiro trabalho sistemático de observação UV foi feito pelo {\em Orbiting
+Astronomical Observatory 2} \citep{Code1970}, obtendo fotometria e
+espectroscopia de estrelas brilhantes, aglomerados globulares e galáxias
+próximas. Durante as décadas de 1970 e 1980, este e outros satélites como o TD-1
+\citep{Boksenberg1973}, o {\em Astronomical Netherlands Satellite}
+\citep{vanDuinen1975} e o {\em International Ultraviolet Explorer}
+\citep{Kondo1987} -- o primeiro satélite a utilizar um detetor de imageamento
+UV, forneceram os dados fundamentais para os modelos de síntese de população
+estelar de galáxias. {\em Surveys} de campo amplo foram feitos por uma camera
+lunar erguida por astronautas da {\em Apollo 16} \citep{Carruthers1973}, a bordo
+do {\em Skylab} \citep{Henize1975} e pelo instrumento {\em FAUST} a bordo do
+{\em Spacelab} \citep{Bowyer1993}. Muitas imagens UV também foram obtidas pelo
+{\em Ultraviolet Imaging Telescope} em duas missões em ônibus espacial
+\citep{Stecher1997}.
+
+% FIXME: O que é rest-UV?
+The balloon-borne FOCA Telescope (Milliard et al. 1992) obtained the
+first far- UV (FUV) luminosity function for galaxies in the local universe
+(Treyer et al. 1998) and the first rest-UV anchor point for the star formation
+history plot.
+
+
+%***************************************************************%
+%                                                               %
+%                     Galex - Banco de dados                    %
+%                                                               %
+%***************************************************************%
+
+\section{Data releases e banco de dados}
+\label{sec:Galex:BancoDeDados}
+
+% FIXME: Arrumar uma tradução melhor para ``tile''.
+Os dados obtidos pelo \galex{} são armazenados no {\em Multi-Mission archive at
+the Space Telescope Science Institute} (MAST). O acesso a estes dados é público,
+a liberação é feita anualmente em {\em General Releases} (GR). Os dados
+consistem basicamente em imagens e catálogos, dividos em campos ({\em tiles})
+com área de aproximadamente $1,2graus^2$. Devido ao modo como o \galex{} faz as
+observações, um determinado objeto pode estar presente em mais de um campo. A
+tabela \ref{tab:GalexReleases} mostra o número cumulativo de campos observados
+por {\em survey} em cada GR\footnote{Informações retiradas do website do GR6:
+\url{http://galex.stsci.edu/GR6/}}. Observações de pesquisadores convidados
+({\em Guest Investigators}, GI) foram selecionadas de forma a complementar os
+{\em surveys}.
+
+\begin{table}
+	\caption[Campos observados em cada {\em General Release} do \galex.]{Campos
+	observados em cada {\em General Release} do \galex. Os valores são referentes
+	aos campos observados.}
+	\begin{tabular}{l r r r r r r r r}
+		{\em Release} & AIS   & DIS & MIS  & NGS & GI   & CAI & Espectros & Total \\
+		\midrule
+		GR1           & 3074  & 14  & 112  & 52  & -    & -   & 7         & 3259  \\
+		GR2/GR3       & 15721 & 165 & 1017 & 296 & 288  & 20  & 41        & 17548 \\
+		GR4/GR5       & 28269 & 292 & 2161 & 458 & 788  & 38  & 174       & 32180 \\
+		GR6           & 28889 & 338 & 3479 & 480 & 1314 & 51  & -         & 34551 \\
+	\end{tabular}
+	\label{tab:GalexReleases}
+\end{table}
+
+Para facilitar o acesso aos dados do \galex, o MAST desenvolveu uma ferramenta
+chamada {\em GalexView}, utilizando tecnologia {\em Adobe Flex}\footnote{{\em
+Adobe Flex} é um {\em framework} de código aberto que permite desenvolver
+aplicações para {\em web browsers}. Ver
+\url{http://www.adobe.com/products/flex.html}.}. Desta forma o {\em GalexView }
+pode ser acessado através de seu {\em website}\footnote{GalexView:
+\url{http://galex.stsci.edu/GalexView/}} em qualquer {\em web browser} que tenha
+suporte ao {\em Adobe Flash Player}\footnote{{\em Adobe Flash Player} é uma
+extensão multiplataforma para {\em web browsers} que provê capacidade de
+visualização de conteúdo {\em flash} gerado tanto pelos seus editores
+proprietários quanto por ferramentas de terceiros. Ver
+\url{http://www.adobe.com/products/flashplayer/}.}.
+
+Através do {\em GalexView} é possível fazer buscas, visualizar e obter imagens e
+catálogos dos campos do \galex. As buscas podem ser feitas de forma bastante
+versátil, tanto pelo nome do objeto quanto pelas coordenadas do céu. O formato
+de entrada é flexível o suficiente para evitar os problemas causados por
+idiosincrasias na notação de coordenadas (por exemplo, tanto ``14h03m12.6s
++54d20m56.7s'' quanto ``14 03 12.6 54 20 56.7'' ou ``210.83 54.35'' apontam para
+a mesma região). A sua interface (figura \ref{fig:GalexView}) permite filtrar o
+conteúdo retornado pelas buscas, separando por {\em surveys}. Há também uma
+ferramenta de histograma, permitindo filtrar pelos valores das colunas dos
+catálogos. Os objetos selecionados na busca aparecem marcados na visualização da
+imagem. Utilizando um sistema do tipo ``carrinho de compras'', pode-se
+selecionar campos e objetos de interesse, para ao final do uso do sistema baixar
+toda a seleção de uma vez.
+
+% FIXME: Adicionar figura.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Tela do programa GalexView.]
+	{Tela do programa GalexView.}
+	\label{fig:GalexView}
+\end{figure}
+
+Tanto o {\em GalexView} quanto outras ferramentas de busca do MAST, como o
+\galex {\em Search Form} e o \galex {\em Tilelist}, são construídos sobre um
+{\em banco de dados relacional} acessado através da linguagem {\em SQL}
+\citep{Chamberlin1974}. Muito comum na indústria, bancos de dados relacionais
+dispõem em geral uma vasta gama de ferramentas para gerenciamento dos dados. Uma
+de suas grandes vantagens é o uso de {\em índices} para agilizar o acesso a
+dados. Embora a tecnologia exista desde a década de 1970 \citep{Codd1970}, até
+uma década atrás suas vantagens eram praticamente neglicenciadas na astronomia.
+
+Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
+contendo um registro por linha, de um forma tecnicamente conhecida como {\em
+flat file}. Buscas neste tipo de banco de dados são feitas examinando
+individualmente cada registro do arquivo. Com o volume de dados obtido pelo
+\galex (aproximadamente 222 milhões de objetos, 34 mil campos)\citneed, o uso
+de arquivos simples para armazenamento de dados se torna inviável.\citneed É
+preciso ``profissionalizar'' o gerenciamento de dados de um {\em survey} desta
+escala.
+
+Bancos de dados relacionais e ferramentas para gerenciamento e acesso a dados
+serão tratados com mais detalhes no capítulo \ref{sec:Crossmatch}.
 
 
 %***************************************************************%
@@ -122,18 +245,14 @@ Copiar e colar 1.2 do \cite{Martin2005}.
 \section{Resultados obtidos}
 \label{sec:Galex:Resultados}
 
-Galex papers. \cite{Wyder2007} + II e III. Adicionar um diagrama cor-mag. Falar
-da bimodalidade. Conclusões dos principais artigos.
+% TODO: Finalmente um survey sério em UV.
 
-%***************************************************************%
-%                                                               %
-%                     Galex - Banco de dados                    %
-%                                                               %
-%***************************************************************%
+%TODO: Galex papers.
+Galex papers. \cite{Wyder2007} + II e III.
+Falar da bimodalidade. Conclusões dos principais artigos.
 
-\section{Banco de dados}
-\label{sec:Galex:BancoDeDados}
 
-Data releases. Legado. Referências com links em footnotes.
+% TODO: Adicionar um diagrama cor-mag.
+
 
 % End of this chapter

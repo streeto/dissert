@@ -35,5 +35,11 @@
 % My definitions
 \usepackage{nadefinitions}
 
-% URL and hyperlinks
+%%%% André %%%%
 \usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+
+% Used for code formatting.
+\usepackage{fancyvrb}
+\usepackage[scaled]{beramono}
+

@@ -27,22 +27,40 @@ na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente 
 \SDSS utilizou um {\em sistema de gerenciamento de banco de dados orientado a
 objetos} (OODBMS, na sigla em inglês). Após pouco mais de um ano a abordagem se
 mostrou inadequada: entre os principais problemas, uma linguagem de {\em query}
-inadequada e performance ruim. O motivo, segundo \cite{Thakar2004}, foi a
+inadequada e performance ruim. O motivo, segundo \citet{Thakar2004}, foi a
 incapacidade da empresa desenvolvedora do OODBMS em prover novas funcionalidades
 requisitadas pelo projeto e correção de {\em bugs}, bem como em acompanhar o
 crescimento da performance do {\em hardware}.
 
+% TODO: Adicionar figura - tela do skyserver.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Tela do skyserver.]
+	{tela do skyserver.}
+	\label{fig:TelaDoSkyServer}
+\end{figure}
+
+
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
-de banco de dados relacional} (RDBMS, na sigla em inglês). RDBMS pode ser
-considerado o padrão da indústria. Praticamente todas as linguagens de
-programação tem bibliotecas de interface às implementações de RDBMS comerciais
-mais comuns (Oracle, IBM e Microsoft). Há uma diversidade de ferramentas para
-desenvolvimento e gerenciamento de RDBMS. E talvez o maior benefício de todos, o
-acesso aos dados é feito utilizando uma linguagem padronizada: Simple Query
-Language (SQL) \citep{Codd1970}. A migração dos dados do \SDSS para um RDBMS
-comercial implicou num aumento significativo da performance do acesso aos dados,
-e resultou no desenvolvimento do {\em SkyServer}\footnote{SkyServer:
+de banco de dados relacional} (RDBMS, na sigla em inglês) num esforço guiado por
+\citet{Thakar2004}. RDBMS pode ser considerado o padrão da indústria.
+Praticamente todas as linguagens de programação tem bibliotecas de interface às
+implementações de RDBMS comerciais mais comuns (Oracle, IBM e Microsoft,
+Postgres). Há uma diversidade de ferramentas para desenvolvimento e
+gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
+é feito utilizando uma linguagem padronizada: Simple Query Language (SQL)
+\citep{Codd1970}. A migração dos dados do \SDSS para um RDBMS comercial implicou
+num aumento significativo da performance do acesso aos dados, e resultou no
+desenvolvimento do {\em SkyServer}\footnote{SkyServer:
 \url{http://skyserver.sdss.org/}}.
+
+% FIXME: Continuar o paragrafo sobre OODB X RDB
+A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
+necessariamente a superioridade do segundo em relação ao primeira. Tanto a
+abordagem orientada a objetos quanto a abordagem relacional tem suas vantagens e
+desvantagens. O estudo de caso do \SDSS é apenas uma evidência anedótica. No
+entanto, Para aplicações semelhantes ao \SDSS, isto é, {\em surveys} com volumes
+imensos de dados\ldots\fixme
 
 O {\em SkyServer} é um {\em website} que provê acesso aos dados armazenados no
 banco de dados do \SDSS \citep{Szalay2002}. O acesso mais simples pode ser feito
@@ -57,13 +75,13 @@ contornada através do sistema {\em CasJobs}, que será tratado adiante.
 encoraja) a criação de {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês.
 Clone de um website.}. Todo o banco de dados do \SDSS e o código fonte do {\em
 SkyServer} está disponível no próprio {\em website} do {\em SkyServer}. Há um
-clone do banco de dados do {Data Release} 8 do \SDSS no servidor {\em CasJobs}
-do \starlight \footnote{{\em CasJobs} do \starlight:
+clone do banco de dados do {\em Data Release} 8 do \SDSS no servidor {\em
+CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
 \subsection{{\em CasJobs}}
 % TODO: Apresentar o Casjobs.
-\cite{Li2008}.
+\citet{Li2008}.
 \begin{verbatim}
 Catalog Archive Server Jobs (CasJobs) is an asynchronous query
 workbench service that lets users run unrestricted SQL queries against
@@ -89,7 +107,11 @@ TODO: Construção do banco de dados do starlight Starlight gera dados em arquiv
 texto. São gigabytes de dados. Tratável para uso pessoal, mas não é muito viável
 a distribuição.
 
-Importação para o sql server?.
+Importação para o sql server? Mostrar que não é complicado, vale a pena gastar
+tempo fazendo isso.
+
+Deixar pra falar do acesso aos dados no apêndice
+\ref{anexo:ManualStarlightGalex}.
 
 \subsection{Estrutura do banco de dados}
 % TODO: Estrutura banco de dados do starlight.
@@ -172,11 +194,11 @@ fotométrica.
 
 \section{Crossmatch \SDSS/\galex}
 % TODO: Crossmatch SDSS/GALEX.
-TODO: Crossmatch SDSS/GALEX. \cite{Budavari2009}.
+TODO: Crossmatch SDSS/GALEX. \citet{Budavari2009}.
 
 \subsection{Indexação HTM}
 % TODO: Indexação HTM.
-TODO: Indexação HTM. \cite{Kunszt2000}.
+TODO: Indexação HTM. \citet{Kunszt2000}.
 \begin{verbatim}
 The Spatial Indexing used in the Sloan
 Digital Sky Survey (SDSS) Science Archive divides the spherical surface into
@@ -203,7 +225,8 @@ flags.
 
 \subsection{Análise de completeza}
 % TODO: Análise de completeza do crossmatch SDSS/GALEX
-TODO: Análise de completeza do crossmatch SDSS/GALEX
+TODO: Análise de completeza do crossmatch SDSS/GALEX. Tem no paper do
+\citet{Budavari2009}, acho que é redundante.
 
 
 \section{Definição das amostras \SDSS/\starlight e \galex}

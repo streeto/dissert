@@ -21,55 +21,51 @@
 % TODO: Crossmatch - intro do capítulo.
 TODO: Crossmatch - intro do capítulo.
 
-\section{\SDSS {\em SkyServer} e {\em CasJobs}}
+\section{Banco de dados do \SDSS}
 Um dos maiores responsáveis pela promoção do uso de bancos de dados relacionais
 na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente o
 \SDSS utilizou um {\em sistema de gerenciamento de banco de dados orientado a
-objetos} (OODBMS, na sigla em inglês). Após pouco mais de um ano a abordagem se
-mostrou inadequada: entre os principais problemas, uma linguagem de {\em query}
-inadequada e performance ruim. O motivo, segundo \citet{Thakar2004}, foi a
-incapacidade da empresa desenvolvedora do OODBMS em prover novas funcionalidades
-requisitadas pelo projeto e correção de {\em bugs}, bem como em acompanhar o
-crescimento da performance do {\em hardware}.
+objetos} \citep{Maier1986} (OODBMS, na sigla em inglês). Após pouco mais de um
+ano a abordagem se mostrou inadequada: entre os principais problemas, uma
+linguagem de {\em query} inadequada e performance ruim. O motivo, segundo
+\citet{Thakar2004}, foi a incapacidade da empresa desenvolvedora do OODBMS em
+prover novas funcionalidades requisitadas pelo projeto e correção de {\em bugs},
+bem como em acompanhar o crescimento da performance do {\em hardware}.
 
-% TODO: Adicionar figura - tela do skyserver.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Tela do skyserver.]
-	{tela do skyserver.}
-	\label{fig:TelaDoSkyServer}
-\end{figure}
-
-
+\subsection{Migração de OODBMS para RDBMS}
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
-de banco de dados relacional} (RDBMS, na sigla em inglês) num esforço guiado por
-\citet{Thakar2004}. RDBMS pode ser considerado o padrão da indústria.
-Praticamente todas as linguagens de programação tem bibliotecas de interface às
-implementações de RDBMS comerciais mais comuns (Oracle, IBM e Microsoft,
-Postgres). Há uma diversidade de ferramentas para desenvolvimento e
+de banco de dados relacional} \citep{Codd1970} (RDBMS, na sigla em inglês) num
+esforço guiado por \citet{Thakar2004}. RDBMS pode ser considerado o padrão da
+indústria. Praticamente todas as linguagens de programação tem bibliotecas de
+interface às implementações de RDBMS comerciais mais comuns (Oracle, IBM e
+Microsoft, Postgres). Há uma diversidade de ferramentas para desenvolvimento e
 gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
-é feito utilizando uma linguagem padronizada: Simple Query Language (SQL)
-\citep{Codd1970}. A migração dos dados do \SDSS para um RDBMS comercial implicou
-num aumento significativo da performance do acesso aos dados, e resultou no
-desenvolvimento do {\em SkyServer}\footnote{SkyServer:
-\url{http://skyserver.sdss.org/}}.
+é feito utilizando uma linguagem padronizada: {\em Simple Query Language}, ou
+simplesmente SQL \citep{Chamberlin1974}. A migração dos dados do \SDSS para um
+RDBMS comercial implicou num aumento significativo da performance do acesso aos
+dados, e resultou no desenvolvimento do {\em SkyServer}\footnote{SkyServer:
+\url{http://skyserver.sdss.org/}}. O servidor de banco de dados escolhido pelo
+\SDSS foi o {\em Microsoft SQL Server}.
 
-% FIXME: Continuar o paragrafo sobre OODB X RDB
 A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
-necessariamente a superioridade do segundo em relação ao primeira. Tanto a
+necessariamente a superioridade do segundo em relação ao primeiro. Tanto a
 abordagem orientada a objetos quanto a abordagem relacional tem suas vantagens e
-desvantagens. O estudo de caso do \SDSS é apenas uma evidência anedótica. No
-entanto, Para aplicações semelhantes ao \SDSS, isto é, {\em surveys} com volumes
-imensos de dados\ldots\fixme
+desvantagens. O estudo de caso do \SDSS é apenas uma evidência anedótica em
+favor do uso de bancos de dados relacionais. No entanto, para aplicações
+semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
+-- vale a pena apostar no sucesso dos RDBMS.
 
-O {\em SkyServer} é um {\em website} que provê acesso aos dados armazenados no
-banco de dados do \SDSS \citep{Szalay2002}. O acesso mais simples pode ser feito
-através de um atlas de locais famosos {\em famous places}, que mostra imagens
-coloridas de objetos celestes conhecidos. Há formulários para buscas mais
-sérias, gerando coleções de imagens, espectros e tabelas de dados. No {\em
-SkyServer} é possível fazer buscas avançadas utlizando SQL, embora haja limites
-de tempo de execução e de quantidade de objetos retornados. Esta limitação é
-contornada através do sistema {\em CasJobs}, que será tratado adiante.
+\subsection{{\em SkyServer}}
+\label{sec:CrossMatch:SDSS:SkyServer}
+O {\em SkyServer} é um {\em website} (figura \ref{fig:TelaDoSkyServer}) que
+provê acesso aos dados armazenados no banco de dados do \SDSS
+\citep{Szalay2002}. O acesso mais simples pode ser feito através de um atlas de
+locais famosos {\em famous places}, que mostra imagens coloridas de objetos
+celestes conhecidos. Há formulários para buscas mais sérias, gerando coleções de
+imagens, espectros e tabelas de dados. No {\em SkyServer} é possível fazer
+buscas avançadas utlizando SQL, embora haja limites de tempo de execução e de
+quantidade de objetos retornados. Esta limitação é contornada através do sistema
+{\em CasJobs}, que é tratado na seção \ref{sec:CrossMatch:SDSS:CasJobs}.
 
 É importante ressaltar que o {\em SkyServer} permite (ou mais adequadamente,
 encoraja) a criação de {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês.
@@ -79,27 +75,52 @@ clone do banco de dados do {\em Data Release} 8 do \SDSS no servidor {\em
 CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
-\subsection{{\em CasJobs}}
-% TODO: Apresentar o Casjobs.
-\citet{Li2008}.
-\begin{verbatim}
-Catalog Archive Server Jobs (CasJobs) is an asynchronous query
-workbench service that lets users run unrestricted SQL queries against
-scientific catalog archives. After running queries in batch mode, users can save
-their results to a personal database called MyDB before downloading them,
-letting users manage their query workloads, results, and histories without
-causing network overload.
+% TODO: Adicionar figura - tela do skyserver.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Tela do skyserver.]
+	{tela do skyserver.}
+	\label{fig:TelaDoSkyServer}
+\end{figure}
 
-CasJobs has become the mainstay and workhorse of the SDSS data-access system.
-It’s in use at SDSS mirror sites worldwide and has also been adapted for
-non-SDSS astronomical archives, such as Galaxy Evolution Explorer (GALEX),
-Palomar Quest, and the upcoming Panoramic Survey Telescope and Rapid Response
-System (Pan-STARRS) PS1 archive, as well as for non-astronomy applications that
-contain hydrology sensor data such as AmeriFlux. The technologies that CasJobs
-employs—asynchronous query execution and personal server-side database
-access—are universally applicable and inescapable for query management in very
-large online databases.
-\end{verbatim}
+\subsection{{\em CasJobs}}
+\label{sec:CrossMatch:SDSS:CasJobs}
+O {\em Catalog Archive Server Jobs} ({\em CasJobs}) é um serviço online
+desenvolvido pela equipe do \SDSS para expandir a capacidade do {\em SkyServer}
+\citep{Li2008}. Nele o usuário pode executar consultas SQL no banco de dados do
+\SDSS da mesma forma que no {\em SkyServer}. Porém, além de consultas rápidas, é
+possível agendar a execução de consultas mais longas. O {\em CasJobs} gerencia
+estas consultas agendadas numa fila de execução, de modo a não sobrecarregar a
+rede ou os servidores de banco de dados. Cada usuário possui sem próprio banco
+de dados, chamado {\em MyDB}. Pode-se importar tabelas para o {\em MyDB} para
+utilizar em {\em queries} correlacionando com os dados presentes no {\em
+CasJobs}. O {\em MyDB} serve como armazenamento de tabelas do usuário, e há
+mecanismos para exportar estas tabelas para arquivos nos formatos FITS, CSV, XML
+e VOTable. Estes arquivos podem ser lidos por programas de análise de dados como
+o {\em TopCat}\footnote{{\em TopCat} é um visualizador gráfico interativo e
+editor de dados tabulares usado em astronomia. Ver
+\url{http://www.star.bris.ac.uk/~mbt/topcat/}.}, ou mesmo importados para outros
+bancos de dados.
+
+% TODO: Adicionar figura - casjobs.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Tela do casjobs]
+	{Tela do casjobs.}
+	\label{fig:CasJobs}
+\end{figure}
+
+É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
+dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
+CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed,
+WISE\citneed e \galex. O {\em CasJobs} também foi adotado por outros projetos
+como o \galex, Kepler\citneed, {\em Palomar Quest}\citneed, {\em Panoramic
+Survey Telescope and Rapid Response System} (Pan-STARRS) e até pelo projeto {\em
+AmeriFlux}, que contém dados de hidrologia\citneed.
+
+% TODO: Exemplos de uso do casjobs.
+A figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
+CasJobs}.
 
 \section{Banco de dados do \starlight}
 % TODO: Construção do banco de dados do starlight.
@@ -107,10 +128,10 @@ TODO: Construção do banco de dados do starlight Starlight gera dados em arquiv
 texto. São gigabytes de dados. Tratável para uso pessoal, mas não é muito viável
 a distribuição.
 
-Importação para o sql server? Mostrar que não é complicado, vale a pena gastar
-tempo fazendo isso.
-
-Deixar pra falar do acesso aos dados no apêndice
+% TODO: Importação do banco de dados do starlight.
+\subsection{Importação para o banco de dados}
+TODO: Importação para o sql server? Mostrar que não é complicado, vale a pena
+gastar tempo fazendo isso. Deixar pra falar do acesso aos dados no anexo
 \ref{anexo:ManualStarlightGalex}.
 
 \subsection{Estrutura do banco de dados}

@@ -18,8 +18,6 @@
 \chapter{O {\em Galaxy Evolution Explorer} (\galex)}
 \label{sec:Galex}
 
-%TODO: Intro do cap 2.
-Neste capítulo\ldots
 
 %***************************************************************%
 %                                                               %
@@ -74,7 +72,7 @@ imagem, conforme descrito por \citet{Morrissey2007}.
 
 % TODO: Adicionar figura - Curvas de transmissão dos filtros do galex.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\includegraphics{figuras/galex-filters.eps}
 	\caption[Curvas de transmissão dos filtros do \galex.]
 	{Curvas de transmissão dos filtros do \galex, medidas em
 	laboratório \citep{Morrissey2005}.}
@@ -84,11 +82,11 @@ imagem, conforme descrito por \citet{Morrissey2007}.
 Os {\em surveys} do \galex foram planejados de forma a se valer de outros {\em
 surveys} já existentes em outros comprimentos de onda. A figura
 \ref{fig:GalexSDSSOverlap} mostra a sobreposição da área observada
-\footnote{{\em Footprint}, no linguajar astronômico.} pelos surveys AIS e MIS do
-\galex e do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário da
+\footnote{{\em Footprint}, no linguajar astronômico.} pelos {\em surveys} AIS e
+MIS do \galex e do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário da
 missão do \galex é calibrar da taxa de formação estelar no universo local e a
-determinar o histórico cosmológico de formação estelar entre os redshifts $0 < z
-< 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em outros
+determinar o histórico cosmológico de formação estelar entre os {\em redshifts}
+$0 < z < 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em outros
 comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
 
 % TODO: Adicionar figura -- Footprint dos surveys AIS, MIS, SDSS.
@@ -125,7 +123,7 @@ próximas. Durante as décadas de 1970 e 1980, este e outros satélites como o T
 \citep{vanDuinen1975} e o {\em International Ultraviolet Explorer}
 \citep{Kondo1987} -- o primeiro satélite a utilizar um detetor de imageamento UV
 -- forneceram os dados fundamentais para os modelos de síntese de população
-estelar de galáxias. {\em Surveys} de campo amplo foram feitos por uma camera
+estelar de galáxias. {\em Surveys} de campo amplo foram feitos por uma câmera
 lunar erguida por astronautas da {\em Apollo 16} \citep{Carruthers1973}, a bordo
 do {\em Skylab} \citep{Henize1975} e pelo instrumento {\em FAUST} a bordo do
 {\em Spacelab} \citep{Bowyer1993}. Muitas imagens UV também foram obtidas pelo
@@ -178,10 +176,10 @@ UV do universo local é medida -- pela primeira vez, segundo os autores -- com
 relação aos parâmetros estruturais e à inclinação das galáxias.
 
 A missão do \galex se encerra em 31 de dezembro de 2011. Dados coletados após o
-GR6, como as observações no mesmo campo da missão Kepler \citep(KeplerMission),
-observações de M31 e da Nuvem de Magalhães, entre outros, serão liberados num
-úmtimo {\em data release}, GR7. Os dados obtidos pelo \galex permanecerão
-disponíveis publicamente no MAST.
+GR6, como as observações no mesmo campo utilizado na missão Kepler
+\citep(KeplerMission), observações de M31 e da Nuvem de Magalhães, entre outros,
+serão liberados num último {\em data release}, GR7. Os dados obtidos pelo \galex
+permanecerão disponíveis publicamente no MAST.
 
 % TODO: Adicionar figura - diagrama cor-magnitude.
 \begin{figure}
@@ -206,14 +204,14 @@ disponíveis publicamente no MAST.
 Os dados obtidos pelo \galex são armazenados no {\em Multi-Mission archive at
 the Space Telescope Science Institute} (MAST). O acesso a estes dados é público,
 a liberação é feita anualmente em {\em General Releases} (GR). Os dados
-consistem basicamente em imagens e qcatálogos, dividos em campos ({\em tiles})
+consistem basicamente em imagens e catálogos, divididos em campos ({\em tiles})
 com área de aproximadamente $1,2$ graus quadrados. Devido ao modo como o \galex
 faz as observações, um determinado objeto pode estar presente em mais de um
 campo. A tabela \ref{tab:GalexReleases} mostra o número cumulativo de campos
-observados por {\em survey} em cada GR\footnote{Informações retiradas do website
-do GR6: \url{http://galex.stsci.edu/GR6/}}. Observações de pesquisadores
-convidados ({\em Guest Investigators}, GI) foram selecionadas de forma a
-complementar os {\em surveys}.
+observados por {\em survey} em cada GR\footnote{Informações retiradas do {em
+website} do GR6: \url{http://galex.stsci.edu/GR6/}}. Observações de
+pesquisadores convidados ({\em Guest Investigators}, GI) foram selecionadas de
+forma a complementar os {\em surveys}.
 
 \begin{table}
 	\caption[Campos observados em cada {\em General Release} do \galex.]{Campos
@@ -246,7 +244,7 @@ Através do {\em GalexView} é possível fazer buscas, visualizar e obter imagen
 catálogos dos campos do \galex. As buscas podem ser feitas de forma bastante
 versátil, tanto pelo nome do objeto quanto pelas coordenadas do céu. O formato
 de entrada é flexível o suficiente para evitar os problemas causados por
-idiosincrasias na notação de coordenadas (por exemplo, tanto ``14h03m12.6s
+idiossincrasias na notação de coordenadas (por exemplo, tanto ``14h03m12.6s
 +54d20m56.7s'' quanto ``14 03 12.6 54 20 56.7'' ou ``210.83 54.35'' apontam para
 a mesma região). A sua interface (figura \ref{fig:GalexView}) permite filtrar o
 conteúdo retornado pelas buscas, separando por {\em surveys}. Há também uma

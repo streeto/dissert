@@ -18,10 +18,6 @@
 \chapter{Crossmatch entre \SDSS/\starlight e \galex}
 \label{sec:Crossmatch}
 
-% TODO: Crossmatch - intro do capítulo.
-TODO: Crossmatch - intro do capítulo.
-
-
 \section{Banco de dados do \SDSS}
 Um dos maiores responsáveis pela promoção do uso de bancos de dados relacionais
 na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente o
@@ -44,9 +40,9 @@ gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
 é feito utilizando uma linguagem padronizada: {\em Simple Query Language}, ou
 simplesmente SQL \citep{Chamberlin1974}. A migração dos dados do \SDSS para um
 RDBMS comercial implicou num aumento significativo da performance do acesso aos
-dados, e resultou no desenvolvimento do {\em SkyServer}\footnote{SkyServer:
-\url{http://skyserver.sdss.org/}}. O servidor de banco de dados escolhido pelo
-\SDSS foi o {\em Microsoft SQL Server}.
+dados, e resultou no desenvolvimento do {\em SkyServer}\footnote{\SDSS
+SkyServer: \url{http://skyserver.sdss.org/}}. O servidor de banco de dados
+escolhido pelo \SDSS foi o {\em Microsoft SQL Server}.
 
 A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
 necessariamente a superioridade do segundo em relação ao primeiro. Tanto a
@@ -61,19 +57,19 @@ semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
 O {\em SkyServer} é um {\em website} (figura \ref{fig:TelaDoSkyServer}) que
 provê acesso aos dados armazenados no banco de dados do \SDSS
 \citep{Szalay2002}. O acesso mais simples pode ser feito através de um atlas de
-locais famosos {\em famous places}, que mostra imagens coloridas de objetos
+locais famosos ({\em famous places}), que mostra imagens coloridas de objetos
 celestes conhecidos. Há formulários para buscas mais sérias, gerando coleções de
 imagens, espectros e tabelas de dados. No {\em SkyServer} é possível fazer
 buscas avançadas utlizando SQL, embora haja limites de tempo de execução e de
 quantidade de objetos retornados. Esta limitação é contornada através do sistema
 {\em CasJobs}, que é tratado na seção \ref{sec:CrossMatch:SDSS:CasJobs}.
 
-É importante ressaltar que o {\em SkyServer} permite (ou mais adequadamente,
-encoraja) a criação de {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês.
-Clone de um website.}. Todo o banco de dados do \SDSS e o código fonte do {\em
-SkyServer} está disponível no próprio {\em website} do {\em SkyServer}. Há um
-clone do banco de dados do {\em Data Release} 8 do \SDSS no servidor {\em
-CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
+É importante ressaltar que é possível (de fato, a equipe do \SDSS encoraja)
+criar {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês. Clone de um {\em
+website}.} do {\em SkyServer}. Tanto o banco de dados do \SDSS quanto o código
+fonte do {\em SkyServer} estão disponível no próprio {\em website} do {\em
+SkyServer}. Há um clone do banco de dados do {\em Data Release} 8 do \SDSS no
+servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
 % TODO: Adicionar figura - tela do skyserver.
@@ -113,10 +109,11 @@ bancos de dados.
 
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
-CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed,
-WISE\citneed e \galex. O {\em CasJobs} também foi adotado por outros projetos
-como o \galex, Kepler\citneed, {\em Palomar Quest}\citneed, {\em Panoramic
-Survey Telescope and Rapid Response System} (Pan-STARRS) e até pelo projeto {\em
+CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed, e uma
+amostra do \galex e um catálogo de {\em redshifts} fotométricos
+\citep{OMill2011}. O {\em CasJobs} também foi adotado por outros projetos como o
+\galex, Kepler\citneed, {\em Palomar Quest}\citneed, {\em Panoramic Survey
+Telescope and Rapid Response System} (Pan-STARRS) e até pelo projeto {\em
 AmeriFlux}, que contém dados de hidrologia\citneed.
 
 % TODO: Exemplos de uso do casjobs.
@@ -124,20 +121,31 @@ A figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
 CasJobs}.
 
 \section{Banco de dados do \starlight}
-% TODO: Construção do banco de dados do starlight.
-TODO: Construção do banco de dados do starlight Starlight gera dados em arquivos
-texto. São gigabytes de dados. Tratável para uso pessoal, mas não é muito viável
-a distribuição.
+O \starlight é um código de síntese espectral \citep{CidFernandes2005} que foi
+usado para ajustar espectros de todas as galáxias do \SDSS, um catálogo de
+propriedades físicas de quase um milhão de galáxias. SSP, etc.
+
+Procedimento do starlight. Entrada: Espectro em formato ascii + espectros de
+base. Rodado uma vez para cada galáxia. Gera arquivos ascii de saída contendo
+frações de luz e massa para cada elemento da base.
+
+Há uma etapa de pós-processamento que envolve a determinação das linhas de
+emissão das galáxias, gerando um catáologo complementar.
 
 % TODO: Importação do banco de dados do starlight.
 \subsection{Importação para o banco de dados}
-TODO: Importação para o sql server? Mostrar que não é complicado, vale a pena
-gastar tempo fazendo isso. Deixar pra falar do acesso aos dados no anexo
-\ref{anexo:ManualStarlightGalex}.
+TODO: Starlight gera dados em arquivos texto (formato fortran). São gigabytes de
+dados. Tratável para uso pessoal, mas não é muito viável a distribuição. A
+conversão para CSV é trivial. Existe uma ferramenta do MS SQL Server para
+importar um arquivo CSV para uma tabela. A tabela de linhas de emissão é
+normalizada. Mostrar que não é complicado, vale a pena gastar tempo fazendo
+isso.
 
 \subsection{Estrutura do banco de dados}
 % TODO: Estrutura banco de dados do starlight.
-TODO: Estrutura banco de dados do starlight.
+TODO: Estrutura banco de dados do starlight. Tabela com dados observacionais.
+Tabela com as propriedades físicas das galáxias (starlight) e tabela de linhas
+de emissão.
 
 % TODO: Adicionar figura - esquema BD starlight.
 \begin{figure}
@@ -149,17 +157,17 @@ TODO: Estrutura banco de dados do starlight.
 
 \subsection{Amostra do \starlight}
 \label{sec:Crossmatch:AmostraStarlight}
-% TODO: Definir a amostra inicial do starlight. FIXME: Explicar o que é uma
-% chave primária.
+% TODO: Definir a amostra inicial do starlight.
 A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS. A
 identificação de cada espectro é feita através de um tripleto: a data juliana
 média da observação ({\tt MJD}, {\em Mean Julian Date}), a identificação da
-placa de suporte das fibras ópticas ({\tt Plate}) e a identificão da fibra
+placa de suporte das fibras ópticas ({\tt Plate}) e a identificacão da fibra
 utilizada para a obtenção do espectro ({\tt FiberID}). Este tripleto ({\tt MJD},
 {\tt Plate}, {\tt FiberID}) identifica unicamente um espectro. Porém, é mais
 conveniente (e eficiente) ter um identificador único{\footnote{Chave primária
 \fixme}} para os registros num banco de dados. No caso do \SDSS, a tabela de
 espectros ({\tt SpecObjAll}) tem um identificador chamado {\tt SpecObjID}.
+% FIXME: Explicar o que é uma chave primária.
 
 % TODO: Adicionar figura - esquema simplificado da BD do SDSS.
 \begin{figure}
@@ -181,9 +189,9 @@ A tabela de índices da amostra de galáxias do \starlight (esquema na figura
 \ref{fig:TabelaAmostraStarlight}) contém inicialmente os tripletos [{\tt MJD},
 {\tt Plate}, {\tt FiberID}]. Dentro do ambiente {CasJobs} do \SDSS
 DR7\footnote{{\em CasJobs} \SDSS DR7 - \url{http://casjobs.sdss.org/CasJobs/}} a
-tabela tem os valores de {\tt SpecObjID} e {\tt BestObjID} prenchida através da
+tabela tem os valores de {\tt SpecObjID} e {\tt BestObjID} preenchida através da
 execução da {\em query} mostrada na figura \ref{fig:AtualizaObjIds}. Entre os
-objetos na amostra do \starlight, $622$ objetos não tem a sua contraparte
+objetos na amostra do \starlight, $622$ objetos não tem a sua contrapartida
 fotométrica.
 
 % TODO: Adicionar figura - Tabela amostra do starlight.
@@ -309,11 +317,14 @@ TODO: Análise de completeza do crossmatch SDSS/GALEX. Tem no paper do
 \section{Correções na fotometria UV}
 \label{sec:Crossmatch:Correcoes}
 
-\subsection{K-correct}
-% TODO: K-correction
-
 \subsection{Poeira}
 % TODO: Correção por poeira etc.
+%a_FUV = 8.29 * ebv
+%a_NUV = 8.18 * ebv
+%CCM, Schlegel.
+
+\subsection{K-correct}
+% TODO: K-correction
 
 
 %% End of this chapter

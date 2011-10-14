@@ -89,12 +89,11 @@ determinar o histórico cosmológico de formação estelar entre os {\em redshif
 $0 < z < 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em outros
 comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
 
-% TODO: Adicionar figura -- Footprint dos surveys AIS, MIS, SDSS.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\includegraphics[width=1.0\columnwidth]{figuras/footprint.eps}
 	\caption[{\em Footprint} dos {\em surveys} \galex AIS, MIS e SDSS]
-	{{\em Footprint} dos {\em surveys} \galex AIS, MIS (GR2+3) e SDSS (DR6),
-	conforme \citet{Budavari2009}}
+	{{\em Footprint} dos {\em surveys} \galex GR2+3 AIS (azul), MIS (vermelho) e
+	SDSS DR6 (verde), de \citet{Budavari2009}}
 	\label{fig:GalexSDSSOverlap}
 \end{figure}
 
@@ -140,15 +139,18 @@ do {\em Skylab} \citep{Henize1975} e pelo instrumento {\em FAUST} a bordo do
 \section{Resultados obtidos pelo \galex}
 \label{sec:Galex:Resultados}
 
-% TODO: elaborar sobre as publicações.
-o \galex fez o primeiro {\em survey} do céu inteiro em UV. \footnote{Lista de
-publicações do \galex:
-\url{http://www.galex.caltech.edu/researcher/publications.html}}
+o \galex fez o primeiro {\em survey} do céu inteiro em UV. As regiões próximas
+ao plano da Galáxia foram evitados para não danificar os detetores. Pode-se ter
+uma idéia do sucesso desta missão considerando a grande quantidade de artigos
+publicados\footnote{Há uma lista com as mais de 500 publicações relacionadas ao
+projeto do \galex em
+\url{http://www.galex.caltech.edu/researcher/publications.html}}. Abaixo segue
+um resumo dos resultados mais notáveis.
 
-\citet{Wyder2007} analisa a distribuição de galáxias em função da cor UV e da
+\citet{Wyder2007} analisam a distribuição de galáxias em função da cor UV e da
 magnitude absoluta no universo local. Esta distribuição é conhecida como {\em
 Diagrama Cor--Magnitude} (CMD, na sigla em inglês para {\em Color-Magnitude
-Diagram}). O autor usa {\em redshifts} e fotometria óptica obtidas do \SDSS
+Diagram}). Os autores usam {\em redshifts} e fotometria óptica obtidas do \SDSS
 junto com fotometria UV do {\em survey} MIS do \galex. A amostra do \SDSS é
 correlacionada com a do \galex procurando o objeto do \galex mais próximo de
 cada objeto \SDSS até um limite de $4$'' ($4$ segundos de arco).
@@ -159,10 +161,17 @@ distribuição bimodal é um resultado bem conhecido na astronomia.\citneed Por�
 diferente do diagrama cor-magnitude para a faixa espectral do óptico, a
 distribuição de cores em UV não pode ser ajustada somente pela soma de duas
 gaussianas, há um excesso de objetos nas cores intermediárias entre os picos
-azul e vermelho. O autor atribui a boa separação entre as sequências a uma maior
+azul e vermelho. A boa separação entre as sequências é atribuída a uma maior
 sensibilidade à formação estelar recente.
 
-\citet{Martin2007} investigou as propriedades das galáxias entre as sequências
+\begin{figure}
+	\includegraphics[width=0.7\columnwidth]{figuras/cmd-wyder.eps}
+	\caption[Diagrama cor-margnitude em ultravioleta.]
+	{Diagrama cor-margnitude em ultravioleta. Figura 7 de \citet{Wyder2007}.}
+	\label{fig:WyderCMD}
+\end{figure}
+
+\citet{Martin2007} investigaram as propriedades das galáxias entre as sequências
 vermelha e azul para a mesma amostra citada acima. As galáxias nesta região
 intermediária são preferencialmente galáxias com núcleo ativo ({\em Active
 Galactic Nucleus}, AGN). Os autores estimam o fluxo de massa de galáxias indo da
@@ -170,24 +179,16 @@ sequência azul para a vermelha.
 
 % FIXME: O que é a função de luminosidade para o univeso local? Entender o que
 % isto significa.
-Ainda para a mesma amostra, \citet{Schiminovich2007} investigou a correlação
+Ainda para a mesma amostra, \citet{Schiminovich2007} investigaram a correlação
 entre a morfologia das galáxias e a sua posição no CMD. A função de luminosidade
 UV do universo local é medida -- pela primeira vez, segundo os autores -- com
 relação aos parâmetros estruturais e à inclinação das galáxias.
 
 A missão do \galex se encerra em 31 de dezembro de 2011. Dados coletados após o
 GR6, como as observações no mesmo campo utilizado na missão Kepler
-\citep(KeplerMission), observações de M31 e da Nuvem de Magalhães, entre outros,
+\citep{KeplerMission}, observações de M31 e da Nuvem de Magalhães, entre outros,
 serão liberados num último {\em data release}, GR7. Os dados obtidos pelo \galex
 permanecerão disponíveis publicamente no MAST.
-
-% TODO: Adicionar figura - diagrama cor-magnitude.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Diagrama cor-margnitude em ultravioleta.]
-	{Diagrama cor-margnitude em ultravioleta. Figura 7 de \citet{Wyder2007}.}
-	\label{fig:WyderCMD}
-\end{figure}
 
 
 
@@ -254,11 +255,10 @@ imagem. Utilizando um sistema do tipo ``carrinho de compras'', pode-se
 selecionar campos e objetos de interesse, para ao final do uso do sistema baixar
 toda a seleção de uma vez.
 
-% TODO: Adicionar figura -- Tela do programa GalexView.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\includegraphics[width=1.0\columnwidth]{figuras/galexview.eps}
 	\caption[Tela do programa{\em GalexView}.]
-	{Tela do programa {\em GalexView}.}
+	{Tela do programa {\em GalexView}, com a visualização da galáxia M101.}
 	\label{fig:GalexView}
 \end{figure}
 

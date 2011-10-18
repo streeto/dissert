@@ -32,7 +32,7 @@ pylab.rcParams.update(params)
 
 pylab.figure(1)
 pylab.axis([1200, 3100, 0, 0.7])
-pylab.xlabel('$\lambda$ (\AA)')
+pylab.xlabel('Comprimento de onda [\AA]')
 pylab.ylabel('Transmit\^ancia')
 pylab.plot(nuv.data['col1'], nuv.data['col2'], 'r-', label='NUV')
 pylab.plot(fuv.data['col1'], fuv.data['col2'], 'b-', label='FUV')

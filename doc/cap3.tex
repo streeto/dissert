@@ -18,7 +18,24 @@
 \chapter{Crossmatch entre \SDSS/\starlight e \galex}
 \label{sec:Crossmatch}
 
+Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
+contendo um registro por linha, de um forma tecnicamente conhecida como {\em
+flat file}. Buscas neste tipo de banco de dados são feitas examinando
+individualmente cada registro do arquivo. Com o volume de dados obtido pelo
+\galex (aproximadamente 222 milhões de objetos, 34 mil campos)\citneed, o uso de
+arquivos simples para armazenamento de dados se torna inviável.\citneed É
+preciso ``profissionalizar'' o gerenciamento de dados de um {\em survey} desta
+escala.
+
+
+%***************************************************************%
+%                                                               %
+%              Crossmatch - Banco de dados do SDSS              %
+%                                                               %
+%***************************************************************%
+
 \section{Banco de dados do \SDSS}
+
 Um dos maiores responsáveis pela promoção do uso de bancos de dados relacionais
 na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente o
 \SDSS utilizou um {\em sistema de gerenciamento de banco de dados orientado a
@@ -30,6 +47,8 @@ prover novas funcionalidades requisitadas pelo projeto e correção de {\em bugs
 bem como em acompanhar o crescimento da performance do {\em hardware}.
 
 \subsection{Migração de OODBMS para RDBMS}
+\label{sec:CrossMatch:SDSS:MigracaoRDBMS}
+
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
 de banco de dados relacional} \citep{Codd1970} (RDBMS, na sigla em inglês) num
 esforço guiado por \citet{Thakar2004}. RDBMS pode ser considerado o padrão da
@@ -54,6 +73,7 @@ semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
 
 \subsection{{\em SkyServer}}
 \label{sec:CrossMatch:SDSS:SkyServer}
+
 O {\em SkyServer} é um {\em website} (figura \ref{fig:TelaDoSkyServer}) que
 provê acesso aos dados armazenados no banco de dados do \SDSS
 \citep{Szalay2002}. O acesso mais simples pode ser feito através de um atlas de
@@ -72,15 +92,16 @@ SkyServer}. Há um clone do banco de dados do {\em Data Release} 8 do \SDSS no
 servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
-% TODO: Adicionar figura - tela do skyserver.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Tela do skyserver.]
-	{tela do skyserver.}
+	\includegraphics[width=1.0\columnwidth]{figuras/skyserver.eps}
+	\caption[Telas do {\em SkyServer}.]
+	{Telas do {\em SkyServer}. À esquerda, formulário para submeter uma {\em
+	query} SQL. À direita, ferramenta {\em Explore} mostrando a galáxia NGC 799.}
 	\label{fig:TelaDoSkyServer}
 \end{figure}
 
 \subsection{{\em CasJobs}}
+
 \label{sec:CrossMatch:SDSS:CasJobs}
 O {\em Catalog Archive Server Jobs} ({\em CasJobs}) é um serviço online
 desenvolvido pela equipe do \SDSS para expandir a capacidade do {\em SkyServer}
@@ -99,11 +120,12 @@ editor de dados tabulares usado em astronomia. Ver
 \url{http://www.star.bris.ac.uk/~mbt/topcat/}.}, ou mesmo importados para outros
 bancos de dados.
 
-% TODO: Adicionar figura - casjobs.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Tela do casjobs]
-	{Tela do casjobs.}
+	\includegraphics[width=0.7\columnwidth]{figuras/casjobs.eps}
+	\caption[Tela do {\em CasJobs}.]
+	{Tela do {\em CasJobs}. Resultado da {\em query} buscando o {\em redshift}, a
+	magnitude na banda {\em g}, a cor {\em g}-{\em r} e uma amostra da imagem de
+	objetos com espectroscopia.}
 	\label{fig:CasJobs}
 \end{figure}
 
@@ -116,36 +138,80 @@ amostra do \galex e um catálogo de {\em redshifts} fotométricos
 Telescope and Rapid Response System} (Pan-STARRS) e até pelo projeto {\em
 AmeriFlux}, que contém dados de hidrologia\citneed.
 
-% TODO: Exemplos de uso do casjobs.
 A figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
 CasJobs}.
 
+
+%***************************************************************%
+%                                                               %
+%          Crossmatch - Banco de dados do STARLIGHT             %
+%                                                               %
+%***************************************************************%
+
 \section{Banco de dados do \starlight}
-O \starlight é um código de síntese espectral \citep{CidFernandes2005} que foi
-usado para ajustar espectros de todas as galáxias do \SDSS, um catálogo de
-propriedades físicas de quase um milhão de galáxias. SSP, etc.
+O \starlight é um código de síntese espectral \citep{CidFernandes2005}. O
+programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectro
+como um arquivo texto. Ele usa uma biblioteca de espectros de populações
+estelares simples ({\em Single Stellar Population}, SSP)\footnote{Uma SSP
+consiste num conjunto de estrelas formadas ao mesmo tempo com a mesma
+metalicidade.\fixme} com diferentes idades e metalicidades como uma base do
+espaço de espectros galáticos possíveis. De forma simplificada, o que o
+\starlight faz é encontrar as frações de massa e luz correspondente a cada
+elemento da base, ou seja, cada SSP. Analisando as relações entre os componentes
+determinandos pela síntese, o programa determina diversas propriedades físicas
+da galáxia, como a massa estelar total, a massa separada por idade, metalicidade
+média, quantidade de poeira e velocidade de rotação, para citar apenas algumas.
+Quase um milhão de espectros foram analisados, e o resultado da síntese foi
+armazenado em arquivos texto.
 
-Procedimento do starlight. Entrada: Espectro em formato ascii + espectros de
-base. Rodado uma vez para cada galáxia. Gera arquivos ascii de saída contendo
-frações de luz e massa para cada elemento da base.
+Apenas os componentes estelares do espectro são obtidos desta forma. Subtraindo
+o espectro sintetizado de luz estelar é possível medir as linhas de emissão do
+espectro. Esta é uma etapa de pós-processamento, que gera um catálogo
+complementar de linhas de emissão.
 
-Há uma etapa de pós-processamento que envolve a determinação das linhas de
-emissão das galáxias, gerando um catáologo complementar.
+\subsection{Importação para o RDBMS}
 
-% TODO: Importação do banco de dados do starlight.
-\subsection{Importação para o banco de dados}
-TODO: Starlight gera dados em arquivos texto (formato fortran). São gigabytes de
-dados. Tratável para uso pessoal, mas não é muito viável a distribuição. A
-conversão para CSV é trivial. Existe uma ferramenta do MS SQL Server para
-importar um arquivo CSV para uma tabela. A tabela de linhas de emissão é
-normalizada. Mostrar que não é complicado, vale a pena gastar tempo fazendo
-isso.
+Os arquivos da síntese gerados pelo \starlight ocupam uma dezena de gigabytes.
+Mesmo o catálogo de propriedades físicas das galáxias, sozinho, ocupa mais de um
+gigabyte. Embora seja um volume razoavelmente grande de dados, é possível
+trabalhar com esta quantidade de dados num computador atual\footnote{Na época da
+escrita desta dissertação, é difícil encontrar um computador novo com menos de 4
+gigabytes de memória RAM.}. A transferência de arquivos com tamanho da ordem de
+gigabytes pela internet também também é lugar-comum atualmente. Poderia-se
+argumentar que distribuir os dados neste formato seja a forma mais adequada.
+
+Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
+CasJobs} em prover acesso aos dados o \SDSS não é o tamanho da base de dados, e
+sim a facilidade com que o usuário pode acessar os dados e filtrar apenas o que
+lhe for conveniente. Além disso, manter a base de dados num local central
+permite que sejam feitas correções e revisões, o que implicaria normalmente numa
+nova transferência caso cada usuário tivesse a sua cópia local.
+
+O {\em CasJobs} requer um servidor rodando {\em Windows Server} com {\em
+Internet Information Services} (IIS) e {\em Microsoft SQL Server} (MSSQL). A
+instalação do {\em CasJobs} está documentada no {\em website} do {\em SkyServer}
+(ver secão \ref{sec:CrossMatch:SDSS:SkyServer}). Com um servidor {\em CasJobs},
+o trabalho consiste em importar os dados em arquivos texto para um banco de
+dados no MSSQL. A ferramenta principal para a manipulação dos bancos de dados no
+MSSQL é o {\em Microsoft SQL Server Management Studio}. Nele há um assistente
+para importação de dados baseado no {\em SQL Server Integrated Services} (SSIS).
+A importação das tabelas de propriedades físicas do \starlight é trivial. A
+importação das linhas de emissão requer um trabalho extra para normalizar a
+tabela\footnote{Normalização de tabelas.\fixme}.
+% FIXME: NOrmalização de tabelas.
 
 \subsection{Estrutura do banco de dados}
-% TODO: Estrutura banco de dados do starlight.
-TODO: Estrutura banco de dados do starlight. Tabela com dados observacionais.
-Tabela com as propriedades físicas das galáxias (starlight) e tabela de linhas
-de emissão.
+
+O esquema do banco de dados do \starlight pode ser visto na figura
+\ref{fig:EsquemaBDStarlight}. A tabela {\tt observational\_params} contém os
+dados obtidos do \SDSS e usados como parâmetros para a obtenção das propriedades
+físicas das galáxias. Estas propriedades físicas estão armazzenadas na tabela
+{\tt synthesis\_results}. Estas duas tabelas estão relacionadas através da chave
+{SpecObjID}, que será explicada na seção \ref{sec:Crossmatch:AmostraStarlight}.
+A tabela {\tt el\_fit} contém medidas de linhas de emissão para cada galáxia,
+cada linha sendo descrita pelos elementos da tabela {\tt cfg\_el\_fit}. O manual
+de acesso aos dados do \starlight (anexo \ref{anexo:ManualStarlightGalex})
+contém a descrição completa de todos os dados disponíveis nestas tabelas.
 
 % TODO: Adicionar figura - esquema BD starlight.
 \begin{figure}
@@ -157,7 +223,7 @@ de emissão.
 
 \subsection{Amostra do \starlight}
 \label{sec:Crossmatch:AmostraStarlight}
-% TODO: Definir a amostra inicial do starlight.
+
 A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS. A
 identificação de cada espectro é feita através de um tripleto: a data juliana
 média da observação ({\tt MJD}, {\em Mean Julian Date}), a identificação da
@@ -222,6 +288,12 @@ fotométrica.
 \end{figure}
 
 
+%***************************************************************%
+%                                                               %
+%                   Crossmatch - SDSS X GALEX                   %
+%                                                               %
+%***************************************************************%
+
 \section{Crossmatch \SDSS/\galex}
 % TODO: Crossmatch SDSS/GALEX.
 TODO: Crossmatch SDSS/GALEX. \citet{Budavari2009}.
@@ -258,6 +330,12 @@ flags.
 TODO: Análise de completeza do crossmatch SDSS/GALEX. Tem no paper do
 \citet{Budavari2009}, acho que é redundante.
 
+
+%***************************************************************%
+%                                                               %
+%      Crossmatch - Definição da amostra Starlight/GALEX        %
+%                                                               %
+%***************************************************************%
 
 \section{Definição das amostras \SDSS/\starlight e \galex}
 \label{sec:Crossmatch:DefAmostras}

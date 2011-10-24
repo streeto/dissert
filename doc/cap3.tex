@@ -363,61 +363,6 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 	\label{tab:SDSSxGalexMatchesMIS}
 \end{table}
 
-\subsection{Indexação por {\em Hierarchical Triangular Mesh}}
-\label{sec:Crossmatch:SDSSGalex:HTM}
-
-Para encontrar observações correspondentes de um mesmo objeto em dois {\em
-surveys} é necessária uma busca no espaço de coordenadas celestes. Dada a imensa
-quantidade de objetos presentes tipicamente nos surveys atuais, a verificação de
-todos contra todos torna-se inviável. \citet{Kunszt2000} aplicaram uma técnica
-de indexação espacial chamada {\em Hierarchical Triangular Mesh} (HTM) aos
-objetos do \SDSS.
-
-Esta técnica consiste em dividir a esfera celeste numa malha de regiões
-triangulares \citep{Kunszt2001}. Cada uma destas regiões triangulares do céu
-recebe um identificador único. O processo de divisão em triângulos é recursivo,
-com a profundidade dependendo da resolução desejada (figura
-\ref{fig:HTMBasico}). O ponto inicial da HTM é um octaedro dado pela intersecção
-dos eixos $x$, $y$ e $z$ com a esfera unitária. Os oito pimeiros nodos da HTM
-são os triângulos esféricos compostos por aqueles pontos, conectados por
-segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
-
-% TODO: Elaborar mais sobre HTM? Dar um exemplo de busca no SDSS?
-\begin{verbatim}
-Each trixel can be split into four smaller trixels by introducing new vertices
-at the midpoints of each side, and adding a great circle arc segment to connect
-the new vertices with the existing one. Trixel division repeats recursively and
-indefinitely to produce smaller and smaller trixels.
-
-This subdivision scheme suggests a natural way of labeling (naming) the trixels.
-Each trixel has three vertices labaled 0, 1 or 2. The opposite midpoints are
-labeled 0', 1' and 2', respectively. The newly created trixels receive a label
-formed by the name of the parent appended with one of {0, 1, 2}, indicated by
-the vertex shared with the parent. The central trixel is suffixed with a '3'.
-Smaller trixels have longer names. The length of the name of the trixel also
-indicates its level. Points in this decomposition are represented by a leading 1
-bit and then the level 0 trixel number [0..7] and then the successive sub-trixel
-numbers [0..3]. This gives each trixel and its center-point a unique 64 bit
-identifier, called an HTM ID (HtmID) that represents a particular trixel in the
-HTM hierarchy.
-\end{verbatim}
-
-% TODO: Adicionar figura - esquema básico do HTM.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Todo: esquema básico do HTM]
-	{Todo: esquema básico do HTM}
-	\label{fig:HTMBasico}
-\end{figure}
-
-% TODO: Adicionar figura - Inicio do HTM.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Todo: Inicio do HTM.]
-	{Todo: Inicio do HTM.}
-	\label{fig:HTMInicio}
-\end{figure}
-
 
 %***************************************************************%
 %                                                               %
@@ -435,7 +380,20 @@ de dados do \galex há uma tabela de {\em crossmatch} entre os objetos do \galex
 e os seus correspondentes ópticos no catálogo do \SDSS. A figura
 \ref{fig:TabelaxSDSSDR7} mostra o esquema desta tabela, chamada {\tt xSDSSDR7}.
 A descrição completa dos campos pode ser vista na tabela
-\ref{tab:CamposXSDSSDR7}.
+\ref{tab:CamposXSDSSDR7}. Dado que a identificação não é necessariamente
+unívoca, existem informações extras nesta tabela a fim de facilitar a seleção
+dos melhores candidatos.
+
+\begin{verbatim}
+In lieu of actual probabilities of matches, the following columns 
+have been added to the table to facilitate selection of matched sources.
+Again, the user should be aware of that the best (closest) match is 
+not always the correct one. However, as a first cut best results can 
+be obtained from rank = 1 matches and reverse matches across both 
+catalogs.
+\end{verbatim}
+
+
 
 % TODO: Adicionar figura - tabela xSDSSDR7.
 \begin{figure}
@@ -483,15 +441,6 @@ A descrição completa dos campos pode ser vista na tabela
 	\end{tabular}
 	\label{tab:CamposXSDSSDR7}
 \end{table}
-
-\begin{verbatim}
-In lieu of actual probabilities of matches, the following columns 
-have been added to the table to facilitate selection of matched sources.
-Again, the user should be aware of that the best (closest) match is 
-not always the correct one. However, as a first cut best results can 
-be obtained from rank = 1 matches and reverse matches across both 
-catalogs.
-\end{verbatim}
 
 \subsection{Obtendo dados UV da amostra do \starlight}
 % TODO: Como foi feito o match.

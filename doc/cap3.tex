@@ -51,8 +51,8 @@ bem como em acompanhar o crescimento da performance do {\em hardware}.
 
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
 de banco de dados relacional} \citep{Codd1970} (RDBMS, na sigla em inglês) num
-esforço guiado por \citet{Thakar2004}. RDBMS pode ser considerado o padrão da
-indústria. Praticamente todas as linguagens de programação tem bibliotecas de
+esforço guiado por \citeauthor{Thakar2004}. RDBMS pode ser considerado o padrão
+da indústria. Praticamente todas as linguagens de programação tem bibliotecas de
 interface às implementações de RDBMS comerciais mais comuns (Oracle, IBM e
 Microsoft, Postgres). Há uma diversidade de ferramentas para desenvolvimento e
 gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
@@ -295,40 +295,92 @@ fotométrica.
 %***************************************************************%
 
 \section{Crossmatch \SDSS/\galex}
-% TODO: Crossmatch SDSS/GALEX.
-TODO: Crossmatch SDSS/GALEX. \citet{Budavari2009}.
 
-\subsection{Indexação HTM}
+A identificação mútua ({\em crossmatch}) de objetos em {\em surveys} diferentes
+é um problema razoavelmente complicado. A cobertura do céu de cada {\em survey}
+em geral não é a mesma. Por outro lado, os objetos presentes em um {\em survey}
+podem não ter sido detectados no outro. A probabilidade de duas fontes em
+catálogos diferentes corresponderem a um mesmo objeto pode ser calculada como
+função da separação entre elas e a precisão astrométrica das medidas
+\citep{Budavari2008}.
+
+\subsection{Identificação dos objetos}
+\label{sec:Crossmatch:SDSSGalex:Identificacao}
+
+\citet{Budavari2009} aplicam este método probabilístico ao \SDSS e ao \galex. O
+{\em crossmatch} espacial é feito dentro de um RDMS (MSSQL, o mesmo usado no
+{\em CasJobs}), utilizando técnicas avançadas de indexação (seção
+\ref{sec:Crossmatch:SDSSGalex:HTM}). A tabela resultante é uma relação ``muitos
+para muitos'', onde a maioria dos objetos \galex tem apenas um objeto \SDSS
+associado, mas outras combinações podem ocorrer\footnote{Um exemplo onde pode
+ocorrer uma combinação ``um para muitos'' é o caso onde existe uma fonte fraca
+em UV (presente no \SDSS mas não detectada pelo \galex) próxima a uma fonte
+presente tanto no UV quanto no óptico. O algoritmo irá apontar estes dois
+objetos no \SDSS como candidatos a serem a contrapartida óptica do objeto
+detectado no \galex. O caso inverso implicaria numa combinação ``muitos para
+um''}. O artigo apresenta os resultados para dados do \SDSS DR6 e \galex GR3. Na
+tabela \ref{tab:SDSSxGalexMatches} há a quantidade de objetos encontrados nos
+{\em surveys} AIS e MIS (estrelas e galáxias) que estão unicamente identificados
+com um objeto do \SDSS, utilizando os dados mais recentes ({\em crossmatch}
+entre \SDSS DR7 e \galex GR6, disponível no {\em CasJobs} do
+\galex\footnote{{\em CasJobs} do \galex:
+\url{http://galex.stsci.edu/casjobs/}}). A técnica utilizada por
+\citeauthor{Budavari2009} agora faz parte do {\em pipeline} do \galex. A
+distribuição do {\em CasJobs} inclui as ferramentas necessárias para fazer o
+{\em crossmatch} espacial entre bancos de dados.
+
+% TODO: Preencher tabela de objetos com crossmatch 1x1. 
+\begin{table}
+	\caption[Número de objetos correlacionados entre \SDSS DR7 e \galex GR6.]
+	{Número de objetos do \SDSS DR7 identificados no catálogo do \galex, por survey
+	e tipo. Apenas são considerados objetos que têm relação ``um para um'' entre
+	\SDSS e \galex.}
+	\begin{tabular}{l r r}
+		Tipo    &     AIS &     MIS \\ 
+		\midrule
+		Galáxia &       - &       - \\
+		Estrela &       - &       - \\
+	\end{tabular}
+	\label{tab:SDSSxGalexMatches}
+\end{table}
+
+\subsection{Indexação por {\em Hierarchical Triangular Mesh}}
+\label{sec:Crossmatch:SDSSGalex:HTM}
 % TODO: Indexação HTM.
-TODO: Indexação HTM. \citet{Kunszt2000}.
-\begin{verbatim}
-The Spatial Indexing used in the Sloan
-Digital Sky Survey (SDSS) Science Archive divides the spherical surface into
-triangles in a hierarchical scheme resulting in roughly equal surface areas at
-each level, which is a big advantage over other schemes. The location of a point
-on the sky may be given by the unique index id to any level, refining it with
-each step. This naming scheme is being used successfully in other catalogs, too,
-like GSC-II and GAIA. The use of the Spatial Index in the SDSS is two-fold, a
-level-5 index is used to partition the bulk data, and a high-resolution level-14
-index id is assigned to each data point to enable quick lookup and proximity
-searches. Use of this indexing scheme in more catalogs will enormously simplify
-cross-matching of objects. Using a new computing paradigm, we recently realized
-a quantum leap in performance that makes this scheme competitive with
-bit-interleaving and requires very little memory. The Flux-space Indexing used
-is a traditional k-d tree. The space is 5 dimensional, 5 being the number of
-SDSS-filters. The specialization to astronomical data has been achieved by
-modeling the location of the main branch in this space and applying the k-d tree
-subdivisions only to its confined area. The outliers are indexed separately.
-Most of the interesting data points come directly from the outlier part of the
-index, with no additional analytical effort. Additionally, the key-lookup index
-feature of object-oriented databases is exploited for much-used parameters like
-flags.
-\end{verbatim}
 
-\subsection{Análise de completeza}
-% TODO: Análise de completeza do crossmatch SDSS/GALEX
-TODO: Análise de completeza do crossmatch SDSS/GALEX. Tem no paper do
-\citet{Budavari2009}, acho que é redundante.
+Para encontrar observações correspondentes de um mesmo objeto em
+dois {\em surveys} é necessária uma busca no espaço de coordenadas celestes.
+Dada a imensa quantidade de objetos presentes tipicamente nos surveys atuais, a
+verificação de todos contra todos torna-se inviável. \citet{Kunstz2000}
+aplicaram uma técnica de indexação espacial chamada {\em Hierarchical
+Triangular Mesh} (HTM) aos objetos do \SDSS.
+
+Esta técnica consiste em dividir a esfera celeste numa malha de regiões
+triangulares \citep{Kunstz2001}. Cada uma destas regiões triangulares do céu
+recebe um identificador único. O processo de divisão em triângulos é recursivo,
+com a profundidade dependendo da resolução desejada (figura
+\ref{fig:HTMBasico}). O ponto inicial da HTM é um octaedro dado pela
+intersecção dos eixos $x$, $y$ e $z$ com a esfera unitária. Os oito pimeiros
+nodos da HTM são os triângulos esféricos compostos por aqueles pontos,
+conectados por segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
+
+% TODO: Adicionar figura - esquema básico do HTM.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Todo]
+	{Todo}
+	\label{fig:HTMBasico}
+\end{figure}
+
+% TODO: Adicionar figura - Inicio do HTM.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Todo]
+	{Todo}
+	\label{fig:HTMInicio}
+\end{figure}
+
+% TODO: Elaborar mais sobre HTM? Dar um exemplo de busca no SDSS?
 
 
 %***************************************************************%

@@ -312,75 +312,111 @@ função da separação entre elas e a precisão astrométrica das medidas
 {\em CasJobs}), utilizando técnicas avançadas de indexação (seção
 \ref{sec:Crossmatch:SDSSGalex:HTM}). A tabela resultante é uma relação ``muitos
 para muitos'', onde a maioria dos objetos \galex tem apenas um objeto \SDSS
-associado, mas outras combinações podem ocorrer\footnote{Um exemplo onde pode
-ocorrer uma combinação ``um para muitos'' é o caso onde existe uma fonte fraca
-em UV (presente no \SDSS mas não detectada pelo \galex) próxima a uma fonte
-presente tanto no UV quanto no óptico. O algoritmo irá apontar estes dois
-objetos no \SDSS como candidatos a serem a contrapartida óptica do objeto
-detectado no \galex. O caso inverso implicaria numa combinação ``muitos para
-um''}. O artigo apresenta os resultados para dados do \SDSS DR6 e \galex GR3. Na
-tabela \ref{tab:SDSSxGalexMatches} há a quantidade de objetos encontrados nos
-{\em surveys} AIS e MIS (estrelas e galáxias) que estão unicamente identificados
-com um objeto do \SDSS, utilizando os dados mais recentes ({\em crossmatch}
-entre \SDSS DR7 e \galex GR6, disponível no {\em CasJobs} do
+associado, mas outras associações podem ocorrer. Um exemplo onde pode ocorrer
+uma associação ``um para muitos'' é o caso onde existe uma fonte fraca em UV
+(presente no \SDSS mas não detectada pelo \galex) próxima a uma fonte presente
+tanto no UV quanto no óptico. O algoritmo irá apontar estes dois objetos no
+\SDSS como candidatos a serem a contrapartida óptica do objeto detectado no
+\galex. O caso inverso implicaria numa associação ``muitos para um''. Nas
+tabelas \ref{tab:SDSSxGalexMatchesAIS} e \ref{tab:SDSSxGalexMatchesMIS} há a
+quantidade de identificações para cada tipo de associação, referentes aos {\em
+surveys} AIS e MIS, respectivamente. Os valores foram determinados para o {\em
+crossmatch} entre \SDSS DR7 e \galex GR6, disponível no {\em CasJobs} do
 \galex\footnote{{\em CasJobs} do \galex:
-\url{http://galex.stsci.edu/casjobs/}}). A técnica utilizada por
-\citeauthor{Budavari2009} agora faz parte do {\em pipeline} do \galex. A
-distribuição do {\em CasJobs} inclui as ferramentas necessárias para fazer o
-{\em crossmatch} espacial entre bancos de dados.
+\url{http://galex.stsci.edu/casjobs/}}). O artigo citado acima mostra a mesma
+tabela, com os resultados para dados do \SDSS DR6 e \galex GR3. A técnica
+utilizada por \citeauthor{Budavari2009} agora faz parte do {\em pipeline} do
+\galex. A distribuição do {\em CasJobs} inclui as ferramentas necessárias para
+fazer o {\em crossmatch} espacial entre bancos de dados.
 
-% TODO: Preencher tabela de objetos com crossmatch 1x1. 
 \begin{table}
-	\caption[Número de objetos correlacionados entre \SDSS DR7 e \galex GR6.]
-	{Número de objetos do \SDSS DR7 identificados no catálogo do \galex, por survey
-	e tipo. Apenas são considerados objetos que têm relação ``um para um'' entre
-	\SDSS e \galex.}
-	\begin{tabular}{l r r}
-		Tipo    &     AIS &     MIS \\ 
-		\midrule
-		Galáxia &       - &       - \\
-		Estrela &       - &       - \\
+	\caption[Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex
+	GR6, por associação.]
+	{Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6, por
+	associação.}
+	\setlength{\tabcolsep}{1cm}
+	\begin{tabular}{r r r r}
+	\galex &          \multicolumn{3}{c}{\SDSS} \\
+	\midrule
+	       &          1 &         2 &    Muitos \\
+	1      & $15267818$ & $9150919$ & $4623197$ \\
+	2      &  $4524337$ & $2504786$ & $1162463$ \\
+	Muitos &   $770645$ &  $426691$ &  $184680$ \\
 	\end{tabular}
-	\label{tab:SDSSxGalexMatches}
+	\label{tab:SDSSxGalexMatchesAIS}
+\end{table}
+
+\begin{table}
+	\caption[Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex
+	GR6, por associação.]
+	{Número de identificações entre \SDSS DR7 e {\em survey} MIS do \galex GR6, por
+	associação.}
+	\setlength{\tabcolsep}{1cm}
+	\begin{tabular}{r r r r}
+	\galex &         \multicolumn{3}{c}{\SDSS} \\
+	\midrule
+	       &         1 &        2 &     Muitos \\
+	1      & $8201735$ & $5923551$ & $3775187$ \\
+	2      & $2120174$ & $1580701$ &  $984067$ \\
+	Muitos &  $276447$ &  $234016$ &  $150894$ \\
+	\end{tabular}
+	\label{tab:SDSSxGalexMatchesMIS}
 \end{table}
 
 \subsection{Indexação por {\em Hierarchical Triangular Mesh}}
 \label{sec:Crossmatch:SDSSGalex:HTM}
-% TODO: Indexação HTM.
 
-Para encontrar observações correspondentes de um mesmo objeto em
-dois {\em surveys} é necessária uma busca no espaço de coordenadas celestes.
-Dada a imensa quantidade de objetos presentes tipicamente nos surveys atuais, a
-verificação de todos contra todos torna-se inviável. \citet{Kunstz2000}
-aplicaram uma técnica de indexação espacial chamada {\em Hierarchical
-Triangular Mesh} (HTM) aos objetos do \SDSS.
+Para encontrar observações correspondentes de um mesmo objeto em dois {\em
+surveys} é necessária uma busca no espaço de coordenadas celestes. Dada a imensa
+quantidade de objetos presentes tipicamente nos surveys atuais, a verificação de
+todos contra todos torna-se inviável. \citet{Kunszt2000} aplicaram uma técnica
+de indexação espacial chamada {\em Hierarchical Triangular Mesh} (HTM) aos
+objetos do \SDSS.
 
 Esta técnica consiste em dividir a esfera celeste numa malha de regiões
-triangulares \citep{Kunstz2001}. Cada uma destas regiões triangulares do céu
+triangulares \citep{Kunszt2001}. Cada uma destas regiões triangulares do céu
 recebe um identificador único. O processo de divisão em triângulos é recursivo,
 com a profundidade dependendo da resolução desejada (figura
-\ref{fig:HTMBasico}). O ponto inicial da HTM é um octaedro dado pela
-intersecção dos eixos $x$, $y$ e $z$ com a esfera unitária. Os oito pimeiros
-nodos da HTM são os triângulos esféricos compostos por aqueles pontos,
-conectados por segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
+\ref{fig:HTMBasico}). O ponto inicial da HTM é um octaedro dado pela intersecção
+dos eixos $x$, $y$ e $z$ com a esfera unitária. Os oito pimeiros nodos da HTM
+são os triângulos esféricos compostos por aqueles pontos, conectados por
+segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
+
+% TODO: Elaborar mais sobre HTM? Dar um exemplo de busca no SDSS?
+\begin{verbatim}
+Each trixel can be split into four smaller trixels by introducing new vertices
+at the midpoints of each side, and adding a great circle arc segment to connect
+the new vertices with the existing one. Trixel division repeats recursively and
+indefinitely to produce smaller and smaller trixels.
+
+This subdivision scheme suggests a natural way of labeling (naming) the trixels.
+Each trixel has three vertices labaled 0, 1 or 2. The opposite midpoints are
+labeled 0', 1' and 2', respectively. The newly created trixels receive a label
+formed by the name of the parent appended with one of {0, 1, 2}, indicated by
+the vertex shared with the parent. The central trixel is suffixed with a '3'.
+Smaller trixels have longer names. The length of the name of the trixel also
+indicates its level. Points in this decomposition are represented by a leading 1
+bit and then the level 0 trixel number [0..7] and then the successive sub-trixel
+numbers [0..3]. This gives each trixel and its center-point a unique 64 bit
+identifier, called an HTM ID (HtmID) that represents a particular trixel in the
+HTM hierarchy.
+\end{verbatim}
 
 % TODO: Adicionar figura - esquema básico do HTM.
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Todo]
-	{Todo}
+	\caption[Todo: esquema básico do HTM]
+	{Todo: esquema básico do HTM}
 	\label{fig:HTMBasico}
 \end{figure}
 
 % TODO: Adicionar figura - Inicio do HTM.
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Todo]
-	{Todo}
+	\caption[Todo: Inicio do HTM.]
+	{Todo: Inicio do HTM.}
 	\label{fig:HTMInicio}
 \end{figure}
-
-% TODO: Elaborar mais sobre HTM? Dar um exemplo de busca no SDSS?
 
 
 %***************************************************************%
@@ -393,7 +429,13 @@ conectados por segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
 \label{sec:Crossmatch:DefAmostras}
 % TODO: Definição das amostras a serem usadas no próximo cap. (MGS e LRG).
 
-% TODO: Como foi feito o match.
+\subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
+Como comentado na seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}, no banco
+de dados do \galex há uma tabela de {\em crossmatch} entre os objetos do \galex
+e os seus correspondentes ópticos no catálogo do \SDSS. A figura
+\ref{fig:TabelaxSDSSDR7} mostra o esquema desta tabela, chamada {\tt xSDSSDR7}.
+A descrição completa dos campos pode ser vista na tabela
+\ref{tab:CamposXSDSSDR7}.
 
 % TODO: Adicionar figura - tabela xSDSSDR7.
 \begin{figure}
@@ -405,7 +447,57 @@ conectados por segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
 	\label{fig:TabelaxSDSSDR7}
 \end{figure}
 
-% FIXME: Corrigir caption da figura do match AIS.
+\begin{table}
+	\caption[Descrição dos campos da tabela {\tt xSDSSDR7}.]
+	{Descrição dos campos da tabela {\tt xSDSSDR7}.}
+	\begin{tabular}{l p{8cm}}
+		Campo & Descrição\\
+		\midrule
+		{\tt ObjID} &
+		Identificador único de objeto do \galex.
+		\\
+		{\tt SDSSObjID} &
+		Identificador único do \SDSS.
+		\\
+		{\tt Distance} &
+		Separação angular em segundos de arco.
+		\\
+		{\tt DistanceRank} &
+		Um número inteiro, onde um valor de $1$ indica que o objeto do \galex é o
+		mais próximo do objeto \SDSS, um valor de $2$ indica que ele é o segundo mais
+		próximo, etc.
+		\\
+		{\tt ReverseDistanceRank} &
+		Um número inteiro, onde um valor de $1$ indica que o objeto do \SDSS é o mais
+		próximo do objeto \galex, um valor de $2$ indica que ele é o segundo mais
+		próximo, etc.
+		\\
+		{\tt MultipleMatchCount} &
+		Um número inteiro indicando quantos objetos \SDSS foram encontrados para o
+		objeto \galex dentro do raio de busca.
+		\\
+		{\tt ReverseMultipleMatchCount} &
+		Um número inteiro indicando quantos objetos \galex foram encontrados para o
+		objeto \SDSS dentro do raio de busca.
+		\\
+	\end{tabular}
+	\label{tab:CamposXSDSSDR7}
+\end{table}
+
+\begin{verbatim}
+In lieu of actual probabilities of matches, the following columns 
+have been added to the table to facilitate selection of matched sources.
+Again, the user should be aware of that the best (closest) match is 
+not always the correct one. However, as a first cut best results can 
+be obtained from rank = 1 matches and reverse matches across both 
+catalogs.
+\end{verbatim}
+
+\subsection{Obtendo dados UV da amostra do \starlight}
+% TODO: Como foi feito o match.
+TODO: Como foi feito o match.
+
+
 \begin{figure}
 	\begin{Verbatim}[commandchars=\\\{\}]
 	\textbf{SELECT INTO} mydb..galex_ais
@@ -440,8 +532,9 @@ conectados por segmentos de grandes círculos (figura \ref{fig:HTMInicio}).
 	\label{fig:QueryMatchAIS}
 \end{figure}
 
-
+\subsection{Completeza dos dados}
 % TODO: Alguma estatística.
+TODO: Alguma estatística.
 
 
 \section{Correções na fotometria UV}

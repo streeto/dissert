@@ -309,20 +309,19 @@ função da separação entre elas e a precisão astrométrica das medidas
 
 \citet{Budavari2009} aplicam este método probabilístico ao \SDSS e ao \galex. O
 {\em crossmatch} espacial é feito dentro de um RDMS (MSSQL, o mesmo usado no
-{\em CasJobs}), utilizando técnicas avançadas de indexação (seção
-\ref{sec:Crossmatch:SDSSGalex:HTM}). A tabela resultante é uma relação ``muitos
-para muitos'', onde a maioria dos objetos \galex tem apenas um objeto \SDSS
-associado, mas outras associações podem ocorrer. Um exemplo onde pode ocorrer
-uma associação ``um para muitos'' é o caso onde existe uma fonte fraca em UV
-(presente no \SDSS mas não detectada pelo \galex) próxima a uma fonte presente
-tanto no UV quanto no óptico. O algoritmo irá apontar estes dois objetos no
-\SDSS como candidatos a serem a contrapartida óptica do objeto detectado no
-\galex. O caso inverso implicaria numa associação ``muitos para um''. Nas
-tabelas \ref{tab:SDSSxGalexMatchesAIS} e \ref{tab:SDSSxGalexMatchesMIS} há a
-quantidade de identificações para cada tipo de associação, referentes aos {\em
-surveys} AIS e MIS, respectivamente. Os valores foram determinados para o {\em
-crossmatch} entre \SDSS DR7 e \galex GR6, disponível no {\em CasJobs} do
-\galex\footnote{{\em CasJobs} do \galex:
+{\em CasJobs}), utilizando técnicas avançadas de indexação \citep{Kunszt2000}. A
+tabela resultante é uma relação ``muitos para muitos'', onde a maioria dos
+objetos \galex tem apenas um objeto \SDSS associado, mas outras associações
+podem ocorrer. Um exemplo onde pode ocorrer uma associação ``um para muitos'' é
+o caso onde existe uma fonte fraca em UV (presente no \SDSS mas não detectada
+pelo \galex) próxima a uma fonte presente tanto no UV quanto no óptico. O
+algoritmo irá apontar estes dois objetos no \SDSS como candidatos a serem a
+contrapartida óptica do objeto detectado no \galex. O caso inverso implicaria
+numa associação ``muitos para um''. Nas tabelas \ref{tab:SDSSxGalexMatchesAIS} e
+\ref{tab:SDSSxGalexMatchesMIS} há a quantidade de identificações para cada tipo
+de associação, referentes aos {\em surveys} AIS e MIS, respectivamente. Os
+valores foram determinados para o {\em crossmatch} entre \SDSS DR7 e \galex GR6,
+disponível no {\em CasJobs} do \galex\footnote{{\em CasJobs} do \galex:
 \url{http://galex.stsci.edu/casjobs/}}). O artigo citado acima mostra a mesma
 tabela, com os resultados para dados do \SDSS DR6 e \galex GR3. A técnica
 utilizada por \citeauthor{Budavari2009} agora faz parte do {\em pipeline} do
@@ -336,12 +335,12 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 	associação.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
-	\galex &          \multicolumn{3}{c}{\SDSS} \\
-	\midrule
-	       &          1 &         2 &    Muitos \\
-	1      & $15267818$ & $9150919$ & $4623197$ \\
-	2      &  $4524337$ & $2504786$ & $1162463$ \\
-	Muitos &   $770645$ &  $426691$ &  $184680$ \\
+		\galex &          \multicolumn{3}{c}{\SDSS} \\
+		\midrule
+		       &          1 &         2 &    Muitos \\
+		1      & 15.267.818 & 9.150.919 & 4.623.197 \\
+		2      &  4.524.337 & 2.504.786 & 1.162.463 \\
+		Muitos &    770.645 &   426.691 &   184.680 \\
 	\end{tabular}
 	\label{tab:SDSSxGalexMatchesAIS}
 \end{table}
@@ -353,12 +352,12 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 	associação.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
-	\galex &         \multicolumn{3}{c}{\SDSS} \\
-	\midrule
-	       &         1 &        2 &     Muitos \\
-	1      & $8201735$ & $5923551$ & $3775187$ \\
-	2      & $2120174$ & $1580701$ &  $984067$ \\
-	Muitos &  $276447$ &  $234016$ &  $150894$ \\
+		\galex &         \multicolumn{3}{c}{\SDSS} \\
+		\midrule
+		       &         1 &         2 &    Muitos \\
+		1      & 8.201.735 & 5.923.551 & 3.775.187 \\
+		2      & 2.120.174 & 1.580.701 &   984.067 \\
+		Muitos &   276.447 &   234.016 &   150.894 \\
 	\end{tabular}
 	\label{tab:SDSSxGalexMatchesMIS}
 \end{table}

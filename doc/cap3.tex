@@ -154,7 +154,7 @@ programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectr
 como um arquivo texto. Ele usa uma biblioteca de espectros de populações
 estelares simples ({\em Single Stellar Population}, SSP)\footnote{Uma SSP
 consiste num conjunto de estrelas formadas ao mesmo tempo com a mesma
-metalicidade.\fixme} com diferentes idades e metalicidades como uma base do
+metalicidade.} com diferentes idades e metalicidades como uma base do
 espaço de espectros galáticos possíveis. De forma simplificada, o que o
 \starlight faz é encontrar as frações de massa e luz correspondente a cada
 elemento da base, ou seja, cada SSP. Analisando as relações entre os componentes
@@ -230,16 +230,17 @@ média da observação ({\tt MJD}, {\em Mean Julian Date}), a identificação da
 placa de suporte das fibras ópticas ({\tt Plate}) e a identificacão da fibra
 utilizada para a obtenção do espectro ({\tt FiberID}). Este tripleto ({\tt MJD},
 {\tt Plate}, {\tt FiberID}) identifica unicamente um espectro. Porém, é mais
-conveniente (e eficiente) ter um identificador único{\footnote{Chave primária
-\fixme}} para os registros num banco de dados. No caso do \SDSS, a tabela de
-espectros ({\tt SpecObjAll}) tem um identificador chamado {\tt SpecObjID}.
-% FIXME: Explicar o que é uma chave primária.
+conveniente (e eficiente) ter um identificador único (uma chave
+primária\footnote{Chave primária é um conjunto de um ou mais campos tais que a
+combinação de todos os campos da chave não se repete.}) para os registros num
+banco de dados. No caso do \SDSS, a tabela de espectros ({\tt SpecObjAll}) tem
+um identificador chamado {\tt SpecObjID}.
 
 % TODO: Adicionar figura - esquema simplificado da BD do SDSS.
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Esquema do banco de dados do \SDSS.]
-	{Esquema do banco de dados do \SDSS.}
+	\caption[Esquema simplificado do banco de dados do \SDSS.]
+	{Esquema simplificado do banco de dados do \SDSS.}
 	\label{fig:EsquemaSDSS}
 \end{figure}
 
@@ -263,7 +264,7 @@ fotométrica.
 % TODO: Adicionar figura - Tabela amostra do starlight.
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Esquema da tabela de índices da amostra do \starlight.]
+	\caption[Tabela de índices da amostra do \starlight.]
 	{Esquema da tabela de índices da amostra do \starlight. Os tipos de dados são
 	referentes à implementação do banco de dados.}
 	\label{fig:TabelaAmostraStarlight}
@@ -329,8 +330,7 @@ utilizada por \citeauthor{Budavari2009} agora faz parte do {\em pipeline} do
 fazer o {\em crossmatch} espacial entre bancos de dados.
 
 \begin{table}
-	\caption[Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex
-	GR6, por associação.]
+	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6, por
 	associação.}
 	\setlength{\tabcolsep}{1cm}
@@ -346,8 +346,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \end{table}
 
 \begin{table}
-	\caption[Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex
-	GR6, por associação.]
+	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} MIS do \galex GR6, por
 	associação.}
 	\setlength{\tabcolsep}{1cm}
@@ -371,7 +370,6 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 
 \section{Definição das amostras \SDSS/\starlight e \galex}
 \label{sec:Crossmatch:DefAmostras}
-% TODO: Definição das amostras a serem usadas no próximo cap. (MGS e LRG).
 
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}, no banco
@@ -381,24 +379,17 @@ e os seus correspondentes ópticos no catálogo do \SDSS. A figura
 A descrição completa dos campos pode ser vista na tabela
 \ref{tab:CamposXSDSSDR7}. Dado que a identificação não é necessariamente
 unívoca, existem informações extras nesta tabela a fim de facilitar a seleção
-dos melhores candidatos.
+dos melhores candidatos: {\tt DistanceRank} e {\tt MultipleMatchCount}.
 
-\begin{verbatim}
-In lieu of actual probabilities of matches, the following columns 
-have been added to the table to facilitate selection of matched sources.
-Again, the user should be aware of that the best (closest) match is 
-not always the correct one. However, as a first cut best results can 
-be obtained from rank = 1 matches and reverse matches across both 
-catalogs.
-\end{verbatim}
-
-
+A identificação cruzada também é feita na direção oposta. Dado um objeto do
+\SDSS, foram encontrados os objetos do \galex candidatos. Para um par [{\tt
+ObjID}, {\tt SDSSObjID}], há também os campos {\tt ReverseDistanceRank} e {\tt
+ReverseMultipleMatchCount}.
 
 % TODO: Adicionar figura - tabela xSDSSDR7.
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Esquema da tabela de {em crossmatch} entre objetos do \galex e do
-	\SDSS.]
+	\caption[Tabela de {em crossmatch} entre objetos do \galex e do	\SDSS.]
 	{Esquema da tabela de {\em crossmatch} entre objetos do \galex e do
 	\SDSS.}
 	\label{fig:TabelaxSDSSDR7}
@@ -420,13 +411,13 @@ catalogs.
 		Separação angular em segundos de arco.
 		\\
 		{\tt DistanceRank} &
-		Um número inteiro, onde um valor de $1$ indica que o objeto do \galex é o
-		mais próximo do objeto \SDSS, um valor de $2$ indica que ele é o segundo mais
+		Um número inteiro, onde o valor $1$ indica que o objeto do \galex é o
+		mais próximo do objeto \SDSS, o valor $2$ indica que ele é o segundo mais
 		próximo, etc.
 		\\
 		{\tt ReverseDistanceRank} &
-		Um número inteiro, onde um valor de $1$ indica que o objeto do \SDSS é o mais
-		próximo do objeto \galex, um valor de $2$ indica que ele é o segundo mais
+		Um número inteiro, onde o valor $1$ indica que o objeto do \SDSS é o mais
+		próximo do objeto \galex, o valor $2$ indica que ele é o segundo mais
 		próximo, etc.
 		\\
 		{\tt MultipleMatchCount} &
@@ -442,22 +433,36 @@ catalogs.
 \end{table}
 
 \subsection{Obtendo dados UV da amostra do \starlight}
-% TODO: Como foi feito o match.
-TODO: Como foi feito o match.
 
+A amostra do \starlight obtida na seção \ref{sec:Crossmatch:AmostraStarlight}
+contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
+o mesmo utilizado na tabela {\tt XSDSSDR7}. A {\em query} da figura
+\ref{fig:QueryMatchAIS} preenche a tabela chamada {\tt galex\_ais} com todos os
+objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
+({\tt FUV\_mag}) e FUV ({\tt NUV\_mag}), o erro na medida das magnitudes ({\tt
+FUV\_magErr} e {\tt NUV\_magErr}), o tempo de exposição em cada filtro ({\tt
+fexptime} e {\tt nexptime}), o índice de cor $E(B-V)$ ({\tt e\_bv}, ver seção
+\ref{sec:Crossmatch:Correcoes:Poeira}) e a distância entre a detecção do objeto
+no \galex e no \SDSS ({\tt distance}). Esta tabela é esparsamente populada, com
+um registro para cada objeto do \starlight, e os dados UV preenchidos somente
+para os objetos com identificação positiva. Caso o objeto não tenha um
+correspodente \galex, os valores serão nulos\footnote{NULL\fixme}. De forma
+similar, os dados UV para o {\em survey} MIS foram armazenados na tabela {\tt
+galex\_mis}.
+% FIXME: Explicar o que é um NULL.
 
 \begin{figure}
 	\begin{Verbatim}[commandchars=\\\{\}]
 	\textbf{SELECT INTO} mydb..galex_ais
 		s.objid \textbf{AS} sdssobjid, x.objid \textbf{AS} galexobjid,
 		s.mjd, s.plate, s.fiberid,
-		g.nuv_mag, nuv_magErr,
-		g.fuv_mag, g.fuv_magErr,
+		g.fuv_mag, fuv_magErr,
+		g.nuv_mag, g.nuv_magErr,
 		g.e_bv,
 		g.band,
 		x.distance,
-		pe.nexptime,
-		pe.fexptime
+		pe.fexptime,
+		pe.nexptime
 	\textbf{FROM} mydb..sample s
 	\textbf{LEFT JOIN} xSDSSDR7 x
 		\textbf{ON} s.objid = x.sdssobjid
@@ -471,8 +476,7 @@ TODO: Como foi feito o match.
 		\textbf{ON} e.photoextractid=g.photoextractid
 	\textbf{WHERE} e.mpstype='AIS'
 	\end{Verbatim}
-	\caption[{\em Query} para o {\em match} entre os objetos da amostra do
-	\starlight e \galex AIS.]
+	\caption[{\em Match} entre os objetos da amostra do \starlight e \galex.]
 	{{\em Query} para o {\em match} entre os objetos da amostra do \starlight e
 	\galex AIS. A mesma {\em query} foi usada para o MIS, trocando apenas o nome da
 	tabela para {\tt galex\_mis} e modificando a última linha para {\tt
@@ -484,18 +488,47 @@ TODO: Como foi feito o match.
 % TODO: Alguma estatística.
 TODO: Alguma estatística.
 
+Foram escolhidos apenas identificações cruzadas do tipo um-para-um, ou seja, com
+{\tt multipleMatchCount} e {\tt reverseMultipleMatchCount} iguais a $1$.
+% TODO: por que apenas matches um-pra-um?
+
+Outro artefato importante é que apenas um objeto foi escolhido, indepente do
+{\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
+o mesmo objeto da amostra, apenas o mais próximo é considerado.\fixme
+% FIXME: Rever o critério de escolha dos matches simultaneos AIS e MIS.
+
 
 \section{Correções na fotometria UV}
 \label{sec:Crossmatch:Correcoes}
 
 \subsection{Poeira}
+\label{sec:Crossmatch:Correcoes:Poeira}
+
+Por que corrigir poeira?
+
+
 % TODO: Correção por poeira etc.
+Correção de poeira, \#comofas?
+
+Catálogo do \galex provê os valores de índice de cor das
+galáxias com base no modelo de \citet{Schlegel1998} para a poeira interestelar.
+
+A correção é feita usando a CCM \citep{Cardelli1989}.
 %a_FUV = 8.29 * ebv
 %a_NUV = 8.18 * ebv
 %CCM, Schlegel.
 
-\subsection{K-correct}
-% TODO: K-correction
+Ver seção 2.2.2 da tese do Abilio.
+
+\begin{equation}
+	A_{FUV} = 8,29 E(B-V)
+\end{equation}
+\begin{equation}
+	A_{NUV} = 8,18 E(B-V)
+\end{equation}
+
+Foi feita a correção para magnitude absoluta usando KCORRECT de
+\citet{Blanton2007}.
 
 
 %% End of this chapter

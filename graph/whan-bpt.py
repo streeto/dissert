@@ -9,6 +9,8 @@ import numpy as np
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
 debug = False
+outformat = 'png'
+
 
 def set_eps_output():
     # From http://www.scipy.org/Cookbook/Matplotlib/LaTeX_Examples
@@ -111,7 +113,7 @@ pylab.xlabel('$NUV - r$')
 if debug:
     pylab.show()
 else:
-    pylab.savefig('../doc/figuras/histo_galtype_color.eps', format='eps')
+    pylab.savefig('../doc/figuras/histo_galtype_color.' + outformat, format=outformat)
 
 
 # WHaN plot
@@ -122,23 +124,25 @@ ax.set_yscale('log')
 pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
 pylab.ylabel('$W_{H\\alpha}$ [\AA]')
 
-sample = oneInTen(starforming)
-pylab.plot(logN2Ha[sample], WHa[sample], '.b', markersize=.1)
+clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 
-sample = oneInTen(sAGN)
-pylab.plot(logN2Ha[sample], WHa[sample], '.', color='lightgreen', markersize=.1)
+sample = oneInTen(starforming) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.b', markersize=.5)
 
-sample = oneInTen(wAGN)
-pylab.plot(logN2Ha[sample], WHa[sample], '.', color='darkgreen', markersize=.1)
+sample = oneInTen(sAGN) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.', color='lightgreen', markersize=.5)
 
-sample = oneInTen(passive)
-pylab.plot(logN2Ha[sample], WHa[sample], '.r', markersize=.1)
+sample = oneInTen(wAGN) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.', color='darkgreen', markersize=.5)
 
-sample = oneInTen(retired)
-pylab.plot(logN2Ha[sample], WHa[sample], '.k', markersize=.1)
+sample = oneInTen(passive) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.r', markersize=.5)
 
-sample = oneInTen(remaining)
-pylab.plot(logN2Ha[sample], WHa[sample], '.m', markersize=.1)
+sample = oneInTen(retired) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.k', markersize=.5)
+
+sample = oneInTen(remaining) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.m', markersize=.5)
 
 # Plot constraints
 pylab.axvline(-0.4, color='k', linestyle='--')
@@ -151,7 +155,7 @@ pylab.plot(x, y, '--k')
 if debug:
     pylab.show()
 else:
-    pylab.savefig('../doc/figuras/whan.eps', format='eps')
+    pylab.savefig('../doc/figuras/whan.' + outformat, format=outformat)
 
 
 # WHaN-UV plot
@@ -161,7 +165,6 @@ pylab.figure()
 bounds = [-1.0,0.6,-1.0,2.5]
 ax = pylab.subplot(111)
 pylab.axis(bounds)
-#ax.set_yscale('log')
 pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
 pylab.ylabel('$\log(W_{H\\alpha}/[\mathrm{\AA}])$')
 
@@ -174,15 +177,16 @@ x = pylab.linspace(-1.0, 0.0, 10)
 y = 0.5 / np.power(10, x)
 #pylab.plot(x, y, '--k')
 
+clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 #pylab.scatter(logN2Ha, logWHa, c=NUV_r,
 #              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
 #              vmin = 0.5, vmax = 7.0)
-pylab.hexbin(logN2Ha, logWHa, NUV_r, extent=bounds, gridsize=50,
+pylab.hexbin(logN2Ha[clean], logWHa[clean], NUV_r[clean], extent=bounds, gridsize=50,
               cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
 cb = pylab.colorbar()
 cb.set_label('$NUV - r$')
 
-h, ex, ey = np.histogram2d(logN2Ha, logWHa, bins=20 ,
+h, ex, ey = np.histogram2d(logN2Ha[clean], logWHa[clean], bins=20 ,
                            range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 # Hack so log(h) does not blow in my face.
 h = h + 1
@@ -191,7 +195,7 @@ pylab.contour(np.log10(h.T), extent=bounds, colors='black')
 if debug:
     pylab.show()
 else:
-    pylab.savefig('../doc/figuras/whan-uv.eps', format='eps')
+    pylab.savefig('../doc/figuras/whan-uv.' + outformat, format=outformat)
 
 
 # BPT-UV plot
@@ -200,15 +204,18 @@ pylab.figure()
 pylab.axis(bounds)
 pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
 pylab.ylabel('$\log([O_{III}] / H_{\\beta})$')
+clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
+clean &= (t.data['oiii_5007_flux'] > 0.0) & (t.data['hbeta_flux'] > 0.0)
+
 #pylab.scatter(logN2Ha, logO3Hb, c=NUV_r,
 #              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
 #              vmin = 0.5, vmax = 7.0)
-pylab.hexbin(logN2Ha, logO3Hb, NUV_r, extent=bounds, gridsize=50,
+pylab.hexbin(logN2Ha[clean], logO3Hb[clean], NUV_r[clean], extent=bounds, gridsize=50,
               cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
 cb = pylab.colorbar()
 cb.set_label('$NUV - r$')
 
-h, ex, ey = np.histogram2d(logN2Ha, logO3Hb, bins=20 ,
+h, ex, ey = np.histogram2d(logN2Ha[clean], logO3Hb[clean], bins=20 ,
                            range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
 pylab.contour(h.T, extent=bounds, colors='black')
@@ -216,6 +223,6 @@ pylab.contour(h.T, extent=bounds, colors='black')
 if debug:
     pylab.show()
 else:
-    pylab.savefig('../doc/figuras/bpt-uv.eps', format='eps')
+    pylab.savefig('../doc/figuras/bpt-uv.' + outformat, format=outformat)
     
     

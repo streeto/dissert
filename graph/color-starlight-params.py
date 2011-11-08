@@ -11,6 +11,7 @@ os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 debug = False
 type = 'starforming'
 #type = None
+outformat = 'png'
 
 
 def set_eps_output():
@@ -129,7 +130,7 @@ if debug:
     pylab.show()
     #exit()
 else:
-    pylab.savefig('../doc/figuras/uvcolor-color-density.eps', format='eps')
+    pylab.savefig('../doc/figuras/uvcolor-color-density.' + outformat, format=outformat)
 
 
 for col in vmin.keys():
@@ -149,11 +150,11 @@ for col in vmin.keys():
     cb.set_label(label[col])
     pylab.contour(h.T, extent=bounds, colors='black')
     if type is not None:
-        figname = '../doc/figuras/' + type + '-uvcolor-color-' + col + '.eps'
+        figname = '../doc/figuras/' + type + '-uvcolor-color-' + col + '.' + outformat
     else:
-        figname = '../doc/figuras/uvcolor-color-' + col + '.eps'
+        figname = '../doc/figuras/uvcolor-color-' + col + '.' + outformat
         
     if debug:
         pylab.show()
     else:    
-        pylab.savefig(figname, format='eps')
+        pylab.savefig(figname, format=outformat)

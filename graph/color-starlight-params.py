@@ -8,6 +8,35 @@ import numpy as np
 
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
+debug = False
+type = 'starforming'
+#type = None
+
+
+def set_eps_output():
+    # From http://www.scipy.org/Cookbook/Matplotlib/LaTeX_Examples
+    fig_width_pt = 448.07378
+    inches_per_pt = 1.0 / 72.27
+    golden_mean = (sqrt(5) - 1.0) / 2.0
+    fig_width = fig_width_pt * inches_per_pt
+    fig_height = fig_width * golden_mean
+    fig_size = (fig_width, fig_height)
+    params = {'backend': 'ps',
+              'axes.labelsize': 10,
+              'text.fontsize': 10,
+              'legend.fontsize': 10,
+              'xtick.labelsize': 10,
+              'ytick.labelsize': 10,
+              'text.usetex': True,
+              'font.family': 'serif',
+              'figure.figsize': fig_size}
+    pylab.rcParams.update(params)
+
+
+tablename = sys.argv[1]
+t = Table(tablename)
+
+
 # mcor_gal : massa em estrelas
 # at_flux: idade ponderada em fluxo
 # at_mass: idade em massa
@@ -43,13 +72,32 @@ vmax['AV'] = 1.25
 label['AV'] = 'Extin\c{c}\~ao'
 
 
-tablename = sys.argv[1]
-t = Table(tablename)
+logN2Ha = np.log10(t.data['nii_6584_flux'] / t.data['halpha_flux'])
+WHa = t.data['halpha_ew']
+WN2 = t.data['nii_6584_ew']
 
-#np.power(10, t.data['at_mass'], t.data['at_mass'])
-#np.power(10, t.data['at_flux'], t.data['at_flux'])
+#WHa_ = t.data['halpha_ew']
+#WN2_ = t.data['nii_6584_ew']
 
-sample = (t.data['z'] < -21.5) & (t.data['z'] > -23.0)
+# Galaxy types
+if type == 'passive':
+    typemask = (WHa < 0.5) & (WN2 < 0.5)
+elif type == 'starforming':
+    typemask = (logN2Ha < -0.4) & (WHa > 3.0)
+elif type == 'sAGN':
+    typemask = (logN2Ha > -0.4) & (WHa > 6.0)
+elif type == 'wAGN':
+    typemask = (logN2Ha > -0.4) & (WHa < 6.0) & (WHa > 3.0)
+elif type == 'retired':
+    typemask = (WHa < 3.0) & (WHa > 0.5) & (WN2 > 0.5)
+
+sample = (t.data['z'] < -21.5)
+sample &= (t.data['z'] > -23.0)
+sample &= (t.data['redshift'] > 0.04) 
+sample &= (t.data['redshift'] < 0.17) 
+if type is not None:
+    sample &= typemask
+
 NUV_r = t.data['NUV'][sample] - t.data['r'][sample]
 g_r = t.data['g'][sample] - t.data['r'][sample]
 
@@ -57,48 +105,41 @@ bounds = [.5,7,.2,.9]
 h, ex, ey = np.histogram2d(NUV_r, g_r, bins=20,
                            range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
-#for col in label.keys():
-#    pylab.figure()
-#    pylab.hist(t.data[col][sample], range=(vmin[col], vmax[col]))
-#    pylab.title(col)
-#    pylab.show()
-#exit()
+if debug:
+    for col in label.keys():
+        pylab.figure()
+        #pylab.hist(t.data[col][sample], range=(vmin[col], vmax[col]))
+        pylab.hist(t.data[col][sample])
+        pylab.title(col)
+        pylab.show()
+    #exit()
 
-# From http://www.scipy.org/Cookbook/Matplotlib/LaTeX_Examples
-fig_width_pt = 448.07378
-inches_per_pt = 1.0 / 72.27
-golden_mean = (sqrt(5) - 1.0) / 2.0
-fig_width = fig_width_pt * inches_per_pt
-fig_height = fig_width * golden_mean
-fig_size = (fig_width, fig_height)
-params = {'backend': 'ps',
-          'axes.labelsize': 10,
-          'text.fontsize': 10,
-          'legend.fontsize': 10,
-          'xtick.labelsize': 10,
-          'ytick.labelsize': 10,
-          'text.usetex': True,
-          'font.family': 'serif',
-          'figure.figsize': fig_size}
-pylab.rcParams.update(params)
+if not debug:
+    set_eps_output()
 
 pylab.figure()
 pylab.axis(bounds)
 #pylab.title('Densidade')
-pylab.xlabel('NUV - r')
-pylab.ylabel('g - r')
+pylab.xlabel('$NUV - r$')
+pylab.ylabel('$g - r$')
 pylab.hexbin(NUV_r, g_r, extent=bounds, bins='log', gridsize=50, cmap=cm.Greys)
 cb = pylab.colorbar()
 cb.set_label('$\log{N}$')
-pylab.savefig('../doc/figuras/uvcolor-color-density.eps', format='eps')
+if debug:
+    pylab.show()
+    #exit()
+else:
+    pylab.savefig('../doc/figuras/uvcolor-color-density.eps', format='eps')
+
 
 for col in vmin.keys():
     z = t.data[col][sample]
     pylab.figure()
     pylab.axis(bounds)
-    #pylab.title(col)
-    pylab.xlabel('NUV - r')
-    pylab.ylabel('g - r')
+    if debug:
+        pylab.title(col)
+    pylab.xlabel('$NUV - r$')
+    pylab.ylabel('$g - r$')
 #    pylab.scatter(NUV_r, g_r, c=z,
 #        marker='o', edgecolor='None', s=1, cmap=cm.spectral,
 #        vmin=vmin[col], vmax=vmax[col])
@@ -107,5 +148,12 @@ for col in vmin.keys():
     cb = pylab.colorbar()
     cb.set_label(label[col])
     pylab.contour(h.T, extent=bounds, colors='black')
-    #pylab.show()
-    pylab.savefig('../doc/figuras/uvcolor-color-' + col + '.eps', format='eps')
+    if type is not None:
+        figname = '../doc/figuras/' + type + '-uvcolor-color-' + col + '.eps'
+    else:
+        figname = '../doc/figuras/uvcolor-color-' + col + '.eps'
+        
+    if debug:
+        pylab.show()
+    else:    
+        pylab.savefig(figname, format='eps')

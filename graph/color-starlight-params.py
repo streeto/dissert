@@ -9,7 +9,7 @@ import numpy as np
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
 debug = False
-type = 'starforming'
+type = 'passive'
 #type = None
 outformat = 'png'
 
@@ -130,7 +130,11 @@ if debug:
     pylab.show()
     #exit()
 else:
-    pylab.savefig('../doc/figuras/uvcolor-color-density.' + outformat, format=outformat)
+    if type is not None:
+        figname = '../doc/figuras/' + type + '-uvcolor-color-density.' + outformat
+    else:
+        figname = '../doc/figuras/uvcolor-color-density.' + outformat
+    pylab.savefig(figname, format=outformat)
 
 
 for col in vmin.keys():

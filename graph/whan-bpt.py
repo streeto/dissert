@@ -9,7 +9,7 @@ import numpy as np
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
 debug = False
-outformat = 'png'
+outformat = 'eps'
 
 
 def set_eps_output():
@@ -178,20 +178,22 @@ y = 0.5 / np.power(10, x)
 #pylab.plot(x, y, '--k')
 
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
-#pylab.scatter(logN2Ha, logWHa, c=NUV_r,
-#              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
-#              vmin = 0.5, vmax = 7.0)
-pylab.hexbin(logN2Ha[clean], logWHa[clean], NUV_r[clean], extent=bounds, gridsize=50,
-              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
+clean &= oneInTen(clean)
+
+pylab.scatter(logN2Ha[clean], logWHa[clean], c=NUV_r[clean],
+              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
+              vmin = 0.5, vmax = 7.0)
+#pylab.hexbin(logN2Ha[clean], logWHa[clean], NUV_r[clean], extent=bounds, gridsize=50,
+#              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
 cb = pylab.colorbar()
 cb.set_label('$NUV - r$')
 
-h, ex, ey = np.histogram2d(logN2Ha[clean], logWHa[clean], bins=20 ,
-                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
+#h, ex, ey = np.histogram2d(logN2Ha[clean], logWHa[clean], bins=20 ,
+#                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 # Hack so log(h) does not blow in my face.
-h = h + 1
+#h = h + 1
 
-pylab.contour(np.log10(h.T), extent=bounds, colors='black')
+#pylab.contour(np.log10(h.T), extent=bounds, colors='black')
 if debug:
     pylab.show()
 else:
@@ -206,19 +208,20 @@ pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
 pylab.ylabel('$\log([O_{III}] / H_{\\beta})$')
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 clean &= (t.data['oiii_5007_flux'] > 0.0) & (t.data['hbeta_flux'] > 0.0)
+clean &= oneInTen(clean)
 
-#pylab.scatter(logN2Ha, logO3Hb, c=NUV_r,
-#              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
-#              vmin = 0.5, vmax = 7.0)
-pylab.hexbin(logN2Ha[clean], logO3Hb[clean], NUV_r[clean], extent=bounds, gridsize=50,
-              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
+pylab.scatter(logN2Ha[clean], logO3Hb[clean], c=NUV_r[clean],
+              marker='o', edgecolor='None', s=1, cmap=cm.spectral,
+              vmin = 0.5, vmax = 7.0)
+#pylab.hexbin(logN2Ha[clean], logO3Hb[clean], NUV_r[clean], extent=bounds, gridsize=50,
+#              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
 cb = pylab.colorbar()
 cb.set_label('$NUV - r$')
 
-h, ex, ey = np.histogram2d(logN2Ha[clean], logO3Hb[clean], bins=20 ,
-                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
+#h, ex, ey = np.histogram2d(logN2Ha[clean], logO3Hb[clean], bins=20 ,
+#                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
-pylab.contour(h.T, extent=bounds, colors='black')
+#pylab.contour(h.T, extent=bounds, colors='black')
 
 if debug:
     pylab.show()

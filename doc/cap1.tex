@@ -54,13 +54,16 @@ infravermelho \citep{Wright2010}. O {\em Visible and Infrared Survey Telescope
 for Astronomy} (VISTA) é um telescópio no Chile fazendo um {\em survey} do céu
 do hemisfério sul no infravermelho próximo \citep{Born2010}. Tratado com mais
 detalhes no capítulo \ref{sec:Galex}, o {Galaxy Evolution Explorer} (\galex)
-mapeou o céu em ultravioleta. Convém mencionar o {\em 2dF Galaxy Redshift
-Survey} (2dFGRS) \citep{Colless1999} e o {\em Two Micron All Sky Survey} (2MASS)
-\citep{Skrutskie2006}. Embora estes {\em surveys} que já tenham sido
-concluídos, os seus dados permanecem disponíveis publicamente.
+mapeou o céu em ultravioleta. O Kepler é um telescópio espacial da NASA
+\citep{Borucki2010}, está fazendo um survey de uma região da Via Láctea para
+descobrir a fração de estrelas com planetas similares à Terra na nossa galáxia.
+Convém mencionar também o {\em 2dF Galaxy Redshift Survey} (2dFGRS)
+\citep{Colless1999} e o {\em Two Micron All Sky Survey} (2MASS)
+\citep{Skrutskie2006}. Embora estes {\em surveys} já tenham sido concluídos, os
+seus dados permanecem disponíveis publicamente.
 
-% TODO: Surveys que vem por aí.
-TODO: Surveys que vem por aí.
+% TODO: Parágrafo sobre J-PAS.
+TODO: Parágrafo sobre J-PAS.
 
 O LSST mapeará metade do céu aproximadamente a cada mês, durante cerca de dez
 anos. Serão mais de um petabyte em imagens brutas por ano, muito mais do que
@@ -73,6 +76,8 @@ FIXME: Os cientistas não armazenam todos os dados das observações, mas atrav�
 de serviços de acesso manipulam estes dados, podendo também fazer a combinação
 destes com outros bancos de dados complementares, e retirando as informações
 relevantes à pesquisa realizada.
+
+(\ldots)
 
 Há pouco mais de uma década astrônomos extragaláticos conheciam os seus objetos
 de estudo pelo nome. Gráficos contendo algumas dúzias de galáxias eram objeto de
@@ -97,135 +102,78 @@ tradicional.
 \section{\starlight e o \SDSS}
 \label{sec:Intro:Starlight}
 
-%TODO: Falar do sucesso do \starlight. Estudo das propriedades das galaxias
-% no UV.
-
-
+% TODO: Intro = falar do sucesso do \starlight. Estudo das propriedades das
+% galaxias no UV.
 
 O \starlight refina dados do \SDSS e gera um catálogo de propriedades físicas
-
 das galáxias.
 
-
-
 Noção geral de como o \starlight funciona. Síntese de população estelar.
-
-
 
 Resultados do \starlight.
 
 
-
-
+\begin{verbatim}
 
 Um exemplo bastante
-
 conhecido é programa STARLIGHT, que tem como entrada uma base de populações
-
 estelares simples e espectros de galáxias do Sloan Digital Sky Survey (SDSS), e
-
 gera como saída informações relacionadas ao histórico de formação estelar das
-
 galáxias. Baseada inteiramente no espectro óptico, esta análise serve de guia
-
 para interpretar dados em outras faixas espectrais para galáxias de diferentes
-
 tipos (como as que estão formando estrelas, as galáxias ativas de diferentes
-
 classes, as passivas e as aposentadas).
 
+\end{verbatim}
 
 
 \begin{verbatim}
 
 Nos últimos anos, novas bibliotecas estelares com alta resolução espectral (~ 1
-
 Å) foram incorporadas a modelos de síntese evolutiva, fornecendo o espectro
-
 detalhado L(lambda,t,Z) de populacoes estelares simples em funcao de sua idade
-
-(t) e metalicidade (Z). O artigo de Bruzual & Charlot (2003), um “best-seller” desde
-
-sua publicação, é o exemplo mais conhecido desta nova geração de modelos, mas
-
-outros conjuntos de bibliotecas estão surgindo (Le Borgne et al 2004; González
-
-Delgado et al 2004; Sanchez-Blasquez et al 2006), e muitos outros estão por vir
-
-(Charlot & Bruzual 2007; Vazdekis et al 2007; Coelho et al 2007; etc). Ao
-
-contrário das técnicas tradicionais de caracterização de populações estelares,
-
-que se baseiam em uns poucos índices espectrais escolhidos “a dedo” (eg, Gallazi
-
-et al 2005), essas novas ferramentas permitem modelar todo espectro observado
-
-Lobs(lambda), incorporando assim toda informacap disponivel, o que naturalmente
-
-produz resultados mais robustos e detalhados. Na prática, o uso efetivo desses
-
-novos modelos no estudo da história de formação estelar em galáxias requer a
-
-implementação de técnicas matemáticas que permitam deduzir a mistura de
-
-populações estelares formadas em diferentes tempos e suas respectivas
-
+(t) e metalicidade (Z). O artigo de Bruzual & Charlot (2003), um “best-seller”
+desde sua publicação, é o exemplo mais conhecido desta nova geração de modelos,
+mas outros conjuntos de bibliotecas estão surgindo (Le Borgne et al 2004;
+González Delgado et al 2004; Sanchez-Blasquez et al 2006), e muitos outros estão
+por vir (Charlot & Bruzual 2007; Vazdekis et al 2007; Coelho et al 2007; etc).
+Ao contrário das técnicas tradicionais de caracterização de populações
+estelares, que se baseiam em uns poucos índices espectrais escolhidos “a dedo”
+(eg, Gallazi et al 2005), essas novas ferramentas permitem modelar todo espectro
+observado Lobs(lambda), incorporando assim toda informacap disponivel, o que
+naturalmente produz resultados mais robustos e detalhados. Na prática, o uso
+efetivo desses novos modelos no estudo da história de formação estelar em
+galáxias requer a implementação de técnicas matemáticas que permitam deduzir a
+mistura de populações estelares formadas em diferentes tempos e suas respectivas
 metalicidades a partir de um espectro observado Lobs(lambda). Este eh um
-
-problema ao qual o Grupo de Astrofísica da UFSC se dedica já há alguns anos (eg, Cid
-
-Fernandes et al 2001b; Leão 2001; Gomes 2005). A experiência acumulada nos
-
+problema ao qual o Grupo de Astrofísica da UFSC se dedica já há alguns anos (eg,
+Cid Fernandes et al 2001b; Leão 2001; Gomes 2005). A experiência acumulada nos
 permitiu desenvolver um código deste tipo logo após a publicação dos modelos de
-
 Bruzual & Charlot (2003). Os resultados são assustadoramente bons! A figura 1
-
 abaixo ilustra a aplicação deste novo código de “síntese espectral” ao espectro
-
 de duas galáxias observadas pela SDSS. (573140 outros exemplos estão disponíveis
-
 em www.starlight.ufsc.br!)
 
-
 Matematicamente, o problema de síntese, abordado sob uma ótica Bayesiana,
-
 envolve o mapeamento de um vasto espaço de parâmetros, de dimensão da ordem de
-
 50 – 100 (dependendo do grau de detalhamento no vetor de populações).  Nosso
-
 código, batizado de STARLIGHT, varre e mapeia este espaço de parâmetros usando
-
 uma combinação de simulated annealing com o algoritmo de Metropolis e métodos de
-
 “Markov-Chain-Monte-Carlo” (MCMC), mais difundidos na comunidade de Física
-
 Estatística, mas que estão ganhando terreno em aplicações astrofísicas diversas.
-
 O STARLIGHT, fornece várias informações como saída: (a) a história de formação
-
 estelar (que nos revela como se formou e evoluiu a galáxia), expressa na forma
-
 de um “vetor de populações” x = x(t,Z), que fornece a fração da luz, ou massa,
-
 proveniente de uma dada população (t,Z); a extinção (AV,devida a grãos de poeira
-
 inter-estelar que provocam um enfraquecimento e avermelhamento da luz observada)
-
 e a dispersão de velocidades (s*), que mede a “temperatura cinética” das
-
 estrelas sob ação do potencial gravitacional da galáxia. Esses parâmetros
-
 básicos podem ser combinados para produzir grandezas fisicamente interessantes,
-
 como a massa estelar da galáxia (M*), sua idade média (t*) e metalicidade
-
 estelar média (Z*). Além disso, o ajuste do espectro é tão bom que permite
-
 medidas bem mais precisas das linhas de emissão a partir do espectro residual
-
-L(lambda) = Lobservado(lambda) – Lmodelo(lambda), incluindo a detecção de
-
-linhas fracas dificilmente mensuráveis no espectro total.
+L(lambda) = Lobservado(lambda) – Lmodelo(lambda), incluindo a detecção de linhas
+fracas dificilmente mensuráveis no espectro total.
 
 \end{verbatim}
 
@@ -238,6 +186,8 @@ linhas fracas dificilmente mensuráveis no espectro total.
 
 \section{Buscando o ultravioleta}
 \label{sec:Intro:UV}
+
+% TODO: Intro - outras bandas espectrais.
 
 A tendência é cobrir todo o espectro eletromagnético.
 
@@ -254,8 +204,11 @@ Resumo do Galex, o que é, como funciona, motivação.
 %                                                               %
 %***************************************************************%
 
-\section{Este Trabalho}
+\section{Este trabalho}
 \label{sec:Intro:EsteTrab}
+
+% TODO: Intro - este trabalho.
+TODO: Intro - este trabalho.
 
 Crossmatch entre fontes SDSS do \starlight{} e do Galex.
 

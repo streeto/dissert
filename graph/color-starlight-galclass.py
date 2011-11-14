@@ -101,7 +101,7 @@ color = {
          }
 
 label = {
-         'all': '{\\bf (a)} Todos',
+         'all': '{\\bf (a)} Todas',
          'starforming': '{\\bf (b)} SFG',
          'sAGN': '{\\bf (c)} sAGN',
          'wAGN': '{\\bf (d)} wAGN',
@@ -110,7 +110,7 @@ label = {
          }
 
 label2 = {
-         'all': 'Todos',
+         'all': 'Todas',
          'starforming': 'SFG',
          'sAGN': 'sAGN',
          'wAGN': 'wAGN',
@@ -154,28 +154,34 @@ param = {}
 
 vmin['at_flux'] = 7.25
 vmax['at_flux'] = 10.25
-param['at_flux'] = '(a) $\log(\mathrm{Idade}_{F})/\mathrm{[a]})$'
+param['at_flux'] = 'Logaritmo da idade [anos] ponderada em fluxo'
 
 vmin['at_mass'] = 9.2
 vmax['at_mass'] = 10.2
-param['at_mass'] = '(b) $\log(\mathrm{Idade}_{M})/\mathrm{[a]})$'
+param['at_mass'] = 'Logaritmo da idade [anos] ponderada em fluxo'
 
 vmin['am_flux'] = 0.25
 vmax['am_flux'] = 2.25
-param['am_flux'] = '(c) $Z_{F}$'
+param['am_flux'] = 'Metalicidade ponderada em fluxo'
 
 vmin['am_mass'] = 0.25
 vmax['am_mass'] = 2.25
-param['am_mass'] = '(d) $Z_{M}$'
+param['am_mass'] = 'Metalicidade ponderada em massa'
 
 vmin['mcor_gal'] = 10.25
 vmax['mcor_gal'] = 11.75
-param['mcor_gal'] = '(e) $\log(M_{\star}/[M_{\odot}])$'
+param['mcor_gal'] = 'Logaritmo da massa estelar [$M_{\odot}$]'
 
 vmin['AV'] = -0.25
 vmax['AV'] = 1.25
-param['AV'] = '(f) $AV$'
+param['AV'] = 'Extin\c{c}\~ao por poeira (magnitude)'
 
+vmin['halpha_ew'] = np.log10(0.1)
+vmax['halpha_ew'] = np.log10(110.0)
+param['halpha_ew'] = 'Logaritmo da largura equivalente de $H_{\\alpha}$ [\AA]'
+
+# Hack: plot log(EWHa)
+t.data['halpha_ew'] = np.log10(t.data['halpha_ew'])
 
 #if debug:
 #    for col in label.keys():
@@ -190,6 +196,7 @@ set_eps_output_3x2()
 
 for p in param.keys():
     pylab.figure()
+    pylab.suptitle(param[p])
     for type, mask in typemask.items():
         h, ex, ey = np.histogram2d(NUV_r[mask], g_r[mask], bins=20,
                                    range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])

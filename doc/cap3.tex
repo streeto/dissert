@@ -197,8 +197,12 @@ MSSQL é o {\em Microsoft SQL Server Management Studio}. Nele há um assistente
 para importação de dados baseado no {\em SQL Server Integrated Services} (SSIS).
 A importação das tabelas de propriedades físicas do \starlight é trivial. A
 importação das linhas de emissão requer um trabalho extra para normalizar a
-tabela\footnote{Normalização de tabelas.\fixme}.
-% FIXME: NOrmalização de tabelas.
+tabela\footnote{A normalização consiste em decompor uma tabela em tabelas
+menores (com menos campos) de forma que elas fiquem melhor estruturadas. No caso
+das linhas de emissão, a tabela passa de ``todas as linhas de um dado objeto num
+único registro'' para ``uma linha para cada regsitro''. No primeiro caso,
+adicionar um novo tipo de linha de emissão implicaria em mudar a estrutura da
+tabela, o que é evitado utilizando a segunda abordagem.}.
 
 \subsection{Estrutura do banco de dados}
 
@@ -244,9 +248,8 @@ um identificador chamado {\tt SpecObjID}.
 	\label{fig:EsquemaSDSS}
 \end{figure}
 
-% FIXME: Citação para cobertura do céu do SDSS.
 Além de espectros, o banco de dados do \SDSS (figura \ref{fig:EsquemaSDSS})
-contém fotometria de $1/4$ do céu.\citneed Os objetos com dados de fotometria
+contém fotometria de $1/4$ do céu. Os objetos com dados de fotometria
 também tem um identificador único, {\tt ObjID}. Existe uma coluna na tabela de
 espectros chamada {\tt BestObjID}, que aponta para o registro de fotometria
 (tabela {\tt PhotoObjAll}) mais provável para cada espectro. É importante
@@ -446,11 +449,13 @@ fexptime} e {\tt nexptime}), o índice de cor $E(B-V)$ ({\tt e\_bv}, ver seção
 no \galex e no \SDSS ({\tt distance}). Esta tabela é esparsamente populada, com
 um registro para cada objeto do \starlight, e os dados UV preenchidos somente
 para os objetos com identificação positiva. Caso o objeto não tenha um
-correspodente \galex, os valores serão nulos\footnote{NULL\fixme}. De forma
+correspodente \galex, os valores serão nulos\footnote{Numa tabela, quando um
+campo de um registro não possui valor definido, seu valor é dito ``nulo''. Em
+SQL, a palavra-chave que representa um valor nulo é ``{\em null}''}. De forma
 similar, os dados UV para o {\em survey} MIS foram armazenados na tabela {\tt
 galex\_mis}.
-% FIXME: Explicar o que é um NULL.
 
+% TODO: Mover queries pra um anexo.
 \begin{figure}
 	\begin{Verbatim}[commandchars=\\\{\}]
 	\textbf{SELECT INTO} mydb..galex_ais

@@ -580,6 +580,9 @@
 
 %% ** Natalia ** INICIO
 %% Front page tweaking
+%% 
+%% ** Andre **
+%% Added co-supervisor field and changed spacing. 
 
 %% Command for defining the title and author in the preamble
 %\DeclareRobustCommand{\definethesis}[2]{%
@@ -614,6 +617,7 @@
 \newcommand{\thesistitle}{\gdef\@thesistitle}
 \newcommand{\thesisauthor}{\gdef\@thesisauthor}
 \newcommand{\supervisor}{\gdef\@supervisor}
+\newcommand{\cosupervisor}{\gdef\@cosupervisor}
 \newcommand{\comments}{\gdef\@comments}
 \newcommand{\place}{\gdef\@place}
 \newcommand{\thesisdate}{\gdef\@thesisdate}
@@ -627,12 +631,14 @@
 	{\Large{\frontfont \@thesisauthor}\\}
 	    \vspace{.5 cm}
         {\Large{\frontfont Orientador:\\ \@supervisor}\\}
-	    \vspace{1.5 cm}
+	    \vspace{.5 cm}
+        {\Large{\frontfont Coorientador:\\ \@cosupervisor}\\}
+	    \vspace{1.2 cm}
 	    \raisebox{0pt}[10pt][10pt]%
 		     {\textbullet\ \textbullet\ \textbullet\hspace{3cm}}\\
 	    \vspace{1.0cm}
 	{\frontfont \@institution\\}
-	    \vspace{3cm}
+	    \vspace{2.0cm}
       \end{flushright}
       \begin{flushleft}
 	\begin{minipage}{9cm}

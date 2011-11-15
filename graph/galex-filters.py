@@ -7,10 +7,26 @@ import os
 
 os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
-fuv_table_name = 'galex1500.txt'
-nuv_table_name = 'galex2500.txt'
-fuv = Table(fuv_table_name, type='ascii')
-nuv = Table(nuv_table_name, type='ascii')
+filters = ['FUV', 'NUV', 'u', 'g', 'r', 'i', 'z']
+
+table_names2 = {}
+table_names2['FUV'] = 'galex1500.txt'
+table_names2['NUV'] = 'galex2500.txt'
+table_names2['u'] = 'u_SDSS.txt'
+table_names2['g'] = 'g_SDSS.txt'
+table_names2['r'] = 'r_SDSS.txt'
+table_names2['i'] = 'i_SDSS.txt'
+table_names2['z'] = 'z_SDSS.txt'
+
+filter_line = {
+               'FUV': 'b-',
+               'NUV': 'r-',
+               'u': 'b--',
+               'g': 'g--',
+               'r': 'y--',
+               'i': 'r--',
+               'z': 'k--'
+}
 
 # From http://www.scipy.org/Cookbook/Matplotlib/LaTeX_Examples
 fig_width_pt = 448.07378
@@ -31,13 +47,15 @@ params = {'backend': 'ps',
 pylab.rcParams.update(params)
 
 pylab.figure(1)
-pylab.axis([1200, 3100, 0, 0.7])
+pylab.axis([1100, 10000, 0, 0.7])
 pylab.xlabel('Comprimento de onda [\AA]')
 pylab.ylabel('Transmit\^ancia')
-pylab.plot(nuv.data['col1'], nuv.data['col2'], 'r-', label='NUV')
-pylab.plot(fuv.data['col1'], fuv.data['col2'], 'b-', label='FUV')
-pylab.legend()
-#plt.show()
+for f in filters:
+    t = Table('filters/' + table_names2[f], type='ascii')
+    pylab.plot(t.data['col1'], t.data['col2'], filter_line[f], label=f)
 
+pylab.legend()
+#pylab.show()
+#exit()
 pylab.savefig('../doc/figuras/galex-filters.eps', format='eps')
 

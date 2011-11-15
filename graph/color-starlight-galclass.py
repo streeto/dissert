@@ -73,6 +73,14 @@ logN2Ha = np.log10(t.data['nii_6584_flux'][sample] / t.data['halpha_flux'][sampl
 WHa = t.data['halpha_ew'][sample]
 WN2 = t.data['nii_6584_ew'][sample]
 
+types = ['all',
+         'starforming',
+         'sAGN',
+         'wAGN',
+         'retired',
+         'passive'
+]
+
 typemask = {
             'all': np.zeros(len(NUV_r)) == 0,
             'starforming': (logN2Ha < -0.4) & (WHa > 3.0),
@@ -124,7 +132,8 @@ bounds = [.5,7,.2,.9]
 # Color - UV color for all the galaxy classes.
 set_eps_output_1()
 pylab.figure()
-for type, mask in typemask.items():
+for type in types:
+    mask = typemask[type]
     if type == 'all': continue
     # Plot less points
     fraction = randomFraction(NUV_r[mask], 0.1)
@@ -197,7 +206,8 @@ set_eps_output_3x2()
 for p in param.keys():
     pylab.figure()
     pylab.suptitle(param[p])
-    for type, mask in typemask.items():
+    for type in types:
+        mask = typemask[type]
         h, ex, ey = np.histogram2d(NUV_r[mask], g_r[mask], bins=20,
                                    range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 

@@ -80,11 +80,12 @@ pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='lightgreen', label='sAGN')
 h, e = pylab.histogram(g_r[wAGN], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='darkgreen', label='wAGN')
 
+h, e = pylab.histogram(g_r[retired], bins, range)
+pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
+
 h, e = pylab.histogram(g_r[passive], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'r-', label='PG')
 
-h, e = pylab.histogram(g_r[retired], bins, range)
-pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
 pylab.legend(loc='upper left')
 pylab.xlabel('$g - r$')
 
@@ -103,11 +104,12 @@ pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='lightgreen', label='sAGN')
 h, e = pylab.histogram(NUV_r[wAGN], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='darkgreen', label='wAGN')
 
+h, e = pylab.histogram(NUV_r[retired], bins, range)
+pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
+
 h, e = pylab.histogram(NUV_r[passive], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'r-', label='PG')
 
-h, e = pylab.histogram(NUV_r[retired], bins, range)
-pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
 #pylab.legend(loc='upper left')
 pylab.xlabel('$NUV - r$')
 if debug:
@@ -128,28 +130,51 @@ clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 
 sample = oneInTen(starforming) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.b', markersize=.5)
+pylab.text(-0.9, 4, 'SF')
 
 sample = oneInTen(sAGN) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.', color='lightgreen', markersize=.5)
+pylab.text(0.4, 8, 'sAGN')
 
 sample = oneInTen(wAGN) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.', color='darkgreen', markersize=.5)
-
-sample = oneInTen(passive) & clean
-pylab.plot(logN2Ha[sample], WHa[sample], '.r', markersize=.5)
+pylab.text(0.4, 3.5, 'wAGN')
 
 sample = oneInTen(retired) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.k', markersize=.5)
+pylab.text(0.4, 0.6, 'RG')
+
+sample = oneInTen(passive) & clean
+pylab.plot(logN2Ha[sample], WHa[sample], '.r', markersize=.5)
+pylab.text(0.0, 0.2, 'PG')
 
 sample = oneInTen(remaining) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.m', markersize=.5)
 
 # Plot constraints
-pylab.axvline(-0.4, color='k', linestyle='--')
-pylab.axhline(0.5, color='k', linestyle='--')
-pylab.axhline(3.0, color='k', linestyle='--')
-pylab.axhline(6.0, color='k', linestyle='--')
-x = pylab.linspace(-1.0, 0.0, 10)
+pylab.axhline(3.0, color='k', linestyle='-')
+
+y = pylab.linspace(3.0, 110, 10)
+x = -0.4 * pylab.ones(len(y))
+pylab.plot(x, y, color='k', linestyle='-')
+
+x = pylab.linspace(-0.4, 0.6, 10)
+y = 6.0 * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle='-')
+
+x = pylab.linspace(0.0, 0.6, 10)
+y = 0.5 * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle='--')
+
+x = pylab.linspace(-1.0, 0, 10)
+y = 0.5 * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle=':')
+
+x = pylab.linspace(0.0, 0.6, 10)
+y = 0.5 / np.power(10, x)
+pylab.plot(x, y, color='k', linestyle=':')
+
+x = pylab.linspace(np.log10(0.5/3.0), 0.0, 10)
 y = 0.5 / np.power(10, x)
 pylab.plot(x, y, '--k')
 if debug:
@@ -169,13 +194,39 @@ pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
 pylab.ylabel('$\log(W_{H\\alpha}/[\mathrm{\AA}])$')
 
 # Plot constraints
-pylab.axvline(-0.4, color='k', linestyle='--', label='bla')
-pylab.axhline(np.log10(0.5), color='k', linestyle='--')
-pylab.axhline(np.log10(3.0), color='k', linestyle='--')
-pylab.axhline(np.log10(6.0), color='k', linestyle='--')
-x = pylab.linspace(-1.0, 0.0, 10)
-y = 0.5 / np.power(10, x)
-#pylab.plot(x, y, '--k')
+pylab.axhline(np.log10(3.0), color='k', linestyle='-')
+
+y = pylab.linspace(np.log10(3.0), 2.5, 10)
+x = -0.4 * pylab.ones(len(y))
+pylab.plot(x, y, color='k', linestyle='-')
+
+x = pylab.linspace(-0.4, 0.6, 10)
+y = np.log10(6.0) * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle='-')
+
+x = pylab.linspace(0.0, 0.6, 10)
+y = np.log10(0.5) * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle='--')
+
+x = pylab.linspace(-1.0, 0, 10)
+y = np.log10(0.5) * pylab.ones(len(x))
+pylab.plot(x, y, color='k', linestyle=':')
+
+x = pylab.linspace(0.0, 0.6, 10)
+y = np.log10(0.5/5.0) * x + np.log10(0.5)
+pylab.plot(x, y, color='k', linestyle=':')
+
+x = pylab.linspace(np.log10(1.0/6.0), 0.0, 10)
+y = np.log10(0.5/5.0) * x + np.log10(0.5)
+pylab.plot(x, y, '--k')
+
+# Labels
+pylab.text(-0.9, 0.75, 'SF')
+pylab.text(0.3, 1.0, 'sAGN')
+pylab.text(0.3, 0.55, 'wAGN')
+pylab.text(0.3, -0.15, 'RG')
+pylab.text(0.0, -0.75, 'PG')
+
 
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 clean &= oneInTen(clean)
@@ -215,6 +266,26 @@ pylab.scatter(logN2Ha[clean], logO3Hb[clean], c=NUV_r[clean],
               vmin = 0.5, vmax = 7.0)
 #pylab.hexbin(logN2Ha[clean], logO3Hb[clean], NUV_r[clean], extent=bounds, gridsize=50,
 #              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
+
+
+# FIXME: BPT plot constraints
+# Plot constraints
+
+# S06
+x = np.linspace(-1.0, -0.3, 100)
+y = 0.96 + 0.29 / (x + 0.20)
+pylab.plot(x, y, color='k', linestyle='--')
+
+# K03
+x = np.linspace(-1.0, 0.0, 100)
+y = 1.30 + 0.61 / (x - 0.05)
+pylab.plot(x, y, color='k', linestyle='--')
+
+# K06
+x = np.linspace(-0.5, 0.5, 10)
+y = 1.01 * x + 0.48
+pylab.plot(x, y, color='k', linestyle='--')
+
 cb = pylab.colorbar()
 cb.set_label('$NUV - r$')
 

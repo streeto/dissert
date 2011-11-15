@@ -18,8 +18,14 @@
 \chapter{Introdução}
 \label{sec:Intro}
 
+%***************************************************************%
+%                                                               %
+%                     Introdução - Nova era                     %
+%                                                               %
+%***************************************************************%
 
 \section{A nova era da astronomia}
+\label{sec:Intro:NovaEra}
 
 Com o advento dos {\em mega-surveys}, está começando uma revolução na forma de
 fazer ciência na astronomia. Os diversos {\em surveys}\footnote{Um {\em Survey}
@@ -37,14 +43,14 @@ e classificam dados. O papel do cientista num cenário como este ainda não est�
 muito claro \citep{Norris2010}.
 
 O {\em Sloan Digital Sky Survey}, (\SDSS) \citep{York2000} é referência quando
-falamos em {\em surveys} modernos. Em seus 11\fixme anos de funcionamento,
-obteve imagens em 5 filtros de um quarto do céu e espectros de um milhão de
-galáxias. O seu catálogo contém 4 terabytes de fotometria e espectros, sem
-contar as imagens. O \SDSS foi praticamente o primeiro {\em survey} a conseguir
-popularizar o acesso aos seus dados. Os seus dados foram feitos públicos desde o
-início\citneed, gerando uma ``corrida do ouro'' no seu vasto volume de dados.
-Esta filosofia é compartilhada hoje pela grande maioria dos {\em surveys} de
-grande porte.
+falamos em {\em surveys} modernos. Em seus 8\fixme anos de funcionamento, obteve
+imagens em 5 filtros (ver figura \ref{fig:GalexFilters}) de um quarto do céu e
+espectros de um milhão de galáxias. O seu catálogo contém 4 terabytes de
+fotometria e espectros, sem contar as imagens. O \SDSS foi praticamente o
+primeiro {\em survey} a conseguir popularizar o acesso aos seus dados. Os seus
+dados foram feitos públicos desde o início\citneed, gerando uma ``corrida do
+ouro'' no seu vasto volume de dados. Esta filosofia é compartilhada hoje pela
+grande maioria dos {\em surveys} de grande porte.
 
 Existem diversos {\em surveys} em operação atualmente. O {\em Wide-field
 Infrared Survey Explorer} (WISE) é um telescópio espacial da NASA\footnote{{\em
@@ -62,22 +68,32 @@ Convém mencionar também o {\em 2dF Galaxy Redshift Survey} (2dFGRS)
 \citep{Skrutskie2006}. Embora estes {\em surveys} já tenham sido concluídos, os
 seus dados permanecem disponíveis publicamente.
 
-% TODO: Parágrafo sobre J-PAS.
-TODO: Parágrafo sobre J-PAS.
+O projeto JPAS ({\em Javalambre Physics of the Accelerating Universe Survey}) é
+um {\em survey} que pretende mapear $8000$ graus quadrados do céu em 56
+cores\citep{Benitez2009}. Os filtros, de banda estreita, irão cobrir todo o
+espectro óptico, formando um espectro de baixa resolução para cada pixel do
+survey. Serão mais de 200 terabytes de dados brutos\citneed. O projeto é uma
+colaboração entre Espanha e Brasil, com mais de 70 pesquisadores e engenheiros
+envolvidos. Integrantes do Grupo de Astrofísica da UFSC estão envolvidos neste
+projeto\citneed. O objetivo do {\em survey} é a exploração das causas da
+aceleração do universo, relacionadas à energia escura. Entretanto, uma
+quantidade considerável de ciência corolária poderá ser feita com base no
+espectro de uma região tão ampla do céu. Seu início está previsto para 2013.
 
-O LSST mapeará metade do céu aproximadamente a cada mês, durante cerca de dez
-anos. Serão mais de um petabyte em imagens brutas por ano, muito mais do que
-poderia ser revisado por humanos.
+O LSST (Large Synoptic Survey Telecope) mapeará metade do céu aproximadamente a
+cada mês, durante cerca de dez anos \citep{Ivezic2008}. As suas operações
+científicas tem início previsto para 2020. Serão mais de um petabyte em imagens
+brutas por ano, muito mais do que poderia ser revisado por humanos. Este {\em
+survey} também pretende explorar a natureza da energia escura, embora, da mesma
+forma que o JPAS, os dados possam ser aproveitados diversos outros fins.
 
-% TODO: Observatórios virtuais.
+% TODO: Observatórios virtuais & datamining.
 TODO: Observatórios virtuais. Datamining.
 
 FIXME: Os cientistas não armazenam todos os dados das observações, mas através
 de serviços de acesso manipulam estes dados, podendo também fazer a combinação
 destes com outros bancos de dados complementares, e retirando as informações
 relevantes à pesquisa realizada.
-
-(\ldots)
 
 Há pouco mais de uma década astrônomos extragaláticos conheciam os seus objetos
 de estudo pelo nome. Gráficos contendo algumas dúzias de galáxias eram objeto de
@@ -95,107 +111,50 @@ tradicional.
 
 %***************************************************************%
 %                                                               %
-%                 Introdução - STARLIGHT + SDSS                 %
+%                     Introdução - STARLIGHT                    %
 %                                                               %
 %***************************************************************%
 
-\section{\starlight e o \SDSS}
+\section{\starlight}
 \label{sec:Intro:Starlight}
 
-% TODO: Intro = falar do sucesso do \starlight. Estudo das propriedades das
-% galaxias no UV.
+o \starlight é um código de síntese espectral desenvolvido por
+\citet{CidFernandes2005}. Dado um espectro de galáxia, o programa retorna as
+frações de massa e luz correspondente às populações estelares componentes desta
+galáxia. O \starlight expressa o espectro desta galáxia como uma combinação
+linear de espectros de populações estelares simples (SSP) com diferentes idades
+e metalicidades. Matematicamente isto é equivalente a encontrar as componentes
+do vetor espectro da galáxia numa base de espectros de SSP, ou seja,
 
-O \starlight refina dados do \SDSS e gera um catálogo de propriedades físicas
-das galáxias.
+$$ F_\lambda = \sum_{i=1}^{N_\star} x_i F^\star_\lambda(t_i,Z_i)
+g_\lambda(A_{V,i}). $$
 
-Noção geral de como o \starlight funciona. Síntese de população estelar.
+Nesta equação, $F_\lambda$ é o fluxo em cada comprimento de onda. Os $N_\star$
+espectros de base $F^\star_\lambda(t_i, Z_i)$ são somados com pesos $x_i$, e o
+conjunto $\{x_i\}$ é chamado {\em vetor de população} para a galáxia sendo
+considerada. O termo $g_\lambda$ corrige o espectro pelo efeito de extinção
+interestelar. São ao todo 45 SSP diferentes utilizadas na base. O problema
+torna-se então um ajuste num espaço de parâmetros bastante grande. A figura
+\ref{fig:StarlightSpectrumSample} mostra o ajuste feito para uma galáxia típica
+do \SDSS.
 
-Resultados do \starlight.
+\begin{figure}
+	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}
+	\caption[Amostra de ajuste de espectro com o \starlight.]
+	{Amostra de ajuste de espectro com o \starlight para o espectro de SDSS
+	J1119+5130 \citep[figura 2]{CidFernandes2006}. O espectro observado é mostrado
+	em preto, enquanto o modelo aparece em vermelho. Linhas de emissão (não
+	modeladas) são mostradas em ciano. Os espectros na parte inferior são a soma
+	das SSP para as faixas de idade dadas na figura. A contribuição percentual no
+	fluxo de cada grupo de idade é mostrada na legenda, entre parênteses.}
+	\label{fig:StarlightSpectrumSample}
+\end{figure}
 
-
-\begin{verbatim}
-
-Um exemplo bastante
-conhecido é programa STARLIGHT, que tem como entrada uma base de populações
-estelares simples e espectros de galáxias do Sloan Digital Sky Survey (SDSS), e
-gera como saída informações relacionadas ao histórico de formação estelar das
-galáxias. Baseada inteiramente no espectro óptico, esta análise serve de guia
-para interpretar dados em outras faixas espectrais para galáxias de diferentes
-tipos (como as que estão formando estrelas, as galáxias ativas de diferentes
-classes, as passivas e as aposentadas).
-
-\end{verbatim}
-
-
-\begin{verbatim}
-
-Nos últimos anos, novas bibliotecas estelares com alta resolução espectral (~ 1
-Å) foram incorporadas a modelos de síntese evolutiva, fornecendo o espectro
-detalhado L(lambda,t,Z) de populacoes estelares simples em funcao de sua idade
-(t) e metalicidade (Z). O artigo de Bruzual & Charlot (2003), um “best-seller”
-desde sua publicação, é o exemplo mais conhecido desta nova geração de modelos,
-mas outros conjuntos de bibliotecas estão surgindo (Le Borgne et al 2004;
-González Delgado et al 2004; Sanchez-Blasquez et al 2006), e muitos outros estão
-por vir (Charlot & Bruzual 2007; Vazdekis et al 2007; Coelho et al 2007; etc).
-Ao contrário das técnicas tradicionais de caracterização de populações
-estelares, que se baseiam em uns poucos índices espectrais escolhidos “a dedo”
-(eg, Gallazi et al 2005), essas novas ferramentas permitem modelar todo espectro
-observado Lobs(lambda), incorporando assim toda informacap disponivel, o que
-naturalmente produz resultados mais robustos e detalhados. Na prática, o uso
-efetivo desses novos modelos no estudo da história de formação estelar em
-galáxias requer a implementação de técnicas matemáticas que permitam deduzir a
-mistura de populações estelares formadas em diferentes tempos e suas respectivas
-metalicidades a partir de um espectro observado Lobs(lambda). Este eh um
-problema ao qual o Grupo de Astrofísica da UFSC se dedica já há alguns anos (eg,
-Cid Fernandes et al 2001b; Leão 2001; Gomes 2005). A experiência acumulada nos
-permitiu desenvolver um código deste tipo logo após a publicação dos modelos de
-Bruzual & Charlot (2003). Os resultados são assustadoramente bons! A figura 1
-abaixo ilustra a aplicação deste novo código de “síntese espectral” ao espectro
-de duas galáxias observadas pela SDSS. (573140 outros exemplos estão disponíveis
-em www.starlight.ufsc.br!)
-
-Matematicamente, o problema de síntese, abordado sob uma ótica Bayesiana,
-envolve o mapeamento de um vasto espaço de parâmetros, de dimensão da ordem de
-50 – 100 (dependendo do grau de detalhamento no vetor de populações).  Nosso
-código, batizado de STARLIGHT, varre e mapeia este espaço de parâmetros usando
-uma combinação de simulated annealing com o algoritmo de Metropolis e métodos de
-“Markov-Chain-Monte-Carlo” (MCMC), mais difundidos na comunidade de Física
-Estatística, mas que estão ganhando terreno em aplicações astrofísicas diversas.
-O STARLIGHT, fornece várias informações como saída: (a) a história de formação
-estelar (que nos revela como se formou e evoluiu a galáxia), expressa na forma
-de um “vetor de populações” x = x(t,Z), que fornece a fração da luz, ou massa,
-proveniente de uma dada população (t,Z); a extinção (AV,devida a grãos de poeira
-inter-estelar que provocam um enfraquecimento e avermelhamento da luz observada)
-e a dispersão de velocidades (s*), que mede a “temperatura cinética” das
-estrelas sob ação do potencial gravitacional da galáxia. Esses parâmetros
-básicos podem ser combinados para produzir grandezas fisicamente interessantes,
-como a massa estelar da galáxia (M*), sua idade média (t*) e metalicidade
-estelar média (Z*). Além disso, o ajuste do espectro é tão bom que permite
-medidas bem mais precisas das linhas de emissão a partir do espectro residual
-L(lambda) = Lobservado(lambda) – Lmodelo(lambda), incluindo a detecção de linhas
-fracas dificilmente mensuráveis no espectro total.
-
-\end{verbatim}
-
-
-%***************************************************************%
-%                                                               %
-%                     Introdução - GALEX                        %
-%                                                               %
-%***************************************************************%
-
-\section{Buscando o ultravioleta}
-\label{sec:Intro:UV}
-
-% TODO: Intro - outras bandas espectrais.
-
-A tendência é cobrir todo o espectro eletromagnético.
-
-Qual ciência pode ser feita com cada faixa.
-
-Por que UV? Limitações do UV.
-
-Resumo do Galex, o que é, como funciona, motivação.
+Analisando o vetor de população das galáxias é possível obter algumas de suas
+propriedades físicas. É possível também extrair a medida das linhas de emissão
+-- não modeladas no ajuste -- com bastante precisão. A técnica foi aplicada aos
+espectros de galáxias do \SDSS, e o resultado da síntese gerou um catálogo de
+propriedades físicas e linhas de emissão de quase um milhão de galáxias.
 
 
 %***************************************************************%
@@ -207,15 +166,39 @@ Resumo do Galex, o que é, como funciona, motivação.
 \section{Este trabalho}
 \label{sec:Intro:EsteTrab}
 
-% TODO: Intro - este trabalho.
-TODO: Intro - este trabalho.
+Historicamente o espectro ultravioleta do céu tem sido pouco estudado. Não por
+falta de interesse dos astrônomos, mas pelo simples fato de que observações do
+chão são impossibilitados pela camada de ozônio. É preciso ir para o espaço.
+Foram lançados diversos satélites com o intuito de estudar o céu no ultravioleta
+(ver seção \ref{sec:Galex:CeuUV}). O \galex foi o primeiro telescópio espacial a
+fazer um {\em survey} inteiro em ultravioleta. A missão tem como objetivo
+estudar a evolução da taxa de formação estelar em galáxias \citep{Martin2005}.
 
-Crossmatch entre fontes SDSS do \starlight{} e do Galex.
+TODO: Crossmatch entre fontes SDSS do \starlight e do \galex.
+Dada a grande quantidade de {\em surveys}\ldots
 
-Cores UV para os tipos de galáxias classificados pelo WHaN.
+TODO: Cores UV para os tipos de galáxias classificados pelo WHaN.
 
-Propriedades físicas dos tipos de galáxias no diagrama cor-cor UV.
+TODO: Propriedades físicas dos tipos de galáxias no diagrama cor-cor UV.
 
-Organização deste trabalho.
+No segundo capítulo a missão \galex é tratada em mais detalhes. As
+características do {\em survey} são discutidas, e são apresentados alguns
+resultados importantes. Os produtos gerados pelos {\em surveys} do \galex
+e o acesso a estes dados são descritos no final do capítulo.
+
+O terceiro capítulo trata inicialmente do problema genérico de identificação
+cruzada ({\em crossmatch}) de objetos em catálogos astronômicos. Em seguida, os
+bancos de dados do \SDSS e do \starlight são apresentados. O processo de
+{\em crossmatch} é feito entre os catálogos do \SDSS e do \galex. Define-se uma
+amostra com magnitudes absoutas (óptico e UV) e propriedades físícas das
+galáxias.
+
+Finalmente no quarto capítulo é feita a análise da amostra obtida no capítulo
+anterior. As galáxias são classificadas através do diagrama WHAN, e as
+propriedades físicas destas galáxias (obtidas do \starlight) são avaliadas no
+diagrama cor--cor UV.
+
+No quinto e último capítulo são apresentadas as conclusões e perspectivas deste
+trabalho.
 
 % End of this chapter

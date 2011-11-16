@@ -42,6 +42,8 @@ inteligência superior à humana.} da astrofísica, onde máquinas coletam, anal
 e classificam dados. O papel do cientista num cenário como este ainda não está
 muito claro \citep{Norris2010}.
 
+\subsection{Mega-levantamentos de dados}
+
 O {\em Sloan Digital Sky Survey}, (\SDSS) \citep{York2000} é referência quando
 falamos em {\em surveys} modernos. Em seus 8\fixme anos de funcionamento, obteve
 imagens em 5 filtros (ver figura \ref{fig:GalexFilters}) de um quarto do céu e
@@ -87,6 +89,8 @@ brutas por ano, muito mais do que poderia ser revisado por humanos. Este {\em
 survey} também pretende explorar a natureza da energia escura, embora, da mesma
 forma que o JPAS, os dados possam ser aproveitados diversos outros fins.
 
+\subsection{Observatórios virtuais e mineração de dados}
+
 % TODO: Observatórios virtuais & datamining.
 TODO: Observatórios virtuais. Datamining.
 
@@ -115,7 +119,7 @@ tradicional.
 %                                                               %
 %***************************************************************%
 
-\section{\starlight}
+\section{O catálogo do \starlight}
 \label{sec:Intro:Starlight}
 
 o \starlight é um código de síntese espectral desenvolvido por
@@ -141,7 +145,7 @@ do \SDSS.
 \begin{figure}
 	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}
 	\caption[Amostra de ajuste de espectro com o \starlight.]
-	{Amostra de ajuste de espectro com o \starlight para o espectro de SDSS
+	{Amostra de ajuste com o \starlight para o espectro de SDSS
 	J1119+5130 \citep[figura 2]{CidFernandes2006}. O espectro observado é mostrado
 	em preto, enquanto o modelo aparece em vermelho. Linhas de emissão (não
 	modeladas) são mostradas em ciano. Os espectros na parte inferior são a soma
@@ -174,29 +178,45 @@ Foram lançados diversos satélites com o intuito de estudar o céu no ultraviol
 fazer um {\em survey} inteiro em ultravioleta. A missão tem como objetivo
 estudar a evolução da taxa de formação estelar em galáxias \citep{Martin2005}.
 
-TODO: Crossmatch entre fontes SDSS do \starlight e do \galex.
-Dada a grande quantidade de {\em surveys}\ldots
+Embora este e outros grandes {\em surveys} tenham um grande valor
+individualmente, esta é somente a ponta do {\em iceberg}. Cruzado informações de
+{\em surveys} em diversos comprimentos de onda pode-se ter novos {\em insights}
+sobre a relação entre os processos físicos subjacentes. Este trabalho utiliza
+dados obtidos dos {\em surveys} \SDSS e \galex, nas bandas espectrais óptica e
+ultravioleta, respectivamente. Estes dois {\em surveys} foram indexados (ver
+seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}) de forma a facilitar a
+identificação entre as suas observações. A técnica desenvolvida por eles pode
+ser aplicada em virtualmente qualquer outro {\em survey} astronômico.
 
-TODO: Cores UV para os tipos de galáxias classificados pelo WHaN.
+As galáxias utilizadas na síntese do \starlight foram obtidas do catálogo do
+\SDSS. Neste trabalho foi feita a identificação destas galáxias no catálogo do
+\galex, obtendo-se assim as suas medidas de fotometria ultravioleta. Este
+conjunto de dados formou uma amostra de galáxias com as suas propriedades
+físicas, cores ópticas e cores ultravioleta. As galáxias desta amostra são
+classificadas utilizando o diagrama de diagnóstico WHAN, conforme
+\citet{CidFernandes2011}. Este método de classificação utiliza as linhas de
+emissão $H_\alpha$ e $[NII]$ para separar as galáxias nas classes de formação
+estelar, núcleo ativo, ``aposentadas'' e passivas. As cores ultravioleta das
+galáxias de cada classe são analisadas em busca de correlações e tendências.
 
-TODO: Propriedades físicas dos tipos de galáxias no diagrama cor-cor UV.
+\subsection{Organização deste trabalho}
 
-No segundo capítulo a missão \galex é tratada em mais detalhes. As
+No capítulo seguinte a missão \galex é tratada em mais detalhes. As
 características do {\em survey} são discutidas, e são apresentados alguns
-resultados importantes. Os produtos gerados pelos {\em surveys} do \galex
-e o acesso a estes dados são descritos no final do capítulo.
+resultados importantes. Os produtos gerados pelos {\em surveys} do \galex e o
+acesso a estes dados são descritos no final do capítulo.
 
-O terceiro capítulo trata inicialmente do problema genérico de identificação
-cruzada ({\em crossmatch}) de objetos em catálogos astronômicos. Em seguida, os
-bancos de dados do \SDSS e do \starlight são apresentados. O processo de
-{\em crossmatch} é feito entre os catálogos do \SDSS e do \galex. Define-se uma
-amostra com magnitudes absoutas (óptico e UV) e propriedades físícas das
-galáxias.
+O terceiro capítulo introduz o uso de bancos de dados em astronomia. Em seguida
+é tratado do problema genérico de identificação cruzada ({\em crossmatch}) de
+objetos em catálogos de {\em surveys} astronômicos. Os bancos de dados do \SDSS
+e do \starlight são apresentados, e processo de {\em crossmatch} é feito entre
+os catálogos do \SDSS e do \galex. Finalmente define-se uma amostra com
+magnitudes absoutas (ópticas e UV) e propriedades físícas das galáxias.
 
-Finalmente no quarto capítulo é feita a análise da amostra obtida no capítulo
-anterior. As galáxias são classificadas através do diagrama WHAN, e as
-propriedades físicas destas galáxias (obtidas do \starlight) são avaliadas no
-diagrama cor--cor UV.
+No quarto capítulo é feita a análise da amostra obtida no capítulo anterior. As
+galáxias são classificadas através do diagrama WHAN, e as propriedades físicas
+destas galáxias (obtidas do \starlight) são analisadas de acordo com as suas
+cores óptica e ultravioleta.
 
 No quinto e último capítulo são apresentadas as conclusões e perspectivas deste
 trabalho.

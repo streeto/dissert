@@ -190,7 +190,7 @@ pylab.figure()
 bounds = [-1.0,0.6,-1.0,2.5]
 ax = pylab.subplot(111)
 pylab.axis(bounds)
-pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
+pylab.xlabel('$\log([NII] / H_{\\alpha})$')
 pylab.ylabel('$\log(W_{H\\alpha}/[\mathrm{\AA}])$')
 
 # Plot constraints
@@ -255,8 +255,8 @@ else:
 bounds = [-1.0,0.5, -1.5,1.3]
 pylab.figure()
 pylab.axis(bounds)
-pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
-pylab.ylabel('$\log([O_{III}] / H_{\\beta})$')
+pylab.xlabel('$\log([NII] / H_{\\alpha})$')
+pylab.ylabel('$\log([OIII] / H_{\\beta})$')
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 clean &= (t.data['oiii_5007_flux'] > 0.0) & (t.data['hbeta_flux'] > 0.0)
 clean &= oneInTen(clean)

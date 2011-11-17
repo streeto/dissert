@@ -16,9 +16,95 @@
 %                                                               %
 %***************************************************************%
 
-\chapter{Anexo 1: Manual de acesso aos dados do \starlight + \galex}
-\label{anexo:ManualStarlightGalex}
+\chapter{{\em Queries} SQL}
+\label{apendice:Queries}
 
-Não vai dar tempo.
+{\em Queries} SQL utilizadas no texto. 
+
+\begin{figure}
+	\begin{Verbatim}[commandchars=\\\{\}]
+	\textbf{UPDATE} sample
+		\textbf{SET} SpecObjID=so.SpecObjID, ObjID=so.BestObjID
+	\textbf{FROM} sample s2 \textbf{INNER JOIN} DR7..SpecObjAll so
+		\textbf{ON} so.MJD=s2.MJD
+		\textbf{AND} so.Plate=s2.Plate
+		\textbf{AND} so.FiberID=s2.FiberID
+	\end{Verbatim}
+	\caption
+	[{\em Query} para atualizar os índices da amostra de galáxias do
+	\starlight.]
+	{Atualização dos índices da amostra de galáxias do \starlight. A {\em query}
+	foi executada no {\em CasJobs} do \SDSS DR7 para obter {\tt SpecObjID} e {\tt
+	BestObjID} dado o tripleto [{\tt MJD}, {\tt Plate}, {\tt FiberID}].}
+	\label{fig:AtualizaObjIds}
+\end{figure}
+
+
+\begin{figure}
+	\begin{Verbatim}[commandchars=\\\{\}]
+	\textbf{SELECT INTO} mydb..galex_ais
+		s.objid \textbf{AS} sdssobjid, x.objid \textbf{AS} galexobjid,
+		s.mjd, s.plate, s.fiberid,
+		g.fuv_mag, fuv_magErr,
+		g.nuv_mag, g.nuv_magErr,
+		g.e_bv,
+		g.band,
+		x.distance,
+		pe.fexptime,
+		pe.nexptime
+	\textbf{FROM} mydb..sample s
+	\textbf{LEFT JOIN} xSDSSDR7 x
+		\textbf{ON} s.objid = x.sdssobjid
+		\textbf{AND} x.distanceRank=1
+		\textbf{AND} x.reverseDistanceRank=1
+		\textbf{AND} x.multipleMatchCount=1
+		\textbf{AND} x.reverseMultipleMatchCount=1
+	\textbf{LEFT JOIN} photoobjall g
+		\textbf{ON} g.objid = x.objid
+	\textbf{LEFT JOIN} photoextract e
+		\textbf{ON} e.photoextractid=g.photoextractid
+	\textbf{WHERE} e.mpstype='AIS'
+	\end{Verbatim}
+	\caption[{\em Match} entre os objetos da amostra do \starlight e \galex.]
+	{{\em Query} para o {\em match} entre os objetos da amostra do \starlight e
+	\galex AIS. A mesma {\em query} foi usada para o MIS, trocando apenas o nome da
+	tabela para {\tt galex\_mis} e modificando a última linha para {\tt
+	e.mpstype='MIS'}.}
+	\label{fig:QueryMatchAIS}
+\end{figure}
+
+% TODO: Caption da figura fig:QuerySampleAIS
+\begin{figure}
+	\begin{Verbatim}[commandchars=\\\{\}]
+	\textbf{SELECT INTO} MyDB..galex_ais_elines_z
+		s.specobjid,
+		g.fuv_mag \textbf{AS} FUV, g.nuv_mag \textbf{AS} NUV,
+		o.Mu \textbf{AS} u, o.Mg \textbf{AS} g, o.Mr \textbf{AS} r,
+		o.Mi \textbf{AS} i, o.Mz \textbf{AS} z,
+		s.mcor_gal, s.at_flux, s.at_mass, s.am_flux,
+		s.am_mass, s.AV,
+		e.oiii_5007_flux, e.oiii_5007_flux_err,
+		e.oiii_5007_ew, e.oiii_5007_ew_err, e.oiii_5007_sn,
+		e.nii_6584_flux, e.nii_6584_flux_err,
+		e.nii_6584_ew, e.nii_6584_ew_err, e.nii_6584_sn,
+		e.halpha_flux, e.halpha_flux_err,
+		e.halpha_ew, e.halpha_ew_err, e.halpha_sn,
+		e.hbeta_flux, e.hbeta_flux_err,
+		e.hbeta_ew, e.hbeta_ew_err, e.hbeta_sn,
+		o.z \textbf{AS} redshift
+	\textbf{FROM} galex_ais g
+	\textbf{INNER JOIN} synthesis_results s\textbf{ON}
+		s.specobjid = g.specobjid
+	\textbf{INNER JOIN} el_fit_all e \textbf{ON}
+		s.synid = e.synid
+	\textbf{INNER JOIN} obs_parameters o \textbf{ON}
+		o.specobjid = s.specobjid
+	\textbf{WHERE} g.galexobjid <> 0
+	\end{Verbatim}
+	\caption[Extração da amostra de galáxias.]
+	{TODO: Extração da amostra de galáxias.}
+	\label{fig:QuerySampleAIS}
+\end{figure}
+
 
 % End of this chapter

@@ -144,7 +144,7 @@ CasJobs}.
 O \starlight é um código de síntese espectral \citep{CidFernandes2005}. O
 programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectro
 como um arquivo texto. Ele usa uma biblioteca de espectros de populações
-estelares simples ({\em Single Stellar Population}, SSP)\footnote{Uma SSP
+estelares simples ({\em Simple Stellar Population}, SSP)\footnote{Uma SSP
 consiste num conjunto de estrelas formadas ao mesmo tempo com a mesma
 metalicidade.} com diferentes idades e metalicidades como uma base do
 espaço de espectros galáticos possíveis. De forma simplificada, o que o
@@ -350,6 +350,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \label{sec:Crossmatch:DefAmostras}
 
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
+
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}, no banco
 de dados do \galex há uma tabela de {\em crossmatch} entre os objetos do \galex
 e os seus correspondentes ópticos no catálogo do \SDSS, chamada {\tt xSDSSDR7}.
@@ -420,6 +421,27 @@ SQL, a palavra-chave que representa um valor nulo é ``{\em null}''}. De forma
 similar, os dados UV para o {\em survey} MIS foram armazenados na tabela {\tt
 galex\_mis}.
 
+Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja, com
+{\tt multipleMatchCount} e {\tt reverseMultipleMatchCount} iguais a $1$. Em
+situações diferentes desta, caso houvesse mais de um candidato para uma mesma
+detecção, seria necessária uma análise mais detalhada. Desta forma, optou-se por
+uma confiabilidade maior nos dados utilizando apenas identificações unívocas, em
+troca de uma amostra menor.
+
+Outro artefato importante é que apenas um objeto foi escolhido, indepente do
+{\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
+o mesmo objeto da amostra, apenas o mais próximo é considerado.\fixme
+% FIXME: Rever o critério de escolha dos matches simultaneos AIS e MIS.
+
+% TODO: Alguma estatística.
+TODO: Alguma estatística.
+
+% FIXME: Restrição em redshift.
+FIXME: Restrição em redshift $0,04 < z < 0.17$ para evitar primeiro o efeito da
+abertura da fibra, e segundo excluir galáxias distantes porém muito brilhantes.
+Limite superior de redshift: acima de $0,17$ a linha de \nII cai fora do
+espectro. Ver \citet{CidFernandes2011}.
+
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
 $ugriz$ do \SDSS, as magnitudes $FUV$ e $NUV$ do \galex e alguns parâmetros
@@ -442,23 +464,6 @@ informações sobre as linhas de emissão H$_\alpha$, H$_\beta$, [OIII](5007\AA)
 	\end{tabular}
 	\label{tab:ParamFisicos}
 \end{table}
-
-\subsection{Completeza dos dados}
-
-Foram escolhidos apenas identificações cruzadas do tipo um-para-um, ou seja, com
-{\tt multipleMatchCount} e {\tt reverseMultipleMatchCount} iguais a $1$. Em
-situações diferentes desta, caso houvesse mais de um candidato para uma mesma
-deteção, seria necessária uma análise mais detalhada. Desta forma, optou-se por
-uma confiabilidade maior nos dados utilizando apenas identificações unívocas, em
-troca de uma amostra menor.
-
-Outro artefato importante é que apenas um objeto foi escolhido, indepente do
-{\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
-o mesmo objeto da amostra, apenas o mais próximo é considerado.\fixme
-% FIXME: Rever o critério de escolha dos matches simultaneos AIS e MIS.
-
-% TODO: Alguma estatística.
-TODO: Alguma estatística.
 
 
 \section{Correções na fotometria UV}

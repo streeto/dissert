@@ -1,124 +1,33 @@
 % ** Natalia@woodstock - 27/Jan/2006
 % ** Some useful TeX definitions for my Master's dissertation.
+%
+% ** Andre@UFSC - 2011
+% ** Stripped down version
 
 \ProvidesPackage{nadefinitions}
 \usepackage{xspace}
 
 % ********************* Andre's Definitions ************************
 \def\starlight{\textsc{starlight}\xspace}      %smallcaps Starlight%
-\def\STARLIGHT{\textit{STARLIGHT}\xspace}                       %Starlight%
+\def\STARLIGHT{\textit{STARLIGHT}\xspace}                %Starlight%
 \def\SDSS{\textit{SDSS}\xspace}           %Sloan Digital Sky Survey%
 \def\galex{\textit{GALEX}\xspace}
 \def\citneed{\textsuperscript{\bf [citation needed]}\xspace}
 \def\fixme{\textsuperscript{\bf [FIXME]}\xspace}
-%*******************************************************************
-
-
-% **************************** Ions ********************************
-\newcommand{\Ha}{\ifmmode {\rm H}\alpha \else H$\alpha$\fi\xspace}
-\newcommand{\Hb}{\ifmmode {\rm H}\beta \else H$\beta$\fi\xspace}
-\newcommand{\Hg}{\ifmmode {\rm H}\gamma \else H$\gamma$\fi}
-\newcommand{\Hd}{\ifmmode {\rm H}\delta \else H$\delta$\fi}
-\newcommand{\Heps}{\ifmmode {\rm H}\epsilon \else H$\epsilon$\fi}
-\newcommand{\hi}{H~{\sc i}\xspace}
-\newcommand{\hii}{H~{\sc ii}\xspace}
-\newcommand{\Hi}{H~{\sc i}\xspace}
-\newcommand{\Hii}{\ifmmode \rm{H}\,\textsc{ii} \else H~{\sc ii}\fi}
-\newcommand{\Nii}{[N~{\sc ii}]$\lambda$6584}
-\newcommand{\nii}{\ifmmode [\rm{N}\,\textsc{ii}] \else [N~{\sc ii}]\fi}
-\newcommand{\ionni}{\ifmmode [\rm{N}\,\textsc{i}] \else [N~{\sc i}]\fi}
-\newcommand{\Oi}{[O~{\sc i}]$\lambda$6300}
-\newcommand{\oi}{\ifmmode [\rm{O}\,\textsc{i}] \else [O~{\sc i}]\fi}
-\newcommand{\Oii}{[O~{\sc ii}]$\lambda$3727}
-\newcommand{\neiii}{\ifmmode [\rm{Ne}\,\textsc{iii}] \else [Ne~{\sc iii}]\fi}
-\newcommand{\nev}{\ifmmode [\rm{Ne}\,\textsc{v}] \else [Ne~{\sc v}]\fi}
-\newcommand{\hei}{\ifmmode [\rm{He}\,\textsc{i}] \else [He~{\sc i}]\fi}
-\newcommand{\Hei}{\ifmmode \rm{He}\,\textsc{i} \else He~{\sc i}\fi}
-\newcommand{\heii}{\ifmmode [\rm{He}\,\textsc{ii}] \else [He~{\sc ii}]\fi}
-\newcommand{\Heii}{\ifmmode \rm{He}\,\textsc{ii} \else He~{\sc ii}\fi}
-\newcommand{\oii}{\ifmmode [\rm{O}\,\textsc{ii}] \else [O~{\sc ii}]\fi}
-\newcommand{\Oiii}{[O~{\sc iii}]$\lambda$5007}
-\newcommand{\Oiiit}{[O~{\sc iii}]$\lambda$4363}
-\newcommand{\oiii}{\ifmmode [\rm{O}\,\textsc{iii}] \else [O~{\sc iii}]\fi}
-\newcommand{\Sii}{[S~{\sc ii}]$\lambda\lambda$6716,6731}
-\newcommand{\sii}{\ifmmode [\rm{S}\,\textsc{ii}] \else [S~{\sc ii}]\fi}
-\newcommand{\siii}{\ifmmode [\rm{S}\,\textsc{iii}] \else [S~{\sc iii}]\fi}
-\newcommand{\feii}{\ifmmode [\rm{Fe}\,\textsc{ii}] \else [Fe~{\sc ii}]\fi}
-\newcommand{\feiii}{\ifmmode [\rm{Fe}\,\textsc{iii}] \else [Fe~{\sc iii}]\fi}
-\newcommand{\fevii}{\ifmmode [\rm{Fe}\,\textsc{vii}] \else [Fe~{\sc vii}]\fi}
-\newcommand{\ariii}{\ifmmode [\rm{Ar}\,\textsc{iii}] \else [Ar~{\sc iii}]\fi}
-\newcommand{\ariv}{\ifmmode [\rm{Ar}\,\textsc{iv}] \else [Ar~{\sc iv}]\fi}
-\newcommand{\cliii}{\ifmmode [\rm{Cl}\,\textsc{iii}] \else [Cl~{\sc iii}]\fi}
+\def\Halpha{H$\alpha$\xspace} 
+\def\NII{[N\thinspace{\sc ii}] $\lambda 6584$\xspace} 
+\def\nII{[N\thinspace{\sc ii}]\xspace} 
+\def\OIII{[O\thinspace{\sc iii}] $\lambda 5007$\xspace} 
+\def\oIII{[O\thinspace{\sc iii}]\xspace} 
 %*******************************************************************
 
 
 % I guess these are Cid's definitions. I have found them in Luis'
 % masters thesis. Some of them are rather useful.
 % ********************* CID'S DEFINITIONS **************************
-\def\ni{\noindent}                                       %No indent%
-\def\ls{\vskip 12.045pt}                            %One Line space%
-\def\halfls{\vskip 6pt}                             %1/2 Line space%
-\def\et{et\thinspace al.\ }                                 %et al.%
-
-\def\gapprox{$_>\atop{^\sim}$}     %Greater than over approximately%
-\def\lapprox{$_<\atop{^\sim}$}        %Less than over approximately%
-
-\def\kms{km\thinspace s$^{-1}$}                        %km per sec1%
-\def\ergsec{ergs\thinspace s$^{-1}$}                  %ergs per sec%
-\def\msun{M$_{\odot}$}                                  %Solar mass%
-\def\cms{{\rm cm\thinspace s}$^{-1}$}                   %cm per sec%
-\def\percc{cm$^{-3}$}                         %per cubic centimeter%
-\def\peryr{yr$^{-1}$}                                     %per year%
-\def\perday{day$^{-1}$}                                    %per day%
-\def\persec{s$^{-1}$}                                   %per second%
-
-\def\Ha{H$\alpha$}                                         %H alpha%
-\def\Hb{H$\beta$}                                           %H beta%
-
-\def\etal{et\thinspace al.\ }                               %et al.%
-
-\def\el{e$^-$}                                            %electron%
-\def\nc{{\it nc}}                 %contraction for narrow component%
-\def\bc{{\it bc}}                  %contraction for broad component%
-
-\def\EW{{\rm EW}}                          %math's Equivalent Width%
-\def\FWHM{{\rm FWHM}}            %math's Full Width at Half Maximum%
-\def\PSD{{\rm PSD}}             %math's Power Spectral Distribution%
-\def\ACF{{\rm ACF}}               %math's Auto Correlation Function%
-\def\SF{{\rm SF}}                        %math's Structure Function%
-
-\def\beq{\begin{equation}}                          %begin equation%
-\def\eeq{\end{equation}}                              %end equation%
-\def\beqa{\begin{eqnarray}}                         %begin eqnarray%
-\def\eeqa{\end{eqnarray}}                             %end eqnarray%
-\def\beqan{\begin{eqnarray*}}                      %begin eqnarray*%
-\def\eeqan{\end{eqnarray*}}                          %end eqnarray*%
-\def\nn{\nonumber}                          %no number in eqnarrays%
-
-\newcommand{\dd}[2]{\frac {d {#1}}{d {#2}}}          % Derivatives %
-\newcommand{\ddd}[2]{\frac {d {\left( {#1} \right)}}{d {#2}}}
-\newcommand{\dpa}[2]{\frac {\partial {#1}}{\partial {#2}}}
-
-\newcommand{\E}[1]{\,10^{#1}}                         %power of ten%
-\newcommand{\ET}[1]{\times 10^{#1}}             %times power of ten%
-
-\newcommand{\ov}[1]{\overline{#1}}                        %overline%
-\newcommand{\zb}[1]{\left[ {#1} \right]}           %square brackets%
-\newcommand{\zk}[1]{\left\{ {#1} \right\}}                    %keys%
-\newcommand{\zp}[1]{\left( {#1} \right)}               %parentheses%
 
 \def\ojo{\fbox{\bf !$\odot$j$\odot$!}}      %Olho! Needs Correction%
 
-% Next 5 lines define \simless and \simgreat: "less than or approximately
-% equal to" and "greater than or approximately equal to".
-\newbox\grsign \setbox\grsign=\hbox{$>$} \newdimen\grdimen \grdimen=\ht\grsign
-\newbox\simlessbox \newbox\simgreatbox
-\setbox\simgreatbox=\hbox{\raise.5ex\hbox{$>$}\llap
-     {\lower.5ex\hbox{$\sim$}}}\ht1=\grdimen\dp1=0pt
-\setbox\simlessbox=\hbox{\raise.5ex\hbox{$<$}\llap
-     {\lower.5ex\hbox{$\sim$}}}\ht2=\grdimen\dp2=0pt
-\def\simgreat{\mathrel{\copy\simgreatbox}}
-\def\simless{\mathrel{\copy\simlessbox}}
 %*******************************************************************
 
 % Journals - from AASTex

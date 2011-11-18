@@ -27,9 +27,12 @@
 \section{A nova era da astronomia}
 \label{sec:Intro:NovaEra}
 
-Com o advento dos {\em mega-surveys}, está começando uma revolução na forma de
-fazer ciência na astronomia. Os diversos {\em surveys}\footnote{Um {\em survey}
-astronômico é um levantamento ou mapeamento de regiões do céu utlizando
+% FIXME: Primeiros surveys foram feitos noa década de 80. Ver intro. da tese do
+% Abilio.~1linha
+
+Com o advento dos {\em mega-surveys}\fixme, está começando uma revolução na
+forma de fazer ciência na astronomia. Os diversos {\em surveys}\footnote{Um {\em
+survey} astronômico é um levantamento ou mapeamento de regiões do céu utlizando
 telescópios.} em execução atualmente estão produzindo dados a uma taxa da ordem
 de petabytes por ano. Este talvez seja o primeiro campo da ciência onde as
 informações coletadas por máquinas tenham -- nas próximas décadas -- um volume
@@ -44,42 +47,43 @@ muito claro \citep{Norris2010}.
 
 \subsection{Mega-levantamentos de dados}
 
-O {\em Sloan Digital Sky Survey}, (\SDSS) \citep{York2000} é referência quando
+O {\em Sloan Digital Sky Survey} \citep[\SDSS]{York2000}, é referência quando
 falamos em {\em surveys} modernos. Em seus 8\fixme anos de funcionamento, obteve
 imagens em 5 filtros (ver figura \ref{fig:GalexFilters}) de um quarto do céu e
-espectros de um milhão de galáxias. O seu catálogo contém 4 terabytes de
-fotometria e espectros, sem contar as imagens. O \SDSS foi praticamente o
-primeiro {\em survey} a conseguir popularizar o acesso aos seus dados. Estes
+espectros de um milhão de galáxias. O seu catálogo contém 4 terabytes de dados
+fotométricos e espectroscópicos, sem contar as imagens. O \SDSS foi praticamente
+o primeiro {\em survey} a conseguir popularizar o acesso aos seus dados. Estes
 foram feitos públicos desde o início\citneed, iniciando uma ``corrida do ouro''
 no seu vasto volume de dados. Esta filosofia é compartilhada hoje pela grande
 maioria dos {\em surveys} de grande porte.
 
+% FIXME: arrumar vírgulas em números. Algum usepackage.
 Existem diversos {\em surveys} em operação atualmente. O {\em Wide-field
 Infrared Survey Explorer} (WISE) é um telescópio espacial da NASA\footnote{{\em
 NASA Explorer Mission} - \url{http://explorers.gsfc.nasa.gov/missions.html}},
-que está mapeando o céu inteiro nas faixas de $3,4$, $4,6$, $12$ e $22\mu$m do
-infravermelho \citep{Wright2010}. O {\em Visible and Infrared Survey Telescope
-for Astronomy} (VISTA) é um telescópio no Chile fazendo um {\em survey} do céu
-do hemisfério sul no infravermelho próximo \citep{Born2010}. Tratado com mais
-detalhes no capítulo \ref{sec:Galex}, o {Galaxy Evolution Explorer} (\galex)
-mapeou o céu em ultravioleta. O {\em Kepler} é um telescópio espacial da NASA
-\citep{Borucki2010}, semelhante ao WISE, e está fazendo um survey de uma região
-da Via Láctea para descobrir a fração de estrelas com planetas similares à Terra
-na nossa galáxia. Convém mencionar também o {\em 2dF Galaxy Redshift Survey}
-(2dFGRS) \citep{Colless1999} e o {\em Two Micron All Sky Survey} (2MASS)
-\citep{Skrutskie2006}. Embora estes {\em surveys} já tenham sido concluídos, os
-seus dados permanecem disponíveis publicamente.
+que está mapeando o céu inteiro nas faixas de $3,4\mu$m, $4,6\mu$m, $12\mu$m e
+$22\mu$m do infravermelho \citep{Wright2010}. O {\em Visible and Infrared Survey
+Telescope for Astronomy} (VISTA) é um telescópio no Chile fazendo um {\em
+survey} do céu do hemisfério sul no infravermelho próximo \citep{Born2010}.
+Tratado com mais detalhes no capítulo \ref{sec:Galex}, o {\em Galaxy Evolution
+Explorer} (\galex) mapeou o céu em ultravioleta. O {\em Kepler} é um telescópio
+espacial da NASA \citep{Borucki2010}, semelhante ao WISE, e está fazendo um
+survey de uma região da Via Láctea para descobrir a fração de estrelas com
+planetas similares à Terra na nossa Galáxia. Convém mencionar também o {\em 2dF
+Galaxy Redshift Survey} (2dFGRS) \citep{Colless1999} e o {\em Two Micron All Sky
+Survey} (2MASS) \citep{Skrutskie2006}. Embora estes {\em surveys} já tenham sido
+concluídos, os seus dados permanecem disponíveis publicamente.
 
 O projeto JPAS ({\em Javalambre Physics of the Accelerating Universe Survey}) é
 um {\em survey} que pretende mapear $8000$ graus quadrados do céu em 56
-cores\citep{Benitez2009}. Os filtros, de banda estreita, irão cobrir todo o
-espectro óptico, formando um espectro de baixa resolução para cada pixel do
+cores\citep{Benitez2009}. Os filtros, de banda estreita, irão cobrir toda a
+região óptica, formando um espectro de baixa resolução para cada pixel do
 survey. Serão mais de 200 terabytes de dados brutos\citneed. O projeto é uma
 colaboração entre Espanha e Brasil, com mais de 70 pesquisadores e engenheiros
 envolvidos. Integrantes do Grupo de Astrofísica da UFSC estão envolvidos neste
 projeto\citneed. O objetivo do {\em survey} é a exploração das causas da
 aceleração do universo, relacionadas à energia escura. Entretanto, uma
-quantidade considerável de ciência corolária poderá ser feita com base no
+quantidade considerável de ciência adicional poderá ser feita com base no
 espectro de uma região tão ampla do céu. Seu início está previsto para 2013.
 
 O LSST (Large Synoptic Survey Telecope) mapeará metade do céu a cada mês,
@@ -87,9 +91,10 @@ aproximadamente, durante cerca de dez anos \citep{Ivezic2008}. As suas operaçõ
 científicas tem início previsto para 2020. Serão mais de um petabyte em imagens
 brutas por ano, muito mais do que poderia ser revisado por humanos. Este {\em
 survey} também pretende explorar a natureza da energia escura, embora, da mesma
-forma que o JPAS, os dados possam ser aproveitados diversos outros fins.
+forma que o JPAS, os dados possam ser aproveitados para diversos outros
+fins.
 
-\subsection{Observatórios virtuais e mineração de dados}
+\subsection{Mineração de dados}
 
 Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
 contendo um registro por linha, de um forma tecnicamente conhecida como {\em
@@ -100,9 +105,10 @@ arquivos simples para armazenamento de dados se torna inviável.\citneed É
 preciso ``profissionalizar'' o gerenciamento de dados de um {\em survey} desta
 escala.
 
-% TODO: Observatório virtual. Casjobs. Datamining.
-TODO: Observatório virtual. Casjobs. Datamining.
+% TODO: Casjobs. Datamining.
+TODO: Casjobs. Datamining.
 
+%FIXME: Provavelmente remover este parágrafo.
 Há pouco mais de uma década astrônomos extragaláticos conheciam os seus objetos
 de estudo pelo nome. Gráficos contendo algumas dúzias de galáxias eram objeto de
 luxo. Tradicionalmente um astrônomo faz um pedido de tempo de um dado
@@ -114,7 +120,7 @@ Alguns programas observacionais certamente são efetuados mais adequadamente
 desta forma. O que se está advocando é a coleta sistemática de dados, tal que
 esses dados possam ser posteriormente utilizados para diversos fins. Ao invés de
 ser um substituto, um {\em mega-survey} é um complemento à observação
-tradicional.
+tradicional.\fixme
 
 
 
@@ -147,7 +153,7 @@ população} para a galáxia sendo considerada. O termo $g_\lambda$ corrige o
 espectro pelo efeito de extinção interestelar. São ao todo 45 SSP diferentes
 utilizadas na base. O problema torna-se então um ajuste num espaço de parâmetros
 bastante grande. A figura \ref{fig:StarlightSpectrumSample} mostra o ajuste
-feito para uma galáxia típica do \SDSS.
+feito para uma galáxia do \SDSS.
 
 \begin{figure}
 	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}
@@ -155,10 +161,10 @@ feito para uma galáxia típica do \SDSS.
 	{Amostra de ajuste com o \starlight para o espectro de SDSS
 	J1119+5130 \citep[figura 2]{CidFernandes2006}. O espectro observado é mostrado
 	em preto, enquanto o modelo aparece em vermelho. Linhas de emissão (não
-	modeladas) são mostradas em ciano. Os espectros na parte inferior são a soma
-	das SSP para as faixas de idade dadas na figura. A contribuição percentual no
-	fluxo de cada grupo de idade é mostrada na legenda, entre parênteses.
-	\starlight.}
+	modeladas) e {\em pixels} ruins são mostradas em ciano. Os espectros na parte
+	inferior são a soma das SSP para as faixas de idade dadas na figura. A
+	contribuição percentual no fluxo de cada grupo de idade é mostrada na legenda,
+	entre parênteses.}
 	\label{fig:StarlightSpectrumSample}
 \end{figure}
 
@@ -178,23 +184,26 @@ propriedades físicas e linhas de emissão de quase um milhão de galáxias.
 \section{Este trabalho}
 \label{sec:Intro:EsteTrab}
 
-Historicamente o espectro ultravioleta do céu tem sido pouco estudado. Não por
-falta de interesse dos astrônomos, mas pelo simples fato de que observações do
-chão são impossibilitados pela camada de ozônio. É preciso ir para o espaço.
-Foram lançados diversos satélites com o intuito de estudar o céu no ultravioleta
-(ver seção \ref{sec:Galex:CeuUV}). O \galex foi o primeiro telescópio espacial a
+Historicamente a região ultravioleta do espectro eletromagnético tem sido pouco
+estudada na astronomia. Não por falta de interesse dos astrônomos, mas pelo
+simples fato de que observações feitas de dentro da atmosfera são
+impossibilitadas pela camada de ozônio. É preciso ir para o espaço. Foram
+lançados diversos satélites com o intuito de estudar o céu no ultravioleta (ver
+seção \ref{sec:Galex:CeuUV}). O \galex foi o primeiro telescópio espacial a
 fazer um {\em survey} do céu inteiro em ultravioleta. A missão tem como objetivo
 estudar a evolução da taxa de formação estelar em galáxias \citep{Martin2005}.
 
+% FIXME: traduzir insight
 Embora este e outros grandes {\em surveys} tenham um grande valor
-individualmente, esta é somente a ponta do {\em iceberg}. Cruzado informações de
-{\em surveys} em diversos comprimentos de onda pode-se ter novos {\em insights}
-sobre a relação entre os processos físicos subjacentes. Este trabalho utiliza
-dados obtidos dos {\em surveys} \SDSS e \galex, nas bandas espectrais óptica e
-ultravioleta, respectivamente. Estes dois {\em surveys} foram indexados (ver
-seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}) de forma a facilitar a
-identificação entre as suas deteções. A técnica desenvolvida por eles pode ser
-aplicada em virtualmente qualquer outro {\em survey} astronômico.
+individualmente, esta é somente a ponta do {\em iceberg}. Cruzando informações
+de {\em surveys} em diversos comprimentos de onda pode-se ter novos {\em
+insights}\fixme sobre a relação entre os processos físicos subjacentes. Este
+trabalho utiliza dados obtidos dos {\em surveys} \SDSS e \galex, nas bandas
+espectrais óptica e ultravioleta, respectivamente. Estes dois {\em surveys}
+foram indexados (ver seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}) de
+forma a facilitar a identificação entre as suas detecções. A técnica
+desenvolvida por eles pode ser aplicada em virtualmente qualquer outro {\em
+survey} astronômico.
 
 As galáxias utilizadas na síntese do \starlight foram obtidas do catálogo do
 \SDSS. Neste trabalho foi feita a identificação destas galáxias no catálogo do
@@ -203,9 +212,9 @@ conjunto de dados formou uma amostra de galáxias com as suas propriedades
 físicas, cores ópticas e cores ultravioleta. As galáxias desta amostra são
 classificadas utilizando o diagrama de diagnóstico WHAN, conforme
 \citet{CidFernandes2011}. Este método de classificação utiliza as linhas de
-emissão $H_\alpha$ e $[NII]$ para separar as galáxias nas classes de formação
-estelar, núcleo ativo, ``aposentadas'' e passivas. As cores ultravioleta das
-galáxias de cada classe são analisadas em busca de correlações e tendências.
+emissão \Halpha e \NII para separar as galáxias nas classes de formação estelar,
+núcleo ativo, ``aposentadas'' e passivas. As cores ultravioleta das galáxias de
+cada classe são analisadas em busca de correlações e tendências.
 
 \subsection{Organização deste trabalho}
 
@@ -222,9 +231,9 @@ os catálogos do \SDSS e do \galex. Finalmente define-se uma amostra com
 magnitudes absoutas (ópticas e UV) e propriedades físícas das galáxias.
 
 No quarto capítulo é feita a análise da amostra obtida no capítulo anterior. As
-galáxias são classificadas através do diagrama WHAN, e as propriedades físicas
+galáxias são classificadas através do diagrama WHAN e as propriedades físicas
 destas galáxias (obtidas do \starlight) são analisadas de acordo com as suas
-cores óptica e ultravioleta.
+cores ópticas e ultravioleta.
 
 No quinto e último capítulo são apresentadas as conclusões e perspectivas deste
 trabalho.

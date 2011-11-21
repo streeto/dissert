@@ -200,13 +200,14 @@ tabela, o que é evitado utilizando a segunda abordagem.}.
 \subsection{Estrutura do banco de dados}
 
 O esquema do banco de dados do \starlight pode ser visto na figura
-\ref{fig:EsquemaBDStarlight}. A tabela {\tt observational\_params} contém os
+\ref{fig:EsquemaBDStarlight}. A tabela \texttt{observational\_params} contém os
 dados obtidos do \SDSS e usados como parâmetros para a obtenção das propriedades
 físicas das galáxias. Estas propriedades físicas estão armazzenadas na tabela
-{\tt synthesis\_results}. Estas duas tabelas estão relacionadas através da chave
-{SpecObjID}, que será explicada na seção \ref{sec:Crossmatch:AmostraStarlight}.
-A tabela {\tt el\_fit} contém medidas de linhas de emissão para cada galáxia,
-cada linha sendo descrita pelos elementos da tabela {\tt cfg\_el\_fit}.
+\texttt{synthesis\_results}. Estas duas tabelas estão relacionadas através da
+chave {SpecObjID}, que será explicada na seção
+\ref{sec:Crossmatch:AmostraStarlight}. A tabela \texttt{el\_fit} contém medidas
+de linhas de emissão para cada galáxia, cada linha sendo descrita pelos
+elementos da tabela \texttt{cfg\_el\_fit}.
 
 % TODO: Explicar os dados contidos nas tabelas do starlight.
 TODO: Explicar os dados contidos nas tabelas do starlight.
@@ -224,15 +225,15 @@ TODO: Explicar os dados contidos nas tabelas do starlight.
 
 A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS. A
 identificação de cada espectro é feita através de um tripleto: a data juliana
-média da observação ({\tt MJD}, {\em Mean Julian Date}), a identificação da
-placa de suporte das fibras ópticas ({\tt Plate}) e a identificacão da fibra
-utilizada para a obtenção do espectro ({\tt FiberID}). Este tripleto ({\tt MJD},
-{\tt Plate}, {\tt FiberID}) identifica unicamente um espectro. Porém, é mais
-conveniente (e eficiente) ter um identificador único (uma chave
-primária\footnote{Chave primária é um conjunto de um ou mais campos tais que a
-combinação de todos os campos da chave não se repete.}) para os registros num
-banco de dados. No caso do \SDSS, a tabela de espectros ({\tt SpecObjAll}) tem
-um identificador chamado {\tt SpecObjID}.
+média da observação (\texttt{MJD}, {\em Mean Julian Date}), a identificação da
+placa de suporte das fibras ópticas (\texttt{Plate}) e a identificacão da fibra
+utilizada para a obtenção do espectro (\texttt{FiberID}). Este tripleto
+(\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}) identifica unicamente um
+espectro. Porém, é mais conveniente (e eficiente) ter um identificador único
+(uma chave primária\footnote{Chave primária é um conjunto de um ou mais campos
+tais que a combinação de todos os campos da chave não se repete.}) para os
+registros num banco de dados. No caso do \SDSS, a tabela de espectros
+(\texttt{SpecObjAll}) tem um identificador chamado \texttt{SpecObjID}.
 
 % TODO: Adicionar figura - esquema simplificado da BD do SDSS.
 \begin{figure}
@@ -244,19 +245,19 @@ um identificador chamado {\tt SpecObjID}.
 
 Além de espectros, o banco de dados do \SDSS (figura \ref{fig:EsquemaSDSS})
 contém fotometria de $1/4$ do céu. Os objetos com dados de fotometria também tem
-um identificador único, {\tt ObjID}. Existe uma coluna na tabela de espectros
-chamada {\tt BestObjID}, que aponta para o registro de fotometria (tabela {\tt
-PhotoObjAll}) mais provável para cada espectro. É importante salientar que nem
-todo espectro tem um {\tt BestObjID} definido.
+um identificador único, \texttt{ObjID}. Existe uma coluna na tabela de espectros
+chamada \texttt{BestObjID}, que aponta para o registro de fotometria (tabela
+{\tt PhotoObjAll}) mais provável para cada espectro. É importante salientar que
+nem todo espectro tem um \texttt{BestObjID} definido.
 
 A tabela de índices da amostra de galáxias do \starlight (esquema na figura
-\ref{fig:TabelaAmostraStarlight}) contém inicialmente os tripletos [{\tt MJD},
-{\tt Plate}, {\tt FiberID}]. Dentro do ambiente {CasJobs} do \SDSS
-DR7\footnote{{\em CasJobs} \SDSS DR7 - \url{http://casjobs.sdss.org/CasJobs/}} a
-tabela tem os valores de {\tt SpecObjID} e {\tt BestObjID} preenchida através da
-execução da {\em query} mostrada na figura \ref{fig:AtualizaObjIds}. Entre os
-objetos na amostra do \starlight, $622$ objetos não tem a sua contrapartida
-fotométrica.
+\ref{fig:TabelaAmostraStarlight}) contém inicialmente os tripletos
+[\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Dentro do ambiente {CasJobs}
+do \SDSS DR7\footnote{{\em CasJobs} \SDSS DR7 -
+\url{http://casjobs.sdss.org/CasJobs/}} a tabela tem os valores de
+\texttt{SpecObjID} e \texttt{BestObjID} preenchida através da execução da {\em
+query} mostrada na figura \ref{fig:AtualizaObjIds}. Entre os objetos na amostra
+do \starlight, $622$ objetos não tem a sua contrapartida fotométrica.
 
 % TODO: Adicionar figura - Tabela amostra do starlight.
 \begin{figure}
@@ -353,47 +354,47 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 \galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
-correspondentes ópticos no catálogo do \SDSS, chamada {\tt xSDSSDR7}. A
+correspondentes ópticos no catálogo do \SDSS, chamada \texttt{xSDSSDR7}. A
 descrição completa dos campos pode ser vista na tabela \ref{tab:CamposXSDSSDR7}.
 Dado que a identificação não é necessariamente unívoca, existem informações
 extras nesta tabela a fim de facilitar a seleção dos melhores candidatos: {\tt
-DistanceRank} e {\tt MultipleMatchCount}.
+DistanceRank} e \texttt{MultipleMatchCount}.
 
 A identificação cruzada também é feita na direção oposta. Dado um objeto do
 \SDSS, foram encontrados os objetos do \galex candidatos. Para um par [{\tt
-ObjID}, {\tt SDSSObjID}], há também os campos {\tt ReverseDistanceRank} e {\tt
-ReverseMultipleMatchCount}.
+ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} e
+{\tt ReverseMultipleMatchCount}.
 
 \begin{table}
-	\caption[Descrição dos campos da tabela {\tt xSDSSDR7}.]
-	{Descrição dos campos da tabela {\tt xSDSSDR7}.}
+	\caption[Descrição dos campos da tabela \texttt{xSDSSDR7}.]
+	{Descrição dos campos da tabela \texttt{xSDSSDR7}.}
 	\begin{tabular}{l p{8cm}}
 		Campo & Descrição\\
 		\midrule
-		{\tt ObjID} &
+		\texttt{ObjID} &
 		Identificador único de objeto do \galex.
 		\\
-		{\tt SDSSObjID} &
+		\texttt{SDSSObjID} &
 		Identificador único do \SDSS.
 		\\
-		{\tt Distance} &
+		\texttt{Distance} &
 		Separação angular em segundos de arco.
 		\\
-		{\tt DistanceRank} &
+		\texttt{DistanceRank} &
 		Um número inteiro, onde o valor $1$ indica que o objeto do \galex é o
 		mais próximo do objeto \SDSS, o valor $2$ indica que ele é o segundo mais
 		próximo, etc.
 		\\
-		{\tt ReverseDistanceRank} &
+		\texttt{ReverseDistanceRank} &
 		Um número inteiro, onde o valor $1$ indica que o objeto do \SDSS é o mais
 		próximo do objeto \galex, o valor $2$ indica que ele é o segundo mais
 		próximo, etc.
 		\\
-		{\tt MultipleMatchCount} &
+		\texttt{MultipleMatchCount} &
 		Um número inteiro indicando quantos objetos \SDSS foram encontrados para o
 		objeto \galex dentro do raio de busca.
 		\\
-		{\tt ReverseMultipleMatchCount} &
+		\texttt{ReverseMultipleMatchCount} &
 		Um número inteiro indicando quantos objetos \galex foram encontrados para o
 		objeto \SDSS dentro do raio de busca.
 		\\
@@ -405,25 +406,25 @@ ReverseMultipleMatchCount}.
 
 A amostra do \starlight descrita na seção \ref{sec:Crossmatch:AmostraStarlight}
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
-o mesmo utilizado na tabela {\tt XSDSSDR7}. A {\em query} da figura
-\ref{fig:QueryMatchAIS} preenche a tabela chamada {\tt galex\_ais} com todos os
-objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
-({\tt FUV\_mag}) e FUV ({\tt NUV\_mag}), o erro na medida das magnitudes ({\tt
-FUV\_magErr} e {\tt NUV\_magErr}), o tempo de exposição em cada filtro ({\tt
-fexptime} e {\tt nexptime}), o excesso de cor $E(B-V)$ ({\tt e\_bv}, ver seção
-\ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a detecção do
-objeto no \galex e no \SDSS ({\tt distance}). Esta tabela é esparsamente
-populada, com um registro para cada objeto do \starlight, e os dados UV
-preenchidos somente para os objetos com identificação positiva. Caso o objeto
-não tenha um correspodente \galex, os valores serão nulos\footnote{Numa tabela,
-quando um campo de um registro não possui valor definido, seu valor é dito
-``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
+o mesmo utilizado na tabela \texttt{XSDSSDR7}. A {\em query} da figura
+\ref{fig:QueryMatchAIS} preenche a tabela chamada \texttt{galex\_ais} com todos
+os objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
+(\texttt{FUV\_mag}) e FUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
+({\tt FUV\_magErr} e \texttt{NUV\_magErr}), o tempo de exposição em cada filtro
+({\tt fexptime} e \texttt{nexptime}), o excesso de cor $E(B-V)$ (\texttt{e\_bv},
+ver seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
+detecção do objeto no \galex e no \SDSS (\texttt{distance}). Esta tabela é
+esparsamente populada, com um registro para cada objeto do \starlight, e os
+dados UV preenchidos somente para os objetos com identificação positiva. Caso o
+objeto não tenha um correspodente \galex, os valores serão nulos\footnote{Numa
+tabela, quando um campo de um registro não possui valor definido, seu valor é
+dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
 null}''}. De forma similar, os dados UV para o {\em survey} MIS foram
-armazenados na tabela {\tt galex\_mis}.
+armazenados na tabela \texttt{galex\_mis}.
 
 Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja, com
-{\tt multipleMatchCount} e {\tt reverseMultipleMatchCount} iguais a $1$. Em
-situações diferentes desta, caso houvesse mais de um candidato para uma mesma
+\texttt{multipleMatchCount} e \texttt{reverseMultipleMatchCount} iguais a $1$.
+Em situações diferentes desta, caso houvesse mais de um candidato para uma mesma
 detecção, seria necessária uma análise mais detalhada. Desta forma, optou-se por
 uma confiabilidade maior nos dados utilizando apenas identificações unívocas, em
 troca de uma amostra menor.
@@ -513,12 +514,12 @@ MIS.
 	\begin{tabular}{l l}
 		Coluna & Descrição \\
 		\midrule
-		{\tt mcor\_gal} & Logaritmo da massa estelar \\
-		{\tt at\_flux}  & Logaritmo da idade média ponderada em fluxo \\
-		{\tt at\_mass}  & Logaritmo da idade média ponderada em massa \\
-		{\tt am\_flux}  & Metalicidade média ponderada em fluxo \\
-		{\tt am\_mass}  & Metalicidade média ponderada em massa \\
-		{\tt AV}       & Extinção causada por poeira (magnitude) \\
+		\texttt{mcor\_gal} & Logaritmo da massa estelar \\
+		\texttt{at\_flux}  & Logaritmo da idade média ponderada em fluxo \\
+		\texttt{at\_mass}  & Logaritmo da idade média ponderada em massa \\
+		\texttt{am\_flux}  & Metalicidade média ponderada em fluxo \\
+		\texttt{am\_mass}  & Metalicidade média ponderada em massa \\
+		\texttt{AV}       & Extinção causada por poeira (magnitude) \\
 	\end{tabular}
 	\label{tab:ParamFisicos}
 \end{table}

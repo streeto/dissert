@@ -99,7 +99,10 @@
 		s.synid = e.synid
 	\textbf{INNER JOIN} obs_parameters o \textbf{ON}
 		o.specobjid = s.specobjid
-	\textbf{WHERE} g.galexobjid <> 0
+	\textbf{WHERE}
+		g.galexobjid <> 0
+		\textbf{AND} o.z > 0.04
+		\textbf{AND} o.z < 0.17
 	\end{Verbatim}
 	\caption[Extração da amostra de galáxias.]
 	{TODO: Extração da amostra de galáxias.}

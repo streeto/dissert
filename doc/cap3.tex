@@ -15,7 +15,7 @@
 %                                                               %
 %***************************************************************%
 
-\chapter{{\em Crossmatch} entre \SDSS/\STARLIGHT e \galex}
+\chapter{Estendendo a base de dados \SDSS/\STARLIGHT para o ultravioleta}
 \label{sec:Crossmatch}
 
 
@@ -115,11 +115,12 @@ bancos de dados.
 	\includegraphics[width=0.7\columnwidth]{figuras/casjobs.eps}
 	\caption[Tela do {\em CasJobs}.]
 	{Tela do {\em CasJobs}. Resultado da {\em query} buscando o {\em redshift}, a
-	magnitude na banda {\em g}, a cor {\em g}-{\em r} e uma amostra da imagem de
-	objetos com espectroscopia.}
+	magnitude na banda $g$, a cor $g-r$ e uma amostra da imagem de objetos com
+	espectroscopia.}
 	\label{fig:CasJobs}
 \end{figure}
 
+% FIXME: Corrigir referências.
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
 CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed, e uma
@@ -146,15 +147,15 @@ programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectr
 como um arquivo texto. Ele usa uma biblioteca de espectros de populações
 estelares simples ({\em Simple Stellar Population}, SSP)\footnote{Uma SSP
 consiste num conjunto de estrelas formadas ao mesmo tempo com a mesma
-metalicidade.} com diferentes idades e metalicidades como uma base do
-espaço de espectros galáticos possíveis. De forma simplificada, o que o
-\starlight faz é encontrar as frações de massa e luz correspondente a cada
-elemento da base, ou seja, cada SSP. Analisando as relações entre os componentes
-determinandos pela síntese, o programa determina diversas propriedades físicas
-da galáxia, como a massa estelar total, a massa separada por idade, metalicidade
-média, quantidade de poeira e velocidade de rotação, para citar apenas algumas.
-Quase um milhão de espectros foram analisados, e o resultado da síntese foi
-armazenado em arquivos texto.
+metalicidade.} com diferentes idades e metalicidades como uma base do espaço de
+espectros galáticos possíveis. De forma simplificada, o que o \starlight faz é
+encontrar as frações de massa e luz correspondente a cada elemento da base, ou
+seja, cada SSP. Analisando as relações entre os componentes determinandos pela
+síntese, o programa determina diversas propriedades físicas da galáxia, como a
+massa estelar total, a massa separada por idade, metalicidade média, quantidade
+de poeira e velocidade de rotação, para citar apenas algumas. Quase um milhão de
+espectros foram analisados, e o resultado da síntese foi armazenado em arquivos
+texto.
 
 Apenas os componentes estelares do espectro são obtidos desta forma. Subtraindo
 o espectro sintetizado de luz estelar é possível medir as linhas de emissão do
@@ -242,11 +243,11 @@ um identificador chamado {\tt SpecObjID}.
 \end{figure}
 
 Além de espectros, o banco de dados do \SDSS (figura \ref{fig:EsquemaSDSS})
-contém fotometria de $1/4$ do céu. Os objetos com dados de fotometria
-também tem um identificador único, {\tt ObjID}. Existe uma coluna na tabela de
-espectros chamada {\tt BestObjID}, que aponta para o registro de fotometria
-(tabela {\tt PhotoObjAll}) mais provável para cada espectro. É importante
-salientar que nem todo espectro tem um {\tt BestObjID} definido.
+contém fotometria de $1/4$ do céu. Os objetos com dados de fotometria também tem
+um identificador único, {\tt ObjID}. Existe uma coluna na tabela de espectros
+chamada {\tt BestObjID}, que aponta para o registro de fotometria (tabela {\tt
+PhotoObjAll}) mais provável para cada espectro. É importante salientar que nem
+todo espectro tem um {\tt BestObjID} definido.
 
 A tabela de índices da amostra de galáxias do \starlight (esquema na figura
 \ref{fig:TabelaAmostraStarlight}) contém inicialmente os tripletos [{\tt MJD},
@@ -273,30 +274,29 @@ fotométrica.
 %                                                               %
 %***************************************************************%
 
-\section{Crossmatch \SDSS/\galex}
+\section{Identificação cruzada entre \SDSS e \galex}
+\label{sec:Crossmatch:SDSSGalex}
 
-A identificação mútua ({\em crossmatch}) de objetos em {\em surveys} diferentes
-é um problema razoavelmente complicado. A cobertura do céu de cada {\em survey}
-em geral não é a mesma. Por outro lado, os objetos presentes em um {\em survey}
-podem não ter sido detectados no outro. A probabilidade de duas fontes em
-catálogos diferentes corresponderem a um mesmo objeto pode ser calculada como
-função da separação entre elas e a precisão astrométrica das medidas
-\citep{Budavari2008}.
-
-\subsection{Identificação dos objetos}
-\label{sec:Crossmatch:SDSSGalex:Identificacao}
+A identificação cruzada ({\em crossmatch}) de objetos em {\em surveys}
+diferentes é um problema razoavelmente complicado. A cobertura do céu de cada
+{\em survey} em geral não é a mesma. Por outro lado, os objetos presentes em um
+{\em survey} podem não ter sido detectados no outro. A probabilidade de duas
+fontes em catálogos diferentes corresponderem a um mesmo objeto pode ser
+calculada como função da separação entre elas e a precisão astrométrica das
+medidas \citep{Budavari2008}.
 
 \citet{Budavari2009} aplicam este método probabilístico ao \SDSS e ao \galex. O
 {\em crossmatch} espacial é feito dentro de um RDMS (MSSQL, o mesmo usado no
-{\em CasJobs}), utilizando técnicas avançadas de indexação \citep{Kunszt2000}. A
-tabela resultante é uma relação ``muitos para muitos'', onde a maioria dos
-objetos \galex tem apenas um objeto \SDSS associado, mas outras associações
-podem ocorrer. Um exemplo onde pode ocorrer uma associação ``um para muitos'' é
-o caso onde existe uma fonte fraca em UV (presente no \SDSS mas não detectada
-pelo \galex) próxima a uma fonte presente tanto no UV quanto no óptico. O
-algoritmo irá apontar estes dois objetos no \SDSS como candidatos a serem a
-contrapartida óptica do objeto detectado no \galex. O caso inverso implicaria
-numa associação ``muitos para um''. Nas tabelas \ref{tab:SDSSxGalexMatchesAIS} e
+{\em CasJobs}), utilizando técnicas avançadas de indexação \citep[{\em
+Hierarchic Triangular Mesh}]{Kunszt2000}. A tabela resultante é uma relação
+``muitos para muitos'', onde a maioria dos objetos \galex tem apenas um objeto
+\SDSS associado, mas outras associações podem ocorrer. Um exemplo onde pode
+ocorrer uma associação ``um para muitos'' é o caso onde existe uma fonte fraca
+em UV (presente no \SDSS mas não detectada pelo \galex) próxima a uma fonte
+presente tanto no UV quanto no óptico. O algoritmo irá apontar estes dois
+objetos no \SDSS como candidatos a serem a contrapartida óptica do objeto
+detectado no \galex. O caso inverso implicaria numa associação ``muitos para
+um''. Nas tabelas \ref{tab:SDSSxGalexMatchesAIS} e
 \ref{tab:SDSSxGalexMatchesMIS} há a quantidade de identificações para cada tipo
 de associação, referentes aos {\em surveys} AIS e MIS, respectivamente. Os
 valores foram determinados para o {\em crossmatch} entre \SDSS DR7 e \galex GR6,
@@ -342,22 +342,22 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 
 %***************************************************************%
 %                                                               %
-%      Crossmatch - Definição da amostra Starlight/GALEX        %
+%     Crossmatch - Obtendo dados UV para a amostra STARLIGHT    %
 %                                                               %
 %***************************************************************%
 
-\section{Definição das amostras \SDSS/\STARLIGHT e \galex}
+\section{Obtendo dados UV para a amostra \STARLIGHT}
 \label{sec:Crossmatch:DefAmostras}
 
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
 
-Como comentado na seção \ref{sec:Crossmatch:SDSSGalex:Identificacao}, no banco
-de dados do \galex há uma tabela de {\em crossmatch} entre os objetos do \galex
-e os seus correspondentes ópticos no catálogo do \SDSS, chamada {\tt xSDSSDR7}.
-A descrição completa dos campos pode ser vista na tabela
-\ref{tab:CamposXSDSSDR7}. Dado que a identificação não é necessariamente
-unívoca, existem informações extras nesta tabela a fim de facilitar a seleção
-dos melhores candidatos: {\tt DistanceRank} e {\tt MultipleMatchCount}.
+Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
+\galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
+correspondentes ópticos no catálogo do \SDSS, chamada {\tt xSDSSDR7}. A
+descrição completa dos campos pode ser vista na tabela \ref{tab:CamposXSDSSDR7}.
+Dado que a identificação não é necessariamente unívoca, existem informações
+extras nesta tabela a fim de facilitar a seleção dos melhores candidatos: {\tt
+DistanceRank} e {\tt MultipleMatchCount}.
 
 A identificação cruzada também é feita na direção oposta. Dado um objeto do
 \SDSS, foram encontrados os objetos do \galex candidatos. Para um par [{\tt
@@ -401,25 +401,25 @@ ReverseMultipleMatchCount}.
 	\label{tab:CamposXSDSSDR7}
 \end{table}
 
-\subsection{Obtendo dados UV da amostra do \STARLIGHT}
+\subsection{Obtendo dados UV para a amostra \STARLIGHT}
 
-A amostra do \starlight obtida na seção \ref{sec:Crossmatch:AmostraStarlight}
+A amostra do \starlight descrita na seção \ref{sec:Crossmatch:AmostraStarlight}
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
 o mesmo utilizado na tabela {\tt XSDSSDR7}. A {\em query} da figura
 \ref{fig:QueryMatchAIS} preenche a tabela chamada {\tt galex\_ais} com todos os
 objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
 ({\tt FUV\_mag}) e FUV ({\tt NUV\_mag}), o erro na medida das magnitudes ({\tt
 FUV\_magErr} e {\tt NUV\_magErr}), o tempo de exposição em cada filtro ({\tt
-fexptime} e {\tt nexptime}), o índice de cor $E(B-V)$ ({\tt e\_bv}, ver seção
-\ref{sec:Crossmatch:Correcoes}) e a distância entre a detecção do objeto
-no \galex e no \SDSS ({\tt distance}). Esta tabela é esparsamente populada, com
-um registro para cada objeto do \starlight, e os dados UV preenchidos somente
-para os objetos com identificação positiva. Caso o objeto não tenha um
-correspodente \galex, os valores serão nulos\footnote{Numa tabela, quando um
-campo de um registro não possui valor definido, seu valor é dito ``nulo''. Em
-SQL, a palavra-chave que representa um valor nulo é ``{\em null}''}. De forma
-similar, os dados UV para o {\em survey} MIS foram armazenados na tabela {\tt
-galex\_mis}.
+fexptime} e {\tt nexptime}), o excesso de cor $E(B-V)$ ({\tt e\_bv}, ver seção
+\ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a detecção do
+objeto no \galex e no \SDSS ({\tt distance}). Esta tabela é esparsamente
+populada, com um registro para cada objeto do \starlight, e os dados UV
+preenchidos somente para os objetos com identificação positiva. Caso o objeto
+não tenha um correspodente \galex, os valores serão nulos\footnote{Numa tabela,
+quando um campo de um registro não possui valor definido, seu valor é dito
+``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
+null}''}. De forma similar, os dados UV para o {\em survey} MIS foram
+armazenados na tabela {\tt galex\_mis}.
 
 Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja, com
 {\tt multipleMatchCount} e {\tt reverseMultipleMatchCount} iguais a $1$. Em
@@ -433,21 +433,79 @@ Outro artefato importante é que apenas um objeto foi escolhido, indepente do
 o mesmo objeto da amostra, apenas o mais próximo é considerado.\fixme
 % FIXME: Rever o critério de escolha dos matches simultaneos AIS e MIS.
 
-% TODO: Alguma estatística.
-TODO: Alguma estatística.
+% TODO: Quantos objetos AIS e MIS?
 
-% FIXME: Restrição em redshift.
-FIXME: Restrição em redshift $0,04 < z < 0.17$ para evitar primeiro o efeito da
-abertura da fibra, e segundo excluir galáxias distantes porém muito brilhantes.
-Limite superior de redshift: acima de $0,17$ a linha de \nII cai fora do
-espectro. Ver \citet{CidFernandes2011}.
+\subsection{Correções aplicadas à fotometria UV}
+\label{sec:Crossmatch:DefAmostras:Correcoes}
+
+O catálogo do \galex fornece a fotometria NUV e FUV dos objetos em magnitude
+aparente, sem qualquer correção a não ser por fatores instrumentais. Para que as
+galáxias possam ser analisadas de forma adequada, algumas correções precisam ser
+feitas.
+
+A luz proveniente de outras galáxias sofre extinção causada por poeira dentro da
+nossa própria Galáxia\footnote{A existência de poeira na Via Láctea pode ser
+notada facilmente a olho nu em uma noite sem lua -- e bem longe da luz da
+cidade!}. Esta extincão depende da direção de onde vem a luz, e a sua influência
+depende do comprimento de onda. O efeito final, em geral, é o avermelhamento do
+espectro. O excesso de cor $E(B-V)$ representa quantitativamente este
+avermelhamento.
+
+O catálogo do \galex provê os valores de excesso de cor $E(B-V)$ das galáxias
+com base nos mapas de extinção interestelar de \citet{Schlegel1998}. A correção
+é feita usando o modelo de extinção CCM \citep[equações 4a e 4b]{Cardelli1989}.
+Para um comprimento de onda $\lambda$ qualquer, a extinção absoluta (em
+magnitudes) é dada por
+\begin{eqnarray}
+	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
+	x &=& \frac{10000\text{\AA}}{\lambda}.
+\end{eqnarray}
+No caso das bandas FUV ($\lambda_{eff}=1528\text{\AA}$) e NUV
+($\lambda_{eff}=1528\text{\AA}$),
+\begin{eqnarray}
+	x_{FUV} &=& 6,54 \\
+	x_{NUV} &=& 4,40
+\end{eqnarray}
+com os coeficientes $a(x)$ e $b(x)$ dados por
+\begin{eqnarray}
+	a(x) &=& 1,752 - 0,326x - 0,104/[(x-4,67)^2 + 0,341] + F_a(x) \\
+	b(x) &=& -3,090 + 1,825x + 1,206/[(x-4,62)^2 + 0,263] + F_b(x)
+\end{eqnarray}
+\begin{eqnarray}
+	F_a(x_{FUV}) &=& F_b(x_{FUV}) = 0 \\
+	F_a(x_{NUV}) &=& -0,04473(x_{NUV}-5,9)^2 - 0,09779(x_{NUV}-5,9)^3 \\
+	F_b(x_{NUV}) &=& 0,2130(x_{NUV}-5,9)^2 + 0,1207(x_{NUV}-5,9)^3.
+\end{eqnarray}
+Usando $R_V=3,1$, a extinção nas bandas FUV e NUV em função do excesso de cor
+$E(B-V)$ é dada por
+\begin{equation}
+	A_{FUV} = 8,15\,E(B-V)
+\end{equation}
+\begin{equation}
+	A_{NUV} = 9,17\,E(B-V).
+\end{equation}
+Esta correção é então aplicada às magnitudes do catálogo.
+
+Foi aplicada também a correção $k(z)$ devida ao {\em redshift} e a magnitude
+transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
+(v4\_2) de \citet{Blanton2007}.
+
+
+%***************************************************************%
+%                                                               %
+%        Crossmatch - Definição da amostra STARLIGHT+UV         %
+%                                                               %
+%***************************************************************%
+
+\section{Definição da amostra \STARLIGHT+UV}
 
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
 $ugriz$ do \SDSS, as magnitudes $FUV$ e $NUV$ do \galex e alguns parâmetros
 físicos do \starlight (tabela \ref{tab:ParamFisicos}. Foram selecionadas também
-informações sobre as linhas de emissão H$_\alpha$, H$_\beta$, [OIII](5007\AA) e
-[NII](6584\AA). Foram montadas duas amostras, uma para o AIS e outra para o MIS.
+a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
+\NII. Desta forma foram montadas duas amostras, uma para o AIS e outra para o
+MIS.
 
 \begin{table}
 	\caption[Parâmetros físicos das galáxias utilizados na amostra.]
@@ -465,35 +523,13 @@ informações sobre as linhas de emissão H$_\alpha$, H$_\beta$, [OIII](5007\AA)
 	\label{tab:ParamFisicos}
 \end{table}
 
-
-\section{Correções na fotometria UV}
-\label{sec:Crossmatch:Correcoes}
-
-\subsection{Poeira}
-\label{sec:Crossmatch:Correcoes:Poeira}
-
-% TODO: Correção por poeira etc.
-Correção de poeira, \#comofas?
-
-Catálogo do \galex provê os valores de índice de cor das galáxias com base no
-modelo de \citet{Schlegel1998} para a poeira interestelar.
-
-A correção é feita usando a CCM \citep{Cardelli1989}.
-%a_FUV = 8.29 * ebv
-%a_NUV = 8.18 * ebv
-%CCM, Schlegel.
-
-Ver seção 2.2.2 da tese do Abilio.
-
-$$
-	A_{FUV} = 8,29 E(B-V)
-$$
-$$
-	A_{NUV} = 8,18 E(B-V)
-$$
-
-Foi feita a correção para magnitude absoluta usando KCORRECT de
-\citet{Blanton2007}.
+% FIXME: Footnote fibra
+Existe uma restrição no intervalo de {\em redshifts} das galáxias que pertencem
+à amostra. O {\em redshift} deve ser superior a $0,04$ para evitar efeitos de
+abertura da fibra\footnote{Fibra\fixme}. Por outro lado, em {\em redshifts}
+superiores a $0,17$ a linha \NII fica deslocada para além do limite vermelho dos
+espectros do \SDSS, escapando assim da detecção. Este mesmo critério foi usado
+por \citet{CidFernandes2011}.
 
 
 %% End of this chapter

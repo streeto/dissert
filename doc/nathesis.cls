@@ -29,7 +29,11 @@
 
 % Bibtex and Portuguese packages - cannot change this order!
 \usepackage{natbib}
-\usepackage[brazil]{babel}
+
+% Fix comma spacing in math mode.
+\def\magyarOptions{mathhucomma=fix,figurecaptions=unchanged,tablecaptions=unchanged,sectiondot=none}
+\usepackage[magyar,brazil]{babel}
+
 \citestyle{aa}
 
 % My definitions
@@ -42,4 +46,6 @@
 % Used for code formatting.
 \usepackage{fancyvrb}
 \usepackage[scaled]{beramono}
+
+\usepackage{txfonts}
 

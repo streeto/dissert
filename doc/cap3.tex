@@ -316,10 +316,10 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 	\begin{tabular}{r r r r}
 		\galex &          \multicolumn{3}{c}{\SDSS} \\
 		\midrule
-		       &          1 &         2 &    Muitos \\
-		1      & 15.267.818 & 9.150.919 & 4.623.197 \\
-		2      &  4.524.337 & 2.504.786 & 1.162.463 \\
-		Muitos &    770.645 &   426.691 &   184.680 \\
+		       &              1 &             2 &        Muitos \\
+		1      & $15\,267\,818$ & $9\,150\,919$ & $4\,623\,197$ \\
+		2      &  $4\,524\,337$ & $2\,504\,786$ & $1\,162\,463$ \\
+		Muitos &     $770\,645$ &    $426\,691$ &    $184\,680$ \\
 	\end{tabular}
 	\label{tab:SDSSxGalexMatchesAIS}
 \end{table}
@@ -332,10 +332,10 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 	\begin{tabular}{r r r r}
 		\galex &         \multicolumn{3}{c}{\SDSS} \\
 		\midrule
-		       &         1 &         2 &    Muitos \\
-		1      & 8.201.735 & 5.923.551 & 3.775.187 \\
-		2      & 2.120.174 & 1.580.701 &   984.067 \\
-		Muitos &   276.447 &   234.016 &   150.894 \\
+		       &             1 &             2 &        Muitos \\
+		1      & $8\,201\,735$ & $5\,923\,551$ & $3\,775\,187$ \\
+		2      & $2\,120\,174$ & $1\,580\,701$ &    $984\,067$ \\
+		Muitos &    $276\,447$ &    $234\,016$ &    $150\,894$ \\
 	\end{tabular}
 	\label{tab:SDSSxGalexMatchesMIS}
 \end{table}
@@ -429,12 +429,40 @@ detecção, seria necessária uma análise mais detalhada. Desta forma, optou-se
 uma confiabilidade maior nos dados utilizando apenas identificações unívocas, em
 troca de uma amostra menor.
 
+% FIXME: Fração dos objetos perdida no overlap de AIS e MIS.
 Outro artefato importante é que apenas um objeto foi escolhido, indepente do
 {\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
-o mesmo objeto da amostra, apenas o mais próximo é considerado.\fixme
-% FIXME: Rever o critério de escolha dos matches simultaneos AIS e MIS.
+o mesmo objeto da amostra, apenas o mais próximo é considerado. Nos campos onde
+os dois {surveys} se sobrepõem, há uma maior quantidade de objetos no MIS do que
+no AIS, devido ao maior tempo de exposição no MIS. Assim, nesses campos, os
+objetos do MIS têm maior chance de estar mais próximos ao objeto do \SDSS. Isto
+também não é um problema muito grave para o AIS, já que a sua cobertura do céu é
+muito maior do que a do MIS. A fração exata de objetos perdidos em cada caso
+ainda precisa ser determinada\fixme.
 
-% TODO: Quantos objetos AIS e MIS?
+No total foram obtidas $173\,218$ detecções no AIS e $41\,274$ no MIS. Nem todos
+os objetos tiveram detecção simultânea nas bandas FUV e NUV. A tabela
+\ref{tab:DetBanda} lista a quantidade de objetos que possuem valor definido de
+acordo com cada banda UV. Alguns objetos podem ser muito fracos em FUV. Isto
+combinado com a baixa eficiência do filtro (figura \ref{fig:GalexFilters}) e do
+detetor pode fazer com que a contagem de fótons deste objeto seja muito baixa,
+ficando abaixo do nível limite de sinal-ruído do {\em survey}.
+
+\begin{table}
+	\caption[Número de detecções por banda no catálogo UV do \STARLIGHT.]
+	{Número de detecções por banda no catálogo UV do \starlight. Nas linhas FUV e
+	NUV, é listada a quantidade de objetos com detecção para os {\em
+	surveys} AIS e MIS nas bandas FUV e NUV, respectivamente. A linha FUV+NUV
+	lista a quantidade de objetos com detecção simultânea em FUV e NUV.}
+	\begin{tabular}{l|r r}
+		Banda   &        AIS &       MIS \\
+		\midrule
+		FUV     & $107\,902$ & $13\,685$ \\
+		NUV     & $168\,126$ & $38\,828$ \\
+		FUV+NUV & $102\,811$ & $11\,239$ \\
+	\end{tabular}
+	\label{tab:DetBanda}
+\end{table}
 
 \subsection{Correções aplicadas à fotometria UV}
 \label{sec:Crossmatch:DefAmostras:Correcoes}
@@ -457,38 +485,36 @@ com base nos mapas de extinção interestelar de \citet{Schlegel1998}. A correç
 é feita usando o modelo de extinção CCM \citep[equações 4a e 4b]{Cardelli1989}.
 Para um comprimento de onda $\lambda$ qualquer, a extinção absoluta (em
 magnitudes) é dada por
-\begin{eqnarray}
+\begin{eqnarray*}
 	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
 	x &=& \frac{10000\text{\AA}}{\lambda}.
-\end{eqnarray}
+\end{eqnarray*}
 No caso das bandas FUV ($\lambda_{eff}=1528\text{\AA}$) e NUV
 ($\lambda_{eff}=1528\text{\AA}$),
-\begin{eqnarray}
-	x_{FUV} &=& 6,54 \\
+\begin{eqnarray*}
+	x_{FUV} &=& 6,54\\
 	x_{NUV} &=& 4,40
-\end{eqnarray}
+\end{eqnarray*}
 com os coeficientes $a(x)$ e $b(x)$ dados por
-\begin{eqnarray}
+\begin{eqnarray*}
 	a(x) &=& 1,752 - 0,326x - 0,104/[(x-4,67)^2 + 0,341] + F_a(x) \\
 	b(x) &=& -3,090 + 1,825x + 1,206/[(x-4,62)^2 + 0,263] + F_b(x)
-\end{eqnarray}
-\begin{eqnarray}
+\end{eqnarray*}
+\begin{eqnarray*}
 	F_a(x_{FUV}) &=& F_b(x_{FUV}) = 0 \\
 	F_a(x_{NUV}) &=& -0,04473(x_{NUV}-5,9)^2 - 0,09779(x_{NUV}-5,9)^3 \\
 	F_b(x_{NUV}) &=& 0,2130(x_{NUV}-5,9)^2 + 0,1207(x_{NUV}-5,9)^3.
-\end{eqnarray}
+\end{eqnarray*}
 Usando $R_V=3,1$, a extinção nas bandas FUV e NUV em função do excesso de cor
 $E(B-V)$ é dada por
-\begin{equation}
-	A_{FUV} = 8,15\,E(B-V)
-\end{equation}
-\begin{equation}
-	A_{NUV} = 9,17\,E(B-V).
-\end{equation}
+\begin{eqnarray*}
+	A_{FUV} &=& 8,15\,E(B-V) \\
+	A_{NUV} &=& 9,17\,E(B-V).
+\end{eqnarray*}
 Esta correção é então aplicada às magnitudes do catálogo.
 
-Foi aplicada também a correção $k(z)$ devida ao {\em redshift} e a magnitude
-transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
+Foi aplicada também a correção $k(z)$ devida ao {\em redshift}, e a magnitude
+foi transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
 (v4\_2) de \citet{Blanton2007}.
 
 
@@ -531,6 +557,9 @@ abertura da fibra\footnote{Fibra\fixme}. Por outro lado, em {\em redshifts}
 superiores a $0,17$ a linha \NII fica deslocada para além do limite vermelho dos
 espectros do \SDSS, escapando assim da detecção. Este mesmo critério foi usado
 por \citet{CidFernandes2011}.
+
+TODO: histogramas, muitos histogramas.
+
 
 
 %% End of this chapter

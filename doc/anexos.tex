@@ -78,7 +78,7 @@
 	\begin{Verbatim}[commandchars=\\\{\}]
 	\textbf{SELECT INTO} MyDB..galex_ais_elines_z
 		s.specobjid,
-		g.fuv_mag \textbf{AS} FUV, g.nuv_mag \textbf{AS} NUV,
+		g.nuv_mag \textbf{AS} NUV,
 		o.Mu \textbf{AS} u, o.Mg \textbf{AS} g, o.Mr \textbf{AS} r,
 		o.Mi \textbf{AS} i, o.Mz \textbf{AS} z,
 		s.mcor_gal, s.at_flux, s.at_mass, s.am_flux,
@@ -101,11 +101,12 @@
 		o.specobjid = s.specobjid
 	\textbf{WHERE}
 		g.galexobjid <> 0
+		\textbf{AND} g.nuv_mag <> -999
 		\textbf{AND} o.z > 0.04
 		\textbf{AND} o.z < 0.17
 	\end{Verbatim}
 	\caption[Extração da amostra de galáxias.]
-	{TODO: Extração da amostra de galáxias.}
+	{TODO: Extração da amostra de galáxias. Explicar limites em z e nuv <> -999.}
 	\label{fig:QuerySampleAIS}
 \end{figure}
 

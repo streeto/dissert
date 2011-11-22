@@ -88,13 +88,12 @@ aceleração do universo, relacionadas à energia escura. Entretanto, uma
 quantidade considerável de ciência adicional poderá ser feita com base no
 espectro de uma região tão ampla do céu. Seu início está previsto para 2013.
 
-O LSST (Large Synoptic Survey Telecope) mapeará metade do céu a cada mês,
+O LSST ({\em Large Synoptic Survey Telecope}) mapeará metade do céu a cada mês,
 aproximadamente, durante cerca de dez anos \citep{Ivezic2008}. As suas operações
 científicas tem início previsto para 2020. Serão mais de um petabyte em imagens
 brutas por ano, muito mais do que poderia ser revisado por humanos. Este {\em
 survey} também pretende explorar a natureza da energia escura, embora, da mesma
-forma que o JPAS, os dados possam ser aproveitados para diversos outros
-fins.
+forma que o JPAS, os dados possam ser aproveitados para diversos outros fins.
 
 \subsection{Mineração de dados}
 
@@ -102,7 +101,7 @@ Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
 contendo um registro por linha, de um forma tecnicamente conhecida como {\em
 flat file}. Buscas neste tipo de banco de dados são feitas examinando
 individualmente cada registro do arquivo. Com o volume de dados obtido pelo
-\galex (aproximadamente 222 milhões de objetos, 34 mil campos)\citneed, o uso de
+\galex (aproximadamente 222 milhões de objetos, 34 mil campos), o uso de
 arquivos simples para armazenamento de dados se torna inviável.\citneed É
 preciso ``profissionalizar'' o gerenciamento de dados de um {\em survey} desta
 escala.
@@ -140,12 +139,16 @@ O \starlight é um código de síntese espectral desenvolvido por
 \citet{CidFernandes2005}. Dado um espectro de galáxia, o programa retorna as
 frações de massa e luz correspondentes às populações estelares componentes desta
 galáxia. O \starlight expressa o espectro desta galáxia como uma combinação
-linear de espectros de populações estelares simples (SSP) com diferentes idades
-e metalicidades. Matematicamente isto é equivalente a encontrar as componentes
-do vetor espectro da galáxia numa base de espectros de SSP, ou seja,
+linear de espectros de populações estelares simples\footnote{Uma SSP consiste
+num conjunto de estrelas formadas ao mesmo tempo com a mesma metalicidade.}
+(SSP) com diferentes idades e metalicidades. Matematicamente isto é equivalente
+a encontrar as componentes do vetor espectro da galáxia numa base de espectros
+de SSP, ou seja,
 
-$$ F_\lambda = \sum_{i=1}^{N_\star} x_i F^\star_\lambda(t_i,Z_i)
-g_\lambda(A_{V,i}). $$
+\begin{equation*}
+F_\lambda = \sum_{i=1}^{N_\star} x_i F^\star_\lambda(t_i,Z_i)
+g_\lambda(A_{V,i}).
+\end{equation*}
 
 Nesta equação, $F_\lambda$ é o fluxo em cada comprimento de onda. Os $N_\star$
 espectros de base $F^\star_\lambda(t_i, Z_i)$, com $t_i$ e $Z_i$ representando

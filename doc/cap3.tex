@@ -120,15 +120,15 @@ bancos de dados.
 	\label{fig:CasJobs}
 \end{figure}
 
-% FIXME: Corrigir referências.
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
 CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed, e uma
 amostra do \galex e um catálogo de {\em redshifts} fotométricos
 \citep{OMill2011}. O {\em CasJobs} também foi adotado por outros projetos como o
-\galex, Kepler\citneed, {\em Palomar Quest}\citneed, {\em Panoramic Survey
-Telescope and Rapid Response System} (Pan-STARRS) e até pelo projeto {\em
-AmeriFlux}, que contém dados de hidrologia\citneed.
+\galex, {\em Kepler}\footnote{{\em Kepler CasJobs}:
+\url{http://mastweb.stsci.edu/kplrcasjobs/}} e o {\em Palomar Quest
+}\footnote{{\em Palomar Quest CasJobs}:
+\url{http://webvoy.cacr.caltech.edu/CasJobs/}} \citep{Djorgovski2008}.
 
 A figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
 CasJobs}.
@@ -144,18 +144,15 @@ CasJobs}.
 
 O \starlight é um código de síntese espectral \citep{CidFernandes2005}. O
 programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectro
-como um arquivo texto. Ele usa uma biblioteca de espectros de populações
-estelares simples ({\em Simple Stellar Population}, SSP)\footnote{Uma SSP
-consiste num conjunto de estrelas formadas ao mesmo tempo com a mesma
-metalicidade.} com diferentes idades e metalicidades como uma base do espaço de
-espectros galáticos possíveis. De forma simplificada, o que o \starlight faz é
-encontrar as frações de massa e luz correspondente a cada elemento da base, ou
-seja, cada SSP. Analisando as relações entre os componentes determinandos pela
-síntese, o programa determina diversas propriedades físicas da galáxia, como a
-massa estelar total, a massa separada por idade, metalicidade média, quantidade
-de poeira e velocidade de rotação, para citar apenas algumas. Quase um milhão de
-espectros foram analisados, e o resultado da síntese foi armazenado em arquivos
-texto.
+como um arquivo texto. Ele usa uma biblioteca de espectros SSPs com diferentes
+idades e metalicidades como uma base do espaço de espectros galáticos possíveis.
+De forma simplificada, o que o \starlight faz é encontrar as frações de massa e
+luz correspondente a cada elemento da base, ou seja, cada SSP. Analisando as
+relações entre os componentes determinandos pela síntese, o programa determina
+diversas propriedades físicas da galáxia, como a massa estelar total, a massa
+separada por idade, metalicidade média, quantidade de poeira e velocidade de
+rotação, para citar apenas algumas. Quase um milhão de espectros foram
+analisados, e o resultado da síntese foi armazenado em arquivos texto.
 
 Apenas os componentes estelares do espectro são obtidos desta forma. Subtraindo
 o espectro sintetizado de luz estelar é possível medir as linhas de emissão do
@@ -168,10 +165,11 @@ Os arquivos da síntese gerados pelo \starlight ocupam uma dezena de gigabytes.
 Mesmo o catálogo de propriedades físicas das galáxias, sozinho, ocupa mais de um
 gigabyte. Embora seja um volume razoavelmente grande de dados, é possível
 trabalhar com esta quantidade de dados num computador atual\footnote{Na época da
-escrita desta dissertação, é difícil encontrar um computador novo com menos de 4
-gigabytes de memória RAM.}. A transferência de arquivos com tamanho da ordem de
-gigabytes pela internet também também é lugar-comum atualmente. Poderia-se
-argumentar que distribuir os dados neste formato seja a forma mais adequada.
+escrita desta dissertação, é bastante comum encontrar um computador novo com 4
+gigabytes de memória RAM ou mais.}. A transferência de arquivos com tamanho da
+ordem de gigabytes pela internet também também é lugar-comum atualmente.
+Poderia-se argumentar que distribuir os dados neste formato seja a forma mais
+adequada.
 
 Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
 CasJobs} em prover acesso aos dados o \SDSS não é o tamanho da base de dados, e
@@ -311,7 +309,8 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \begin{table}
 	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6, por
-	associação.}
+	associação. A lista foi gerada pela {\em query} mostrada na figura
+	\ref{fig:QueryIDGalexSDSS}.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
 		\galex &          \multicolumn{3}{c}{\SDSS} \\
@@ -327,7 +326,8 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \begin{table}
 	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} MIS do \galex GR6, por
-	associação.}
+	associação. A lista foi gerada pela {\em query} mostrada na figura
+	\ref{fig:QueryIDGalexSDSS}.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
 		\galex &         \multicolumn{3}{c}{\SDSS} \\
@@ -351,6 +351,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \label{sec:Crossmatch:DefAmostras}
 
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
+\label{sec:Crossmatch:DefAmostras:IdSDSSGalex}
 
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 \galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
@@ -422,12 +423,12 @@ dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
 null}''}. De forma similar, os dados UV para o {\em survey} MIS foram
 armazenados na tabela \texttt{galex\_mis}.
 
-Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja, com
-\texttt{multipleMatchCount} e \texttt{reverseMultipleMatchCount} iguais a $1$.
-Em situações diferentes desta, caso houvesse mais de um candidato para uma mesma
-detecção, seria necessária uma análise mais detalhada. Desta forma, optou-se por
-uma confiabilidade maior nos dados utilizando apenas identificações unívocas, em
-troca de uma amostra menor.
+Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja,
+registros com \texttt{multipleMatchCount} e \texttt{reverseMultipleMatchCount}
+iguais a 1. Em situações diferentes desta, caso houvesse mais de um candidato
+para uma mesma detecção, seria necessária uma análise mais detalhada. Desta
+forma, optou-se por uma confiabilidade maior nos dados utilizando apenas
+identificações unívocas, em troca de uma amostra menor.
 
 % FIXME: Fração dos objetos perdida no overlap de AIS e MIS.
 Outro artefato importante é que apenas um objeto foi escolhido, indepente do
@@ -445,7 +446,7 @@ os objetos tiveram detecção simultânea nas bandas FUV e NUV. A tabela
 \ref{tab:DetBanda} lista a quantidade de objetos que possuem valor definido de
 acordo com cada banda UV. Alguns objetos podem ser muito fracos em FUV. Isto
 combinado com a baixa eficiência do filtro (figura \ref{fig:GalexFilters}) e do
-detetor pode fazer com que a contagem de fótons deste objeto seja muito baixa,
+detetor podem fazer com que a contagem de fótons deste objeto seja muito baixa,
 ficando abaixo do nível limite de sinal-ruído do {\em survey}.
 
 \begin{table}
@@ -453,7 +454,8 @@ ficando abaixo do nível limite de sinal-ruído do {\em survey}.
 	{Número de detecções por banda no catálogo UV do \starlight. Nas linhas FUV e
 	NUV, é listada a quantidade de objetos com detecção para os {\em
 	surveys} AIS e MIS nas bandas FUV e NUV, respectivamente. A linha FUV+NUV
-	lista a quantidade de objetos com detecção simultânea em FUV e NUV.}
+	lista a quantidade de objetos com detecção simultânea em FUV e NUV. A figura
+	\ref{fig:QueryListaPorBandaSurvey} contém a {\em query} que gera esta lista.}
 	\begin{tabular}{l|r r}
 		Banda   &        AIS &       MIS \\
 		\midrule
@@ -531,8 +533,7 @@ utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
 $ugriz$ do \SDSS, as magnitudes $FUV$ e $NUV$ do \galex e alguns parâmetros
 físicos do \starlight (tabela \ref{tab:ParamFisicos}. Foram selecionadas também
 a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
-\NII. Desta forma foram montadas duas amostras, uma para o AIS e outra para o
-MIS.
+\NII.
 
 \begin{table}
 	\caption[Parâmetros físicos das galáxias utilizados na amostra.]
@@ -545,7 +546,7 @@ MIS.
 		\texttt{at\_mass}  & Logaritmo da idade média ponderada em massa \\
 		\texttt{am\_flux}  & Metalicidade média ponderada em fluxo \\
 		\texttt{am\_mass}  & Metalicidade média ponderada em massa \\
-		\texttt{AV}       & Extinção causada por poeira (magnitude) \\
+		\texttt{AV}        & Extinção causada por poeira (magnitude) \\
 	\end{tabular}
 	\label{tab:ParamFisicos}
 \end{table}
@@ -557,6 +558,8 @@ abertura da fibra\footnote{Fibra\fixme}. Por outro lado, em {\em redshifts}
 superiores a $0,17$ a linha \NII fica deslocada para além do limite vermelho dos
 espectros do \SDSS, escapando assim da detecção. Este mesmo critério foi usado
 por \citet{CidFernandes2011}.
+
+TODO: Usando apenas AIS e registros com NUV definido.
 
 TODO: histogramas, muitos histogramas.
 

@@ -97,18 +97,23 @@ range = (bounds[0], bounds[1])
 bins = 50
 h, e = pylab.histogram(NUV_r[starforming], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'b-', label='SFG')
+print('SFG: %d' % len(NUV_r[starforming]))
 
 h, e = pylab.histogram(NUV_r[sAGN], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='lightgreen', label='sAGN')
+print('sAGN: %d' % len(NUV_r[sAGN]))
 
 h, e = pylab.histogram(NUV_r[wAGN], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='darkgreen', label='wAGN')
+print('wAGN: %d' % len(NUV_r[wAGN]))
 
 h, e = pylab.histogram(NUV_r[retired], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
+print('RG: %d' % len(NUV_r[retired]))
 
 h, e = pylab.histogram(NUV_r[passive], bins, range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'r-', label='PG')
+print('PG: %d' % len(NUV_r[passive]))
 
 #pylab.legend(loc='upper left')
 pylab.xlabel('$NUV - r$')
@@ -123,14 +128,14 @@ bounds = [-1.0,0.6,.1,110.0]
 ax = pylab.subplot(111)
 pylab.axis(bounds)
 ax.set_yscale('log')
-pylab.xlabel('$\log([N_{II}] / H_{\\alpha})$')
+pylab.xlabel('$\log([NII] / H\\alpha)$')
 pylab.ylabel('$W_{H\\alpha}$ [\AA]')
 
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 
 sample = oneInTen(starforming) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.b', markersize=.5)
-pylab.text(-0.9, 4, 'SF')
+pylab.text(-0.9, 4, 'SFG')
 
 sample = oneInTen(sAGN) & clean
 pylab.plot(logN2Ha[sample], WHa[sample], '.', color='lightgreen', markersize=.5)
@@ -190,7 +195,7 @@ pylab.figure()
 bounds = [-1.0,0.6,-1.0,2.5]
 ax = pylab.subplot(111)
 pylab.axis(bounds)
-pylab.xlabel('$\log([NII] / H_{\\alpha})$')
+pylab.xlabel('$\log([NII] / H\\alpha)$')
 pylab.ylabel('$\log(W_{H\\alpha}/[\mathrm{\AA}])$')
 
 # Plot constraints
@@ -221,7 +226,7 @@ y = np.log10(0.5/5.0) * x + np.log10(0.5)
 pylab.plot(x, y, '--k')
 
 # Labels
-pylab.text(-0.9, 0.75, 'SF')
+pylab.text(-0.9, 0.75, 'SFG')
 pylab.text(0.3, 1.0, 'sAGN')
 pylab.text(0.3, 0.55, 'wAGN')
 pylab.text(0.3, -0.15, 'RG')
@@ -255,8 +260,8 @@ else:
 bounds = [-1.0,0.5, -1.5,1.3]
 pylab.figure()
 pylab.axis(bounds)
-pylab.xlabel('$\log([NII] / H_{\\alpha})$')
-pylab.ylabel('$\log([OIII] / H_{\\beta})$')
+pylab.xlabel('$\log([NII] / H\\alpha)$')
+pylab.ylabel('$\log([OIII] / H\\beta)$')
 clean = (t.data['nii_6584_flux'] > 0.0) & (t.data['halpha_flux'] > 0.0)
 clean &= (t.data['oiii_5007_flux'] > 0.0) & (t.data['hbeta_flux'] > 0.0)
 clean &= oneInTen(clean)
@@ -267,8 +272,11 @@ pylab.scatter(logN2Ha[clean], logO3Hb[clean], c=NUV_r[clean],
 #pylab.hexbin(logN2Ha[clean], logO3Hb[clean], NUV_r[clean], extent=bounds, gridsize=50,
 #              cmap=cm.spectral, vmin = 0.5, vmax = 7.0)
 
+pylab.text(-0.7, -0.5, 'SFG')
+pylab.text(-0.5, 0.6, 'Seyfert')
+pylab.text(0.0, -0.5, 'LINER')
 
-# FIXME: BPT plot constraints
+
 # Plot constraints
 
 # S06
@@ -277,9 +285,9 @@ y = 0.96 + 0.29 / (x + 0.20)
 pylab.plot(x, y, color='k', linestyle='--')
 
 # K03
-x = np.linspace(-1.0, 0.0, 100)
-y = 1.30 + 0.61 / (x - 0.05)
-pylab.plot(x, y, color='k', linestyle='--')
+#x = np.linspace(-1.0, 0.0, 100)
+#y = 1.30 + 0.61 / (x - 0.05)
+#pylab.plot(x, y, color='k', linestyle='--')
 
 # K06
 x = np.linspace(-0.5, 0.5, 10)

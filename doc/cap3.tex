@@ -248,23 +248,14 @@ chamada \texttt{BestObjID}, que aponta para o registro de fotometria (tabela
 {\tt PhotoObjAll}) mais provável para cada espectro. É importante salientar que
 nem todo espectro tem um \texttt{BestObjID} definido.
 
-A tabela de índices da amostra de galáxias do \starlight (esquema na figura
-\ref{fig:TabelaAmostraStarlight}) contém inicialmente os tripletos
-[\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Dentro do ambiente {CasJobs}
-do \SDSS DR7\footnote{{\em CasJobs} \SDSS DR7 -
-\url{http://casjobs.sdss.org/CasJobs/}} a tabela tem os valores de
-\texttt{SpecObjID} e \texttt{BestObjID} preenchida através da execução da {\em
-query} mostrada na figura \ref{fig:AtualizaObjIds}. Entre os objetos na amostra
-do \starlight, $622$ objetos não tem a sua contrapartida fotométrica.
-
-% TODO: Adicionar figura - Tabela amostra do starlight.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Tabela de índices da amostra do \starlight.]
-	{Esquema da tabela de índices da amostra do \starlight. Os tipos de dados são
-	referentes à implementação do banco de dados.}
-	\label{fig:TabelaAmostraStarlight}
-\end{figure}
+A tabela de índices da amostra de galáxias do \starlight contém inicialmente os
+tripletos [\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Esta tabela é
+importada para o ambiente {CasJobs} do \SDSS DR7\footnote{{\em CasJobs} \SDSS
+DR7 - \url{http://casjobs.sdss.org/CasJobs/}}. Através da execução da {\em
+query} da figura \ref{fig:QueryAtualizaObjIds} a tabela tem os valores de
+\texttt{SpecObjID} e \texttt{BestObjID} preenchida. Entre os objetos na amostra
+do \starlight, $622$ objetos não possuem um valor de \texttt{BestObjID}
+definido, ou seja, não foi possível encontrar a sua contrapartida fotométrica.
 
 
 %***************************************************************%
@@ -430,7 +421,6 @@ para uma mesma detecção, seria necessária uma análise mais detalhada. Desta
 forma, optou-se por uma confiabilidade maior nos dados utilizando apenas
 identificações unívocas, em troca de uma amostra menor.
 
-% FIXME: Fração dos objetos perdida no overlap de AIS e MIS.
 Outro artefato importante é que apenas um objeto foi escolhido, indepente do
 {\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
 o mesmo objeto da amostra, apenas o mais próximo é considerado. Nos campos onde
@@ -439,7 +429,8 @@ no AIS, devido ao maior tempo de exposição no MIS. Assim, nesses campos, os
 objetos do MIS têm maior chance de estar mais próximos ao objeto do \SDSS. Isto
 também não é um problema muito grave para o AIS, já que a sua cobertura do céu é
 muito maior do que a do MIS. A fração exata de objetos perdidos em cada caso
-ainda precisa ser determinada\fixme.
+ainda precisa ser determinada. Esta correção será feita futuramente numa revisão
+do catálogo.
 
 No total foram obtidas $173\,218$ detecções no AIS e $41\,274$ no MIS. Nem todos
 os objetos tiveram detecção simultânea nas bandas FUV e NUV. A tabela
@@ -526,14 +517,13 @@ foi transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
 %                                                               %
 %***************************************************************%
 
-\section{Definição da amostra \STARLIGHT+UV}
+\section{Definição da amostra \STARLIGHTUV}
 
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
-$ugriz$ do \SDSS, as magnitudes $FUV$ e $NUV$ do \galex e alguns parâmetros
-físicos do \starlight (tabela \ref{tab:ParamFisicos}. Foram selecionadas também
-a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
-\NII.
+$ugriz$ do \SDSS, a magnitude $NUV$ do \galex e alguns parâmetros físicos do
+\starlight (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
+equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 
 \begin{table}
 	\caption[Parâmetros físicos das galáxias utilizados na amostra.]
@@ -551,18 +541,34 @@ a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
 	\label{tab:ParamFisicos}
 \end{table}
 
-% FIXME: Footnote fibra
-Existe uma restrição no intervalo de {\em redshifts} das galáxias que pertencem
-à amostra. O {\em redshift} deve ser superior a $0,04$ para evitar efeitos de
-abertura da fibra\footnote{Fibra\fixme}. Por outro lado, em {\em redshifts}
-superiores a $0,17$ a linha \NII fica deslocada para além do limite vermelho dos
-espectros do \SDSS, escapando assim da detecção. Este mesmo critério foi usado
-por \citet{CidFernandes2011}.
+Foi feita uma restrição no intervalo de {\em redshifts} das galáxias que
+pertencem à amostra. O {\em redshift} deve ser superior a $0,04$ para evitar
+efeitos de abertura da fibra\footnote{Os espectros obtidos pelo \SDSS foram
+feitos através de fibras ópticas. Cada fibra coleta a luz de uma região de 3
+segundos de arco de diâmetro. Em {\em redshifts} próximos, uma fração
+considerável da luz das galáxias (em geral das partes externas) cai fora da
+fibra. Nestes casos, o espectro obtido não é o espectro integrado da galáxia,
+mas sim o espectro das regiões centrais.}. Em {\em redshifts} superiores a
+$0,17$ a linha \NII fica deslocada para além do limite vermelho dos espectros do
+\SDSS, escapando assim da detecção. Este mesmo critério foi usado por
+\citet{CidFernandes2011}.
 
-TODO: Usando apenas AIS e registros com NUV definido.
+% FIXME: Rever este parágrafo quando tiver os histogramas.
+Os histogramas mostrados na figura \ref{fig:HistogramasAmostra} mostram que para
+os critérios de seleção de {\em redshift} acima, os dados do AIS são completos.
+A análise apresentada no capítulo \ref{sec:Analise} não levou em consideração a
+fotometria FUV.
 
+% TODO: Justificar o abandono de FUV
+TODO: Justificar o abandono de FUV na análise.
+
+Foram selecionados somente os objetos do AIS contendo
+fotometria NUV. A amostra \starlight+UV contém $131\,333$.
+
+%TODO: histogramas, muitos histogramas.
 TODO: histogramas, muitos histogramas.
 
+Amostra \starlightUV.
 
 
 %% End of this chapter

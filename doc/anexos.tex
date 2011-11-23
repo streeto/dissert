@@ -19,8 +19,10 @@
 \chapter{{\em Queries} SQL}
 \label{apendice:Queries}
 
-{\em Queries} SQL utilizadas no texto. Listar CasJobs usados com as respectivas
-urls.
+{\em Queries} SQL utilizadas no texto. 
+
+% TODO: Listar CasJobs usados com as respectivas urls no anexo.
+TODO: Listar CasJobs usados com as respectivas urls.
 
 \begin{figure}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -37,7 +39,7 @@ urls.
 	{Atualização dos índices da amostra de galáxias do \starlight. A {\em query}
 	foi executada no {\em CasJobs} do \SDSS para obter {\tt SpecObjID} e {\tt
 	BestObjID} dado o tripleto [{\tt MJD}, {\tt Plate}, {\tt FiberID}].}
-	\label{fig:AtualizaObjIds}
+	\label{fig:QueryAtualizaObjIds}
 \end{figure}
 
 
@@ -118,45 +120,6 @@ urls.
 \end{figure}
 
 
-% TODO: Caption da figura fig:QuerySampleAIS
-\begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
-\textbf{SELECT INTO} MyDB..galex_ais_elines_z
-	s.specobjid,
-	g.nuv_mag \textbf{AS} NUV,
-	o.Mu \textbf{AS} u, o.Mg \textbf{AS} g, o.Mr \textbf{AS} r,
-	o.Mi \textbf{AS} i, o.Mz \textbf{AS} z,
-	s.mcor_gal, s.at_flux, s.at_mass, s.am_flux,
-	s.am_mass, s.AV,
-	e.oiii_5007_flux, e.oiii_5007_flux_err,
-	e.oiii_5007_ew, e.oiii_5007_ew_err, e.oiii_5007_sn,
-	e.nii_6584_flux, e.nii_6584_flux_err,
-	e.nii_6584_ew, e.nii_6584_ew_err, e.nii_6584_sn,
-	e.halpha_flux, e.halpha_flux_err,
-	e.halpha_ew, e.halpha_ew_err, e.halpha_sn,
-	e.hbeta_flux, e.hbeta_flux_err,
-	e.hbeta_ew, e.hbeta_ew_err, e.hbeta_sn,
-	o.z \textbf{AS} redshift
-\textbf{FROM} galex_ais g
-\textbf{INNER JOIN} synthesis_results s\textbf{ON}
-	s.specobjid = g.specobjid
-\textbf{INNER JOIN} el_fit_all e \textbf{ON}
-	s.synid = e.synid
-\textbf{INNER JOIN} obs_parameters o \textbf{ON}
-	o.specobjid = s.specobjid
-\textbf{WHERE}
-	g.galexobjid <> 0
-	\textbf{AND} g.nuv_mag <> -999
-	\textbf{AND} o.z > 0.04
-	\textbf{AND} o.z < 0.17
-\end{Verbatim}
-	\caption[Extração da amostra de galáxias.]
-	{TODO: Extração da amostra de galáxias. Explicar limites em z e nuv <> -999.
-	{\em Query} executada no {\em CasJobs} do \starlight.}
-	\label{fig:QuerySampleAIS}
-\end{figure}
-
-
 \begin{figure}
 \begin{Verbatim}[commandchars=\\\{\}]
 \textbf{SELECT}
@@ -201,6 +164,45 @@ urls.
 	indicam que o objeto \starlight não tem correspondente {\galex}. {\em Query}
 	executada no {\em CasJobs} do \starlight.}
 	\label{fig:QueryListaPorBandaSurvey}
+\end{figure}
+
+
+% TODO: Caption da figura fig:QuerySampleAIS
+\begin{figure}
+\begin{Verbatim}[commandchars=\\\{\}]
+\textbf{SELECT INTO} MyDB..galex_ais_elines_z
+	s.specobjid,
+	g.nuv_mag \textbf{AS} NUV,
+	o.Mu \textbf{AS} u, o.Mg \textbf{AS} g, o.Mr \textbf{AS} r,
+	o.Mi \textbf{AS} i, o.Mz \textbf{AS} z,
+	s.mcor_gal, s.at_flux, s.at_mass, s.am_flux,
+	s.am_mass, s.AV,
+	e.oiii_5007_flux, e.oiii_5007_flux_err,
+	e.oiii_5007_ew, e.oiii_5007_ew_err, e.oiii_5007_sn,
+	e.nii_6584_flux, e.nii_6584_flux_err,
+	e.nii_6584_ew, e.nii_6584_ew_err, e.nii_6584_sn,
+	e.halpha_flux, e.halpha_flux_err,
+	e.halpha_ew, e.halpha_ew_err, e.halpha_sn,
+	e.hbeta_flux, e.hbeta_flux_err,
+	e.hbeta_ew, e.hbeta_ew_err, e.hbeta_sn,
+	o.z \textbf{AS} redshift
+\textbf{FROM} galex_ais g
+\textbf{INNER JOIN} synthesis_results s\textbf{ON}
+	s.specobjid = g.specobjid
+\textbf{INNER JOIN} el_fit_all e \textbf{ON}
+	s.synid = e.synid
+\textbf{INNER JOIN} obs_parameters o \textbf{ON}
+	o.specobjid = s.specobjid
+\textbf{WHERE}
+	g.galexobjid <> 0
+	\textbf{AND} g.nuv_mag <> -999
+	\textbf{AND} o.z > 0.04
+	\textbf{AND} o.z < 0.17
+\end{Verbatim}
+	\caption[Extração da amostra de galáxias.]
+	{TODO: Extração da amostra de galáxias. Explicar limites em z e nuv <> -999.
+	{\em Query} executada no {\em CasJobs} do \starlight.}
+	\label{fig:QuerySampleAIS}
 \end{figure}
 
 

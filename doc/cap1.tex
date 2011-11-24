@@ -35,18 +35,19 @@ $2400$ galáxias pelo {\em Center for Astrophysics} em Harvard \citep{Huchra1983
 e aproximadamente $2000$ galáxias pelo {\em Southern Redshift Survey}
 \citep{DaCosta1988}.
 
-Com o advento dos {\em mega-surveys}, está começando uma revolução na forma de
-fazer ciência na astronomia. Os diversos {\em surveys} em execução atualmente
-estão produzindo dados a uma taxa da ordem de petabytes por ano. Este talvez
-seja o primeiro campo da ciência onde as informações coletadas por máquinas
-tenham -- nas próximas décadas -- um volume maior do que os seres humanos são
-capazes de digerir. Uma espécie de {\em Singularidade Tecnológica}\footnote{O
-termo {\em Singularidade tecnológica} se refere a um futuro hipotético onde uma
-inteligência superior à humana emerge através da tecnologia. Qualquer previsão
-após tal fato se torna muito difícil, algo similar a um horizonte de eventos,
-dada a dificuldade em entender uma inteligência superior à humana.} da
-astrofísica, onde máquinas coletam, analizam e classificam dados. O papel do
-cientista num cenário como este ainda não está muito claro \citep{Norris2010}.
+Nos últimos anos, com o advento dos {\em mega-surveys}, está ocorrendo uma
+revolução na forma de fazer ciência na astronomia. Os diversos {\em surveys} em
+execução atualmente estão produzindo dados a uma taxa da ordem de petabytes por
+ano. Este talvez seja o primeiro campo da ciência onde as informações coletadas
+por máquinas tenham -- nas próximas décadas -- um volume maior do que os seres
+humanos são capazes de digerir. Uma espécie de {\em Singularidade
+Tecnológica}\footnote{O termo {\em Singularidade tecnológica} se refere a um
+futuro hipotético onde uma inteligência superior à humana emerge através da
+tecnologia. Qualquer previsão após tal fato se torna muito difícil, algo similar
+a um horizonte de eventos, dada a dificuldade em entender uma inteligência
+superior à humana.} da astrofísica, onde máquinas coletam, analizam e
+classificam dados. O papel do cientista num cenário como este ainda não está
+muito claro \citep{Norris2010}.
 
 \subsection{Mega-levantamentos de dados}
 
@@ -100,14 +101,26 @@ forma que o JPAS, os dados possam ser aproveitados para diversos outros fins.
 Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
 contendo um registro por linha, de um forma tecnicamente conhecida como {\em
 flat file}. Buscas neste tipo de banco de dados são feitas examinando
-individualmente cada registro do arquivo. Com o volume de dados obtido pelo
-\galex (aproximadamente 222 milhões de objetos, 34 mil campos), o uso de
-arquivos simples para armazenamento de dados se torna inviável.\citneed É
-preciso ``profissionalizar'' o gerenciamento de dados de um {\em survey} desta
-escala.
+individualmente cada registro do arquivo. Com o volume de dados obtido, por
+exemplo, pelo \SDSS ou pelo \galex (aproximadamente 222 milhões de objetos, 34
+mil campos), o uso de arquivos simples para armazenamento de dados se torna
+inviável.\citneed É preciso ``profissionalizar'' o gerenciamento de dados de um
+{\em survey} desta escala, e aprender a trabalhar com volumes imensos de dados.
 
-% TODO: Casjobs. Datamining.
-TODO: Casjobs. Datamining.
+Técnicas de detecção de padrões em grandes conjuntos de dados são conhecidas
+como {\em Mineração de dados}, e tem um interesse crescente nos últimos anos
+\citep{SIGKDD2011}. Estas técnicas tem naturalmente um caráter interdisciplinar,
+indo desde aplicações científicas até áreas como Economia \citep{Spanos2000} e
+Inteligência de Mercado\footnote{Ferramentas como OLAP ({\em On-line Analytical
+Processing} são usadas por empresas para avaliação de mercado e tomada decisão,
+agindo sobre um grande volume de dados.}.
+
+A equipe de arquivamento do \SDSS desenvolveu uma ferramenta chamada {\em
+CasJobs} (ver seção \ref{sec:CrossMatch:SDSS:CasJobs}), que permite que
+múltiplos usuários possam fazer buscas e coleta de dados em seu banco de dados
+através. Embora o {\em CasJobs} não seja estritamente falando uma ferramenta de
+mineração de dados, ele facilita e muito o acesso aos dados de um {\em survey}.
+O presente trabalho se baseia fortemente no uso desta ferramenta.
 
 
 %***************************************************************%

@@ -42,7 +42,7 @@ Ainda segundo \citet[figura 1, exemplo na figura 4]{Chilingarian2011}, o
 espalhamento dos dados na relação entre $g-r$ e $NUV-r$ é mais estreito na faixa
 de magnitude $z$ entre $-24$ e $-20$. A densidade de galáxias da amostra
 \starlight+UV em função de $g-r$ e $NUV-r$ (diagrama cor-cor) pode ser vista na
-figura \ref{fig:DensityColor}. Apenas foram selecionados objetos com magnitude
+figura \ref{fig:DensityColor}. Foram selecionados somente objetos com magnitude
 $z$ entre $-23$ e $-21,5$. Este critério é utilizado em todos os diagramas de
 cor contra cor presentes neste trabalho.
 
@@ -58,18 +58,18 @@ cor contra cor presentes neste trabalho.
 	\label{fig:DensityColor}
 \end{figure}
 
-A figura \ref{fig:ColorStarlightParam} mostra os parâmetros físicos das galáxias
-obtidos através do \starlight no diagrama cor--cor. Essencialmente, os gráficos
-são os mesmos que o da figura \ref{fig:DensityColor}, com a cor dos pontos
-indicando o valor de cada parâmetro. Em especial, o painel (a) mostra a relação
-entre a idade média (ponderada em fluxo das SSP) e a cor das galáxias.
+A figura \ref{fig:ColorStarlightParam} mostra as propriedades físicas das
+galáxias obtidos através do \starlight no diagrama cor--cor. Essencialmente, os
+gráficos são os mesmos que o da figura \ref{fig:DensityColor}, com a cor dos
+pontos indicando o valor de cada parâmetro. Em especial, o painel (a) mostra a
+relação entre a idade média (ponderada em fluxo das SSP) e a cor das galáxias.
 \citeauthor{Chilingarian2011} chegam numa relação semelhante, porém por outros
 meios.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color.eps}
 	\caption[Diagrama cor--cor UV para os diversos parâmetros \starlight.]
-	{Parâmetros físicos das galáxias em função de cor UV e cor óptica. O contorno
+	{Propriedades físicas das galáxias em função de cor UV e cor óptica. O contorno
 	das figuras representam os níveis referentes à figura \ref{fig:DensityColor},
 	e os eixos horizontal e vertical são os mesmos. As cores dos pontos nos painéis
 	correspondem a: \textbf{(a)} Logaritmo da idade média da galáxia, ponderada
@@ -96,17 +96,24 @@ cor UV das galáxias está relacionada às classes. São utilizadas as linhas de
 emissão \Halpha, \Hbeta, \NII e \OIII (daqui em diante chamados apenas de \nII e
 \oIII).
 
-O diagrama WHAN relaciona a largura equivalente da linha \Halpha ($\WHa$) com a
-razão entre o fluxo das linhas \nII e \Halpha ($\nII/\Halpha$). As galáxias são
-separadas em classes conforme os critérios a seguir \citep{CidFernandes2011}.
+A classificação feita a seguir divide as galáxias em dois grupos principais: as
+galáxias com linha de emissão (ELG) e as galáxias passivas (PG). As ELG ainda
+podem ser divididas dependendo do processo físico pro trás das linhas de
+emissão. \citet{CidFernandes2011} elabora um procedimento simples num diagrama
+relacionando a largura equivalente da linha \Halpha ($\WHa$) com a razão entre o
+fluxo de linhas $\nII/\Halpha$, chamado diagrama WHAN. Este diagrama relaciona
+duas quantidades físicas diferentes: $\WHa$ mede a quantidade de fótons
+ionizantes absorvida pelo gás em relação à massa estelar, e $\nII/\Halpha$ mede
+a abundância de nitrogênio, o estado de ionização e a temperatura do gás. Assim,
+as galáxias são separadas em classes neste diagrama conforme os seguintes
+critérios:
 
-% FIXME: Usar lista para critérios do WHAN
 \begin{list}{}{\setlength\itemsep{0pt}}
-\item \textbf{(a)} Galáxias com formação estelar (SFG): $\log{\nII/\Halpha} <
+\item \textbf{(a)} Galáxias com formação estelar (SFG): $\log(\nII/\Halpha) <
 -0,4$ e $\WHa > 3\text{\AA}$,
-\item \textbf{(b)} Galáxias com núcleo ativo forte (sAGN): $\log{\nII/\Halpha} >
+\item \textbf{(b)} Galáxias com núcleo ativo forte (sAGN): $\log(\nII/\Halpha) >
 -0,4$ e $\WHa > 6\text{\AA}$,
-\item \textbf{(c)} Galáxias com núcleo ativo fraco (wAGN): $\log{\nII/\Halpha} >
+\item \textbf{(c)} Galáxias com núcleo ativo fraco (wAGN): $\log(\nII/\Halpha) >
 -0,4$ e $3\text{\AA} > \WHa > 6\text{\AA}$,
 \item \textbf{(d)} Galáxias ``aposentadas'' (RG): $\WHa < 3\text{\AA}$,
 \item \textbf{(e)} Galáxias passivas (PG): $\WHa < 0,5\text{\AA}$ e $\WnII <
@@ -161,13 +168,13 @@ consistente com as cores para o diagrama WHAN.
 	\label{fig:BPTUV}
 \end{figure}
 
-As classes de galáxias ocupam regiões diferentes do diagrama cor--cor. Na figura
+As classes de galáxias ocupam regiões distintas do diagrama cor--cor. Na figura
 \ref{fig:ColorClass} a cor dos pontos representa a classe das galáxias da mesma
-forma que na figura \ref{fig:Whan}. Embora não esteja muito claro para as
-classes RG e PG, as classes formam uma sequência no diagrama cor--cor. Isto pode
-ser visto mais facilmente na figura \ref{fig:HistogramaCorClasse}. Esta figura é
-de certo modo uma versão resumida da figura \ref{fig:ColorClass}. Embora haja
-uma sobreposição considerável, a sequência está bem definida.
+forma que na figura \ref{fig:Whan}. Embora não esteja muito claro para as RG e
+PG, as classes formam uma sequência no diagrama cor--cor. Isto pode ser visto
+mais facilmente na figura \ref{fig:HistogramaCorClasse}. Esta figura é de certo
+modo uma versão resumida da figura \ref{fig:ColorClass}. Mesmo havendo uma
+sobreposição considerável, a sequência está bem definida.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-class.eps}
@@ -191,22 +198,34 @@ uma sobreposição considerável, a sequência está bem definida.
 \end{figure}
 
 
-\section{Análise das propriedades físicas}
+%***************************************************************%
+%                                                               %
+%          Análise - Pro. Físicas no diagrama cor -- cor        %
+%                                                               %
+%***************************************************************%
+
+\section{Propriedades físicas no diagrama cor--cor}
 
 % TODO: Parâmetros físicos das galáxias no diagrama de cores.
-TODO: Parâmetros físicos das galáxias no diagrama de cores.
+TODO: Parâmetros físicos das galáxias no diagrama de cores. A sequência de
+classes no diagrama cor--cor. Figura \ref{fig:ATFluxColor}.
 
+A classificaão das galáxias na seção anterior\ldots As propriedades físicas das
+galáxias estão relacionadas à sua classe\ldots
+
+Não é idade das galáxias, mas idade da SSP que domina o fluxo/massa. O mesmo
+para a metalicidade.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-at_flux-byclass.eps}
 	\caption[Idade média das galáxias ponderada em fluxo no diagrama cor--cor UV.]
-	{Idade média das galáxias ponderada em fluxo em função de $NUV-r$ e $g-r$. O
-	painel \textbf{(a)} contém todas as galáxias da amostra. Os painéis de
-	\textbf{(b)} a \textbf{(f)} contém apenas as galáxias con formação estelar
-	(SFG), AGN fortes (sAGN), AGN fracas (wAGN), galáxias aposentadas (RG) e
-	galáxias passivas (PG), respectivamente. Os contornos indicam a densidade de
-	galáxias. A idade média da distribuição vai aumentando conforme a classe, na
-	sequência apresentada.}
+	{Idade média das galáxias ponderada pelo fluxo das suas componentes SSP, em
+	função de $NUV-r$ e $g-r$. O painel \textbf{(a)} contém todas as galáxias da
+	amostra. Os painéis de \textbf{(b)} a \textbf{(f)} contém somente as galáxias
+	con formação estelar (SFG), AGN fortes (sAGN), AGN fracas (wAGN), galáxias
+	aposentadas (RG) e galáxias passivas (PG), respectivamente. Os contornos
+	indicam a densidade de galáxias. A idade média da distribuição vai aumentando
+	conforme a classe, na sequência apresentada.}
 	\label{fig:ATFluxColor}
 \end{figure}
 
@@ -214,8 +233,8 @@ TODO: Parâmetros físicos das galáxias no diagrama de cores.
 	\includegraphics{figuras/uvcolor-color-at_mass-byclass.eps}
 	\caption[Idade média das galáxias ponderada em massa no diagrama cor--cor UV.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a idade média das galáxias
-	ponderada pela massa das SSP componentes. Note que a escala de idades não é a
-	mesma.}
+	ponderada pela massa das suas componentes SSP. Note que a escala de idades não
+	é a mesma.}
 	\label{fig:ATMassColor}
 \end{figure}
 
@@ -223,7 +242,7 @@ TODO: Parâmetros físicos das galáxias no diagrama de cores.
 	\includegraphics{figuras/uvcolor-color-am_flux-byclass.eps}
 	\caption[Metalicidade das galáxias ponderada em fluxo no diagrama cor--cor UV.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade média das
-	galáxias ponderada pelo fluxo das SSP componentes.}
+	galáxias ponderada pelo fluxo das suas componentes SSP.}
 	\label{fig:AMFluxColor}
 \end{figure}
 

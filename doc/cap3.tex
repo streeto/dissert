@@ -154,7 +154,7 @@ separada por idade, metalicidade média, quantidade de poeira e velocidade de
 rotação, para citar apenas algumas. Quase um milhão de espectros foram
 analisados, e o resultado da síntese foi armazenado em arquivos texto.
 
-Apenas os componentes estelares do espectro são obtidos desta forma. Subtraindo
+Somente os componentes estelares do espectro são obtidos desta forma. Subtraindo
 o espectro sintetizado de luz estelar é possível medir as linhas de emissão do
 espectro. Esta é uma etapa de pós-processamento, que gera um catálogo
 complementar de linhas de emissão.
@@ -173,7 +173,7 @@ adequada.
 
 Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
 CasJobs} em prover acesso aos dados o \SDSS não é o tamanho da base de dados, e
-sim a facilidade com que o usuário pode acessar os dados e filtrar apenas o que
+sim a facilidade com que o usuário pode acessar os dados e filtrar somente o que
 lhe for conveniente. Além disso, manter a base de dados num local central
 permite que sejam feitas correções e revisões, o que implicaria normalmente numa
 nova transferência caso cada usuário tivesse a sua cópia local.
@@ -411,17 +411,17 @@ dados UV preenchidos somente para os objetos com identificação positiva. Caso 
 objeto não tenha um correspodente \galex, os valores serão nulos\footnote{Numa
 tabela, quando um campo de um registro não possui valor definido, seu valor é
 dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
-null}''}. De forma similar, os dados UV para o {\em survey} MIS foram
+null}''.}. De forma similar, os dados UV para o {\em survey} MIS foram
 armazenados na tabela \texttt{galex\_mis}.
 
-Foram escolhidas apenas identificações cruzadas do tipo um-para-um, ou seja,
+Foram escolhidas somente identificações cruzadas do tipo um-para-um, ou seja,
 registros com \texttt{multipleMatchCount} e \texttt{reverseMultipleMatchCount}
 iguais a 1. Em situações diferentes desta, caso houvesse mais de um candidato
 para uma mesma detecção, seria necessária uma análise mais detalhada. Desta
 forma, optou-se por uma confiabilidade maior nos dados utilizando apenas
 identificações unívocas, em troca de uma amostra menor.
 
-Outro artefato importante é que apenas um objeto foi escolhido, indepente do
+Outro artefato importante é que somente um objeto foi escolhido, indepente do
 {\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
 o mesmo objeto da amostra, apenas o mais próximo é considerado. Nos campos onde
 os dois {surveys} se sobrepõem, há uma maior quantidade de objetos no MIS do que
@@ -491,9 +491,8 @@ No caso das bandas FUV ($\lambda_{eff}=1528\text{\AA}$) e NUV
 com os coeficientes $a(x)$ e $b(x)$ dados por
 \begin{eqnarray*}
 	a(x) &=& 1,752 - 0,326x - 0,104/[(x-4,67)^2 + 0,341] + F_a(x) \\
-	b(x) &=& -3,090 + 1,825x + 1,206/[(x-4,62)^2 + 0,263] + F_b(x)
-\end{eqnarray*}
-\begin{eqnarray*}
+	b(x) &=& -3,090 + 1,825x + 1,206/[(x-4,62)^2 + 0,263] + F_b(x) \\
+	\\
 	F_a(x_{FUV}) &=& F_b(x_{FUV}) = 0 \\
 	F_a(x_{NUV}) &=& -0,04473(x_{NUV}-5,9)^2 - 0,09779(x_{NUV}-5,9)^3 \\
 	F_b(x_{NUV}) &=& 0,2130(x_{NUV}-5,9)^2 + 0,1207(x_{NUV}-5,9)^3.
@@ -521,13 +520,13 @@ foi transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
 
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
-$ugriz$ do \SDSS, a magnitude $NUV$ do \galex e alguns parâmetros físicos do
-\starlight (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
+$ugriz$ do \SDSS, a magnitude $NUV$ do \galex e algumas propriedades físicas das
+galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
 equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 
 \begin{table}
-	\caption[Parâmetros físicos das galáxias utilizados na amostra.]
-	{Parâmetros físicos das galáxias, obtidos do \starlight.}
+	\caption[Propriedades físicas das galáxias utilizados na amostra.]
+	{Propriedades físicas das galáxias, obtidos do \starlight.}
 	\begin{tabular}{l l}
 		Coluna & Descrição \\
 		\midrule

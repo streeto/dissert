@@ -19,13 +19,20 @@
 \chapter{{\em Queries} SQL}
 \label{apendice:Queries}
 
-{\em Queries} SQL utilizadas no texto. 
+{\em Queries} SQL utilizadas no texto. As palavras-chave da linguagem
+estão em negrito e maiúsculas. Os servidores {\em CasJobs} referenciados na
+legenda das figuras estão listados abaixo.
 
-% TODO: Listar CasJobs usados com as respectivas urls no anexo.
-TODO: Listar CasJobs usados com as respectivas urls.
+\begin{list}{}{\setlength\itemsep{0pt}}
+\item \starlight: \url{http://casjobs.starlight.ufsc.br/casjobs/}
+\item \SDSS: \url{http://casjobs.sdss.org/CasJobs/}
+\item \galex: \url{http://galex.stsci.edu/casjobs/}
+\end{list}
+
+
 
 \begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{UPDATE} sample
 	\textbf{SET} SpecObjID=so.SpecObjID, ObjID=so.BestObjID
 \textbf{FROM} sample s2 \textbf{INNER JOIN} DR7..SpecObjAll so
@@ -44,7 +51,7 @@ TODO: Listar CasJobs usados com as respectivas urls.
 
 
 \begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{SELECT}
 	'AIS' \textbf{AS} survey, '1' \textbf{AS} mg, '1' \textbf{AS} ms, \textbf{COUNT(*)} \textbf{AS} N
 \textbf{FROM} xsdssdr7 x
@@ -87,7 +94,7 @@ TODO: Listar CasJobs usados com as respectivas urls.
 
 
 \begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{SELECT INTO} mydb..galex_ais
 	s.objid \textbf{AS} sdssobjid, x.objid \textbf{AS} galexobjid,
 	s.mjd, s.plate, s.fiberid,
@@ -121,7 +128,7 @@ TODO: Listar CasJobs usados com as respectivas urls.
 
 
 \begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{SELECT}
 	'AIS' \textbf{AS} survey, 'FUV' \textbf{AS} band, \textbf{COUNT(*)} \textbf{AS} N
 \textbf{FROM} galex_ais
@@ -150,7 +157,7 @@ TODO: Listar CasJobs usados com as respectivas urls.
 \textbf{WHERE} galexobjid <> 0
 	\textbf{AND} uv_mag <> -999
 \textbf{UNION SELECT}
-	'MIS' \textbf{AS} survey, 'FUV+NUV' \textbf{AS} band, \textbf{COUNT(*)}	\textbf{AS} N
+	'MIS' \textbf{AS} survey, 'FUV+NUV' \textbf{AS} band, \textbf{COUNT(*)} \textbf{AS} N
 \textbf{FROM} galex_mis
 \textbf{WHERE} galexobjid <> 0
 	\textbf{AND} fuv_mag <> -999
@@ -169,7 +176,7 @@ TODO: Listar CasJobs usados com as respectivas urls.
 
 % TODO: Caption da figura fig:QuerySampleAIS
 \begin{figure}
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{SELECT INTO} MyDB..galex_ais_elines_z
 	s.specobjid,
 	g.nuv_mag \textbf{AS} NUV,

@@ -42,6 +42,7 @@
 %%%% André %%%%
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
 % Used for code formatting.
 \usepackage{fancyvrb}

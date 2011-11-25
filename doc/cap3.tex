@@ -30,22 +30,22 @@
 Um dos maiores responsáveis pela promoção do uso de bancos de dados relacionais
 na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente o
 \SDSS utilizou um {\em sistema de gerenciamento de banco de dados orientado a
-objetos} \citep{Maier1986} (OODBMS, na sigla em inglês). Após pouco mais de um
-ano a abordagem se mostrou inadequada: entre os principais problemas, uma
-linguagem de {\em query} inadequada e performance ruim. O motivo, segundo
-\citet{Thakar2004}, foi a incapacidade da empresa desenvolvedora do OODBMS em
-prover novas funcionalidades requisitadas pelo projeto e correção de {\em bugs},
-bem como em acompanhar o crescimento da performance do {\em hardware}.
+objetos} \citep[OODBMS;][]{Maier1986}. Após pouco mais de um ano a abordagem se
+mostrou inadequada: entre os principais problemas, uma linguagem de {\em query}
+inadequada e performance ruim. O motivo, segundo \citet{Thakar2004}, foi a
+incapacidade da empresa desenvolvedora do OODBMS em prover novas funcionalidades
+requisitadas pelo projeto e correção de {\em bugs}, bem como em acompanhar o
+crescimento da performance do {\em hardware}.
 
 \subsection{Migração de OODBMS para RDBMS}
 \label{sec:CrossMatch:SDSS:MigracaoRDBMS}
 
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
-de banco de dados relacional} \citep{Codd1970} (RDBMS, na sigla em inglês) num
-esforço guiado por \citeauthor{Thakar2004}. RDBMS pode ser considerado o padrão
-da indústria. Praticamente todas as linguagens de programação tem bibliotecas de
-interface às implementações de RDBMS comerciais mais comuns (Oracle, IBM e
-Microsoft, Postgres). Há uma diversidade de ferramentas para desenvolvimento e
+de banco de dados relacional} \citep[RDBMS;][]{Codd1970} num esforço guiado por
+\citeauthor{Thakar2004}. RDBMS pode ser considerado o padrão da indústria.
+Praticamente todas as linguagens de programação tem bibliotecas de interface às
+implementações de RDBMS comerciais mais comuns (Oracle, IBM e Microsoft,
+Postgres). Há uma diversidade de ferramentas para desenvolvimento e
 gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
 é feito utilizando uma linguagem padronizada: {\em Simple Query Language}, ou
 simplesmente SQL \citep{Chamberlin1974}. A migração dos dados do \SDSS para um
@@ -100,7 +100,7 @@ desenvolvido pela equipe do \SDSS para expandir a capacidade do {\em SkyServer}
 \SDSS da mesma forma que no {\em SkyServer}. Porém, além de consultas rápidas, é
 possível agendar a execução de consultas mais longas. O {\em CasJobs} gerencia
 estas consultas agendadas numa fila de execução, de modo a não sobrecarregar a
-rede ou os servidores de banco de dados. Cada usuário possui sem próprio banco
+rede ou os servidores de banco de dados. Cada usuário possui seu próprio banco
 de dados, chamado {\em MyDB}. Pode-se importar tabelas para o {\em MyDB} para
 utilizar em {\em queries} correlacionando com os dados presentes no {\em
 CasJobs}. O {\em MyDB} serve como armazenamento de tabelas do usuário, e há
@@ -196,25 +196,26 @@ adicionar um novo tipo de linha de emissão implicaria em mudar a estrutura da
 tabela, o que é evitado utilizando a segunda abordagem.}.
 
 \subsection{Estrutura do banco de dados}
+\label{sec:Crossmatch:EstruturaBDStarlight}
 
 O esquema do banco de dados do \starlight pode ser visto na figura
 \ref{fig:EsquemaBDStarlight}. A tabela \texttt{observational\_params} contém os
-dados obtidos do \SDSS e usados como parâmetros para a obtenção das propriedades
-físicas das galáxias. Estas propriedades físicas estão armazzenadas na tabela
-\texttt{synthesis\_results}. Estas duas tabelas estão relacionadas através da
-chave {SpecObjID}, que será explicada na seção
-\ref{sec:Crossmatch:AmostraStarlight}. A tabela \texttt{el\_fit} contém medidas
-de linhas de emissão para cada galáxia, cada linha sendo descrita pelos
-elementos da tabela \texttt{cfg\_el\_fit}.
+dados obtidos do \SDSS. Estes dados, junto com os parâmtetros de entrada da
+síntese (tabela \texttt{synthesis\_params}), foram usados como parâmetros para a
+obtenção das propriedades físicas das galáxias, armazzenadas na tabela
+\texttt{synthesis\_results}. Estas tabelas estão ligadas através dos campos
+\texttt{SpecObjID} e \texttt{SynID}. As linhas de emissão estão armazenadas na
+tabela \texttt{el\_fit}, ligada à \texttt{synthesis\_results} através do campo
+\texttt{SynID}. A definição das linhas (comprimento de onda e faixas contínuo
+usadas na medida) está contida na tabela \texttt{cfg\_el\_fit}. As tabelas
+referentes ao \galex são explicadas na seção
+\ref{sec:Crossmatch:DefAmostras:IdSDSSGalex}.
 
-% TODO: Explicar os dados contidos nas tabelas do starlight.
-TODO: Explicar os dados contidos nas tabelas do starlight.
-
-% TODO: Adicionar figura - esquema BD starlight.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\includegraphics[width=\textwidth]{figuras/starlight-schema.eps}
 	\caption[Esquema do banco de dados do \starlight.]
-	{Esquema do banco de dados do \starlight.}
+	{Esquema do banco de dados do \starlight. As linhas indicam chaves
+	estrangeiras, relacionando dois campos de duas tabelas diferentes.}
 	\label{fig:EsquemaBDStarlight}
 \end{figure}
 
@@ -233,20 +234,12 @@ tais que a combinação de todos os campos da chave não se repete.}) para os
 registros num banco de dados. No caso do \SDSS, a tabela de espectros
 (\texttt{SpecObjAll}) tem um identificador chamado \texttt{SpecObjID}.
 
-% TODO: Adicionar figura - esquema simplificado da BD do SDSS.
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Esquema simplificado do banco de dados do \SDSS.]
-	{Esquema simplificado do banco de dados do \SDSS.}
-	\label{fig:EsquemaSDSS}
-\end{figure}
-
-Além de espectros, o banco de dados do \SDSS (figura \ref{fig:EsquemaSDSS})
-contém fotometria de $1/4$ do céu. Os objetos com dados de fotometria também tem
-um identificador único, \texttt{ObjID}. Existe uma coluna na tabela de espectros
-chamada \texttt{BestObjID}, que aponta para o registro de fotometria (tabela
-{\tt PhotoObjAll}) mais provável para cada espectro. É importante salientar que
-nem todo espectro tem um \texttt{BestObjID} definido.
+Além de espectros, o banco de dados do \SDSS contém fotometria de $1/4$ do céu.
+Os objetos com dados de fotometria também tem um identificador único,
+\texttt{ObjID}. Existe uma coluna na tabela de espectros chamada
+\texttt{BestObjID}, que aponta para o registro de fotometria (tabela {\tt
+PhotoObjAll}) mais provável para cada espectro. É importante salientar que nem
+todo espectro tem um \texttt{BestObjID} definido.
 
 A tabela de índices da amostra de galáxias do \starlight contém inicialmente os
 tripletos [\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Esta tabela é
@@ -290,7 +283,7 @@ um''. Nas tabelas \ref{tab:SDSSxGalexMatchesAIS} e
 \ref{tab:SDSSxGalexMatchesMIS} há a quantidade de identificações para cada tipo
 de associação, referentes aos {\em surveys} AIS e MIS, respectivamente. Os
 valores foram determinados para o {\em crossmatch} entre \SDSS DR7 e \galex GR6,
-disponível no {\em CasJobs} do \galex\footnote{{\em CasJobs} do \galex:
+disponível no {\em CasJobs} do \galex\footnote{{\em CasJobs} \galex:
 \url{http://galex.stsci.edu/casjobs/}}). O artigo citado acima mostra a mesma
 tabela, com os resultados para dados do \SDSS DR6 e \galex GR3. A técnica
 utilizada por \citeauthor{Budavari2009} agora faz parte do {\em pipeline} do
@@ -394,7 +387,7 @@ ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} 
 	\label{tab:CamposXSDSSDR7}
 \end{table}
 
-\subsection{Obtendo dados UV para a amostra \STARLIGHT}
+\subsection{Dados UV}
 
 A amostra do \starlight descrita na seção \ref{sec:Crossmatch:AmostraStarlight}
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
@@ -412,7 +405,9 @@ objeto não tenha um correspodente \galex, os valores serão nulos\footnote{Numa
 tabela, quando um campo de um registro não possui valor definido, seu valor é
 dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
 null}''.}. De forma similar, os dados UV para o {\em survey} MIS foram
-armazenados na tabela \texttt{galex\_mis}.
+armazenados na tabela \texttt{galex\_mis}. Estas tabelas podem ser vistas no
+contexto do banco de dados do \starlight na seção
+\ref{sec:Crossmatch:EstruturaBDStarlight}.
 
 Foram escolhidas somente identificações cruzadas do tipo um-para-um, ou seja,
 registros com \texttt{multipleMatchCount} e \texttt{reverseMultipleMatchCount}
@@ -421,16 +416,16 @@ para uma mesma detecção, seria necessária uma análise mais detalhada. Desta
 forma, optou-se por uma confiabilidade maior nos dados utilizando apenas
 identificações unívocas, em troca de uma amostra menor.
 
-Outro artefato importante é que somente um objeto foi escolhido, indepente do
-{\em survey} \galex utilizado. Se existe um correspondente AIS e outro MIS para
-o mesmo objeto da amostra, apenas o mais próximo é considerado. Nos campos onde
-os dois {surveys} se sobrepõem, há uma maior quantidade de objetos no MIS do que
-no AIS, devido ao maior tempo de exposição no MIS. Assim, nesses campos, os
-objetos do MIS têm maior chance de estar mais próximos ao objeto do \SDSS. Isto
-também não é um problema muito grave para o AIS, já que a sua cobertura do céu é
-muito maior do que a do MIS. A fração exata de objetos perdidos em cada caso
-ainda precisa ser determinada. Esta correção será feita futuramente numa revisão
-do catálogo.
+Outro artefato importante é que somente um objeto \galex foi escolhido para cada
+objeto do catálogo do \starlight, indepente do {\em survey} utilizado. Se existe
+um correspondente AIS e outro MIS para o mesmo objeto da amostra, apenas o mais
+próximo é considerado. Nos campos onde os dois {surveys} se sobrepõem, há uma
+maior quantidade de objetos no MIS do que no AIS, devido ao maior tempo de
+exposição no MIS. Assim, nesses campos, os objetos do MIS têm maior chance de
+estar mais próximos ao objeto do \SDSS. Isto também não é um problema muito
+grave para o AIS, já que a sua cobertura do céu é muito maior do que a do MIS. A
+fração exata de objetos perdidos em cada caso ainda precisa ser determinada.
+Esta correção será feita futuramente numa revisão do catálogo.
 
 No total foram obtidas $173\,218$ detecções no AIS e $41\,274$ no MIS. Nem todos
 os objetos tiveram detecção simultânea nas bandas FUV e NUV. A tabela
@@ -540,34 +535,60 @@ equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 	\label{tab:ParamFisicos}
 \end{table}
 
-Foi feita uma restrição no intervalo de {\em redshifts} das galáxias que
-pertencem à amostra. O {\em redshift} deve ser superior a $0,04$ para evitar
-efeitos de abertura da fibra\footnote{Os espectros obtidos pelo \SDSS foram
-feitos através de fibras ópticas. Cada fibra coleta a luz de uma região de 3
-segundos de arco de diâmetro. Em {\em redshifts} próximos, uma fração
-considerável da luz das galáxias (em geral das partes externas) cai fora da
-fibra. Nestes casos, o espectro obtido não é o espectro integrado da galáxia,
+É preciso fazer algumas  considerações com respeito ao {\em redshifts} das
+galáxias que pertencem à amostra. O {\em redshift} deve ser superior a $0,04$
+para evitar efeitos de abertura da fibra\footnote{Os espectros obtidos pelo
+\SDSS foram feitos através de fibras ópticas. Cada fibra coleta a luz de uma
+região de 3 segundos de arco de diâmetro. Em {\em redshifts} próximos, uma
+fração considerável da luz das galáxias (em geral das partes externas) cai fora
+da fibra. Nestes casos, o espectro obtido não é o espectro integrado da galáxia,
 mas sim o espectro das regiões centrais.}. Em {\em redshifts} superiores a
 $0,17$ a linha \NII fica deslocada para além do limite vermelho dos espectros do
-\SDSS, escapando assim da detecção. Este mesmo critério foi usado por
-\citet{CidFernandes2011}.
+\SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 < z
+< 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 
-% FIXME: Rever este parágrafo quando tiver os histogramas.
+A figura \ref{ref:CompletezaRedshiftMag} mostra a distribuição das magnitudes
+$z$ das galáxias em função do {\em redshift}. Qual corte?
+
+% TODO: Adicionar figura: Diagrama de redshift contra magnitude z.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Diagrama de {\em redshift} contra magnitude $z$.]
+	{Diagrama de {\em redshift} contra magnitude $z$.}
+	\label{fig:CompletezaRedshiftMag}
+\end{figure}
+
+% FIXME: Remover?
+FIXME: Remover? \\
+Ainda segundo \citet[veja figuras 1 e figura 4]{Chilingarian2011}, o
+espalhamento dos dados na relação entre $g-r$ e $NUV-r$ é mais estreito na faixa
+de magnitude $z$ entre $-24$ e $-20$.
+
+Foram selecionados somente objetos com magnitude $z$ entre $-23$ e $-21,5$.
+
+% FIXME: Rever este parágrafo quando tiver os histogramas. 
 Os histogramas mostrados na figura \ref{fig:HistogramasAmostra} mostram que para
 os critérios de seleção de {\em redshift} acima, os dados do AIS são completos.
+
+% TODO: Adicionar figura: Histogramas das medidas da amostra starlight+UV.
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\caption[Histogramas das medidas da amostra \starlight+UV.]
+	{Histogramas das medidas da amostra \starlight+UV.}
+	\label{fig:HistogramasAmostra}
+\end{figure}
+
+% TODO: Justificar o abandono de FUV.
+TODO: Justificar o abandono de FUV na análise. \\
 A análise apresentada no capítulo \ref{sec:Analise} não levou em consideração a
 fotometria FUV.
-
-% TODO: Justificar o abandono de FUV
-TODO: Justificar o abandono de FUV na análise.
-
-Foram selecionados somente os objetos do AIS contendo
-fotometria NUV. A amostra \starlight+UV contém $131\,333$.
 
 %TODO: histogramas, muitos histogramas.
 TODO: histogramas, muitos histogramas.
 
-Amostra \starlightUV.
+Resumindo, a amostra \starlightUV contém os objetos do AIS com fotometria NUV
+definida, com {\em redshift} entre $0,04$ e $0.17$, e magnitude $z$ entre $X$
+e $Y$, num total de $NNN\,NNN$ objetos.
 
 
 %% End of this chapter

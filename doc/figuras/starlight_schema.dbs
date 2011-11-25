@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SqlServer2000-2005" version="42" database="SqlServer2000-2005" >
+	<schema name="dbo" catalogname="starlight_DR7_926246" schemaname="dbo" defo="y" >
+		<table name="aux_index" >
+			<column name="objId" type="bigint" length="19" jt="-5" />
+			<column name="mjd" type="int" length="10" jt="4" />
+			<column name="plate" type="smallint" length="5" jt="5" />
+			<column name="fiberID" type="smallint" length="5" jt="5" />
+			<column name="SpecObjID" type="bigint" length="19" jt="-5" mandatory="y" />
+			<index name="IX_sample_dr7id" unique="NORMAL" >
+				<column name="objId" />
+			</index>
+			<index name="IX_sample_fiberid" unique="NORMAL" >
+				<column name="fiberID" />
+			</index>
+			<index name="IX_sample_mjd" unique="NORMAL" >
+				<column name="mjd" />
+			</index>
+			<index name="IX_sample_plate" unique="NORMAL" >
+				<column name="plate" />
+			</index>
+			<fk name="FK_aux_index_obs_parameters" to_schema="dbo" to_table="obs_parameters" >
+				<fk_column name="SpecObjID" pk="SpecObjID" />
+			</fk>
+		</table>
+		<table name="cfg_el_fit" >
+			<column name="id_line" type="int" length="10" jt="4" mandatory="y" />
+			<column name="el_name" type="varchar" length="15" jt="12" mandatory="y" />
+			<column name="wl_central" type="real" length="24" jt="7" mandatory="y" />
+			<column name="wl_low_blue_con" type="real" length="24" jt="7" mandatory="y" />
+			<column name="wl_upp_blue_con" type="real" length="24" jt="7" mandatory="y" />
+			<column name="wl_low_red_con" type="real" length="24" jt="7" mandatory="y" />
+			<column name="wl_upp_red_con" type="real" length="24" jt="7" mandatory="y" />
+			<index name="cfg_el_fit_pk" unique="PRIMARY_KEY" >
+				<column name="id_line" />
+			</index>
+		</table>
+		<table name="el_fit" >
+			<column name="elid" type="int" length="10" jt="4" mandatory="y" autoincrement="y" />
+			<column name="synID" type="bigint" jt="-5" mandatory="y" />
+			<column name="id_line" type="int" length="10" jt="4" mandatory="y" />
+			<column name="flux" type="real" length="24" jt="7" mandatory="y" />
+			<column name="flux_err" type="real" length="24" jt="7" mandatory="y" />
+			<column name="ew" type="real" length="24" jt="7" mandatory="y" />
+			<column name="ew_err" type="real" length="24" jt="7" mandatory="y" />
+			<column name="vd" type="real" length="24" jt="7" mandatory="y" />
+			<column name="vd_err" type="real" length="24" jt="7" mandatory="y" />
+			<column name="v0" type="real" length="24" jt="7" mandatory="y" />
+			<column name="v0_err" type="real" length="24" jt="7" mandatory="y" />
+			<column name="sn" type="real" length="24" jt="7" mandatory="y" />
+			<column name="fcont" type="real" length="24" jt="7" mandatory="y" />
+			<column name="fcont_err" type="real" length="24" jt="7" mandatory="y" />
+			<index name="el_fit_test_pk" unique="PRIMARY_KEY" >
+				<column name="elid" />
+			</index>
+			<index name="IX_el_fit_id_line" unique="NORMAL" >
+				<column name="id_line" />
+			</index>
+			<index name="IX_el_fit_synid" unique="NORMAL" >
+				<column name="synID" />
+			</index>
+			<fk name="FK__el_fit_te__id_li__6EF57B66" to_schema="dbo" to_table="cfg_el_fit" >
+				<fk_column name="id_line" pk="id_line" />
+			</fk>
+			<fk name="FK__el_fit_te__synID__6FE99F9F" to_schema="dbo" to_table="synthesis_results" delete_action="CASCADE" >
+				<fk_column name="synID" pk="synID" />
+			</fk>
+		</table>
+		<table name="galex_ais" >
+			<column name="galexObjid" type="bigint" length="19" jt="-5" />
+			<column name="nuv_mag" type="real" length="24" jt="7" />
+			<column name="nuv_magErr" type="real" length="24" jt="7" />
+			<column name="fuv_mag" type="real" length="24" jt="7" />
+			<column name="fuv_magErr" type="real" length="24" jt="7" />
+			<column name="e_bv" type="real" length="24" jt="7" />
+			<column name="band" type="smallint" length="5" jt="5" />
+			<column name="distance" type="real" length="24" jt="7" />
+			<column name="nexptime" type="real" length="24" jt="7" />
+			<column name="fexptime" type="real" length="24" jt="7" />
+			<column name="SpecObjId" type="bigint" length="19" jt="-5" mandatory="y" />
+			<index name="IX_galex_ais_galexobjid" unique="NORMAL" >
+				<column name="galexObjid" />
+			</index>
+			<fk name="FK_galex_ais_obs_parameters" to_schema="dbo" to_table="obs_parameters" >
+				<fk_column name="SpecObjId" pk="SpecObjID" />
+			</fk>
+		</table>
+		<table name="galex_mis" >
+			<column name="galexObjid" type="bigint" length="19" jt="-5" />
+			<column name="nuv_mag" type="real" length="24" jt="7" />
+			<column name="nuv_magErr" type="real" length="24" jt="7" />
+			<column name="fuv_mag" type="real" length="24" jt="7" />
+			<column name="fuv_magErr" type="real" length="24" jt="7" />
+			<column name="e_bv" type="real" length="24" jt="7" />
+			<column name="band" type="smallint" length="5" jt="5" />
+			<column name="distance" type="real" length="24" jt="7" />
+			<column name="nexptime" type="real" length="24" jt="7" />
+			<column name="fexptime" type="real" length="24" jt="7" />
+			<column name="SpecObjId" type="bigint" jt="-5" mandatory="y" />
+			<index name="IX_galex_mis_galexobjid" unique="NORMAL" >
+				<column name="galexObjid" />
+			</index>
+			<fk name="FK_galex_mis_obs_parameters" to_schema="dbo" to_table="obs_parameters" delete_action="CASCADE" >
+				<fk_column name="SpecObjId" pk="SpecObjID" />
+			</fk>
+		</table>
+		<table name="obs_parameters" >
+			<column name="SpecObjID" type="bigint" length="19" jt="-5" mandatory="y" />
+			<column name="ra" type="real" length="24" jt="7" />
+			<column name="dec" type="real" length="24" jt="7" />
+			<column name="z" type="real" length="24" jt="7" />
+			<column name="eClass" type="real" length="24" jt="7" />
+			<column name="m_u" type="real" length="24" jt="7" />
+			<column name="m_g" type="real" length="24" jt="7" />
+			<column name="m_r" type="real" length="24" jt="7" />
+			<column name="m_i" type="real" length="24" jt="7" />
+			<column name="m_z" type="real" length="24" jt="7" />
+			<column name="fm_u" type="real" length="24" jt="7" />
+			<column name="fm_g" type="real" length="24" jt="7" />
+			<column name="fm_r" type="real" length="24" jt="7" />
+			<column name="fm_i" type="real" length="24" jt="7" />
+			<column name="fm_z" type="real" length="24" jt="7" />
+			<column name="Mu" type="real" length="24" jt="7" />
+			<column name="Mg" type="real" length="24" jt="7" />
+			<column name="Mr" type="real" length="24" jt="7" />
+			<column name="Mi" type="real" length="24" jt="7" />
+			<column name="Mz" type="real" length="24" jt="7" />
+			<column name="SB_50_r" type="real" length="24" jt="7" />
+			<column name="CI_r" type="real" length="24" jt="7" />
+			<column name="petrorad_r" type="real" length="24" jt="7" />
+			<column name="petroR50_r" type="real" length="24" jt="7" />
+			<column name="petroR90_r" type="real" length="24" jt="7" />
+			<column name="expAB_r" type="real" length="24" jt="7" />
+			<column name="deVAB_r" type="real" length="24" jt="7" />
+			<column name="D" type="real" length="24" jt="7" />
+			<column name="DA" type="real" length="24" jt="7" />
+			<column name="R50" type="real" length="24" jt="7" />
+			<column name="R90" type="real" length="24" jt="7" />
+			<column name="DL" type="real" length="24" jt="7" />
+			<column name="log_L" type="real" length="24" jt="7" />
+			<column name="Mr_fiber" type="real" length="24" jt="7" />
+			<column name="log_L_fiber" type="real" length="24" jt="7" />
+			<column name="Mz_fiber" type="real" length="24" jt="7" />
+			<column name="log_L_fiber_z" type="real" length="24" jt="7" />
+			<column name="petrorad_z" type="real" length="24" jt="7" />
+			<column name="petroR50_z" type="real" length="24" jt="7" />
+			<column name="petroR90_z" type="real" length="24" jt="7" />
+			<column name="DA_z" type="real" length="24" jt="7" />
+			<column name="z50" type="real" length="24" jt="7" />
+			<column name="z90" type="real" length="24" jt="7" />
+			<column name="fib_corr" type="smallint" length="5" jt="5" />
+			<index name="PK_obs_parameters" unique="PRIMARY_KEY" >
+				<column name="SpecObjID" />
+			</index>
+		</table>
+		<table name="synthesis_params" >
+			<column name="synid" type="bigint" length="19" jt="-5" mandatory="y" />
+			<column name="arq_syn" type="nvarchar" length="35" jt="12" />
+			<column name="arq_obs" type="nvarchar" length="21" jt="12" />
+			<column name="arq_base" type="nvarchar" length="13" jt="12" />
+			<column name="arq_masks" type="nvarchar" length="40" jt="12" />
+			<column name="arq_config" type="nvarchar" length="19" jt="12" />
+			<column name="n_base" type="smallint" length="5" jt="5" />
+			<column name="l_ini" type="smallint" length="5" jt="5" />
+			<column name="l_fin" type="smallint" length="5" jt="5" />
+			<column name="dl" type="smallint" length="5" jt="5" />
+			<index name="PK_synthesis_params" unique="PRIMARY_KEY" >
+				<column name="synid" />
+			</index>
+			<fk name="FK_synthesis_params_synthesis_results" to_schema="dbo" to_table="synthesis_results" >
+				<fk_column name="synid" pk="synID" />
+			</fk>
+		</table>
+		<table name="synthesis_results" >
+			<column name="synID" type="bigint" length="19" jt="-5" mandatory="y" />
+			<column name="SpecObjID" type="bigint" length="19" jt="-5" mandatory="y" />
+			<column name="sn_w" type="real" length="24" jt="7" mandatory="y" />
+			<column name="sn_n" type="real" length="24" jt="7" mandatory="y" />
+			<column name="chi2" type="real" length="24" jt="7" mandatory="y" />
+			<column name="adev" type="real" length="24" jt="7" mandatory="y" />
+			<column name="v0" type="real" length="24" jt="7" mandatory="y" />
+			<column name="vd" type="real" length="24" jt="7" mandatory="y" />
+			<column name="av" type="real" length="24" jt="7" mandatory="y" />
+			<column name="at_flux" type="real" length="24" jt="7" mandatory="y" />
+			<column name="at_mass" type="real" length="24" jt="7" mandatory="y" />
+			<column name="am_flux" type="real" length="24" jt="7" mandatory="y" />
+			<column name="am_mass" type="real" length="24" jt="7" mandatory="y" />
+			<column name="aZ_flux" type="real" length="24" jt="7" mandatory="y" />
+			<column name="aZ_mass" type="real" length="24" jt="7" mandatory="y" />
+			<column name="m2l_u" type="real" length="24" jt="7" mandatory="y" />
+			<column name="m2l_g" type="real" length="24" jt="7" mandatory="y" />
+			<column name="m2l_r" type="real" length="24" jt="7" mandatory="y" />
+			<column name="m2l_i" type="real" length="24" jt="7" mandatory="y" />
+			<column name="m2l_z" type="real" length="24" jt="7" mandatory="y" />
+			<column name="Mcor_fib" type="real" length="24" jt="7" />
+			<column name="Mcor_gal" type="real" length="24" jt="7" />
+			<column name="Mini_gal" type="real" length="24" jt="7" />
+			<column name="Mpho_gal" type="real" length="24" jt="7" />
+			<index name="PK_synthesis_results" unique="PRIMARY_KEY" >
+				<column name="synID" />
+			</index>
+			<index name="idx_synthesis_results" unique="NORMAL" >
+				<column name="SpecObjID" />
+			</index>
+			<fk name="fk_synthesis_results" to_schema="dbo" to_table="obs_parameters" delete_action="CASCADE" >
+				<fk_column name="SpecObjID" pk="SpecObjID" />
+			</fk>
+		</table>
+		<view name="el_fit_all" >
+			<view_script> <![CDATA[CREATE VIEW [dbo].[el_fit_all]
+WITH SCHEMABINDING
+AS
+SELECT     s.synID, fit_SII_6731.id_line AS SII_6731_id_line, fit_SII_6731.elid AS SII_6731_elid, fit_SII_6731.flux AS SII_6731_flux, 
+                      fit_SII_6731.flux_err AS SII_6731_flux_err, fit_SII_6731.ew AS SII_6731_ew, fit_SII_6731.ew_err AS SII_6731_ew_err, fit_SII_6731.vd AS SII_6731_vd, 
+                      fit_SII_6731.vd_err AS SII_6731_vd_err, fit_SII_6731.v0 AS SII_6731_v0, fit_SII_6731.v0_err AS SII_6731_v0_err, fit_SII_6731.sn AS SII_6731_sn, 
+                      fit_SII_6731.fcont AS SII_6731_fcont, fit_SII_6731.fcont_err AS SII_6731_fcont_err, fit_Hdelta.id_line AS Hdelta_id_line, fit_Hdelta.elid AS Hdelta_elid, 
+                      fit_Hdelta.flux AS Hdelta_flux, fit_Hdelta.flux_err AS Hdelta_flux_err, fit_Hdelta.ew AS Hdelta_ew, fit_Hdelta.ew_err AS Hdelta_ew_err, 
+                      fit_Hdelta.vd AS Hdelta_vd, fit_Hdelta.vd_err AS Hdelta_vd_err, fit_Hdelta.v0 AS Hdelta_v0, fit_Hdelta.v0_err AS Hdelta_v0_err, 
+                      fit_Hdelta.sn AS Hdelta_sn, fit_Hdelta.fcont AS Hdelta_fcont, fit_Hdelta.fcont_err AS Hdelta_fcont_err, fit_OIII_4363.id_line AS OIII_4363_id_line, 
+                      fit_OIII_4363.elid AS OIII_4363_elid, fit_OIII_4363.flux AS OIII_4363_flux, fit_OIII_4363.flux_err AS OIII_4363_flux_err, 
+                      fit_OIII_4363.ew AS OIII_4363_ew, fit_OIII_4363.ew_err AS OIII_4363_ew_err, fit_OIII_4363.vd AS OIII_4363_vd, 
+                      fit_OIII_4363.vd_err AS OIII_4363_vd_err, fit_OIII_4363.v0 AS OIII_4363_v0, fit_OIII_4363.v0_err AS OIII_4363_v0_err, 
+                      fit_OIII_4363.sn AS OIII_4363_sn, fit_OIII_4363.fcont AS OIII_4363_fcont, fit_OIII_4363.fcont_err AS OIII_4363_fcont_err, 
+                      fit_OIII_5007.id_line AS OIII_5007_id_line, fit_OIII_5007.elid AS OIII_5007_elid, fit_OIII_5007.flux AS OIII_5007_flux, 
+                      fit_OIII_5007.flux_err AS OIII_5007_flux_err, fit_OIII_5007.ew AS OIII_5007_ew, fit_OIII_5007.ew_err AS OIII_5007_ew_err, 
+                      fit_OIII_5007.vd AS OIII_5007_vd, fit_OIII_5007.vd_err AS OIII_5007_vd_err, fit_OIII_5007.v0 AS OIII_5007_v0, 
+                      fit_OIII_5007.v0_err AS OIII_5007_v0_err, fit_OIII_5007.sn AS OIII_5007_sn, fit_OIII_5007.fcont AS OIII_5007_fcont, 
+                      fit_OIII_5007.fcont_err AS OIII_5007_fcont_err, fit_NII_6548.id_line AS NII_6548_id_line, fit_NII_6548.elid AS NII_6548_elid, 
+                      fit_NII_6548.flux AS NII_6548_flux, fit_NII_6548.flux_err AS NII_6548_flux_err, fit_NII_6548.ew AS NII_6548_ew, 
+                      fit_NII_6548.ew_err AS NII_6548_ew_err, fit_NII_6548.vd AS NII_6548_vd, fit_NII_6548.vd_err AS NII_6548_vd_err, fit_NII_6548.v0 AS NII_6548_v0, 
+                      fit_NII_6548.v0_err AS NII_6548_v0_err, fit_NII_6548.sn AS NII_6548_sn, fit_NII_6548.fcont AS NII_6548_fcont, 
+                      fit_NII_6548.fcont_err AS NII_6548_fcont_err, fit_OII_3727.id_line AS OII_3727_id_line, fit_OII_3727.elid AS OII_3727_elid, 
+                      fit_OII_3727.flux AS OII_3727_flux, fit_OII_3727.flux_err AS OII_3727_flux_err, fit_OII_3727.ew AS OII_3727_ew, 
+                      fit_OII_3727.ew_err AS OII_3727_ew_err, fit_OII_3727.vd AS OII_3727_vd, fit_OII_3727.vd_err AS OII_3727_vd_err, fit_OII_3727.v0 AS OII_3727_v0, 
+                      fit_OII_3727.v0_err AS OII_3727_v0_err, fit_OII_3727.sn AS OII_3727_sn, fit_OII_3727.fcont AS OII_3727_fcont, 
+                      fit_OII_3727.fcont_err AS OII_3727_fcont_err, fit_OI_6300.id_line AS OI_6300_id_line, fit_OI_6300.elid AS OI_6300_elid, 
+                      fit_OI_6300.flux AS OI_6300_flux, fit_OI_6300.flux_err AS OI_6300_flux_err, fit_OI_6300.ew AS OI_6300_ew, fit_OI_6300.ew_err AS OI_6300_ew_err, 
+                      fit_OI_6300.vd AS OI_6300_vd, fit_OI_6300.vd_err AS OI_6300_vd_err, fit_OI_6300.v0 AS OI_6300_v0, fit_OI_6300.v0_err AS OI_6300_v0_err, 
+                      fit_OI]]> </view_script>
+			<column name="Halpha_elid" type="int" />
+			<column name="Halpha_ew" type="real" />
+			<column name="Halpha_ew_err" type="real" />
+			<column name="Halpha_fcont" type="real" />
+			<column name="Halpha_fcont_err" type="real" />
+			<column name="Halpha_flux" type="real" />
+			<column name="Halpha_flux_err" type="real" />
+			<column name="Halpha_id_line" type="int" />
+			<column name="Halpha_sn" type="real" />
+			<column name="Halpha_v0" type="real" />
+			<column name="Halpha_v0_err" type="real" />
+			<column name="Halpha_vd" type="real" />
+			<column name="Halpha_vd_err" type="real" />
+			<column name="Hbeta_elid" type="int" />
+			<column name="Hbeta_ew" type="real" />
+			<column name="Hbeta_ew_err" type="real" />
+			<column name="Hbeta_fcont" type="real" />
+			<column name="Hbeta_fcont_err" type="real" />
+			<column name="Hbeta_flux" type="real" />
+			<column name="Hbeta_flux_err" type="real" />
+			<column name="Hbeta_id_line" type="int" />
+			<column name="Hbeta_sn" type="real" />
+			<column name="Hbeta_v0" type="real" />
+			<column name="Hbeta_v0_err" type="real" />
+			<column name="Hbeta_vd" type="real" />
+			<column name="Hbeta_vd_err" type="real" />
+			<column name="Hdelta_elid" type="int" />
+			<column name="Hdelta_ew" type="real" />
+			<column name="Hdelta_ew_err" type="real" />
+			<column name="Hdelta_fcont" type="real" />
+			<column name="Hdelta_fcont_err" type="real" />
+			<column name="Hdelta_flux" type="real" />
+			<column name="Hdelta_flux_err" type="real" />
+			<column name="Hdelta_id_line" type="int" />
+			<column name="Hdelta_sn" type="real" />
+			<column name="Hdelta_v0" type="real" />
+			<column name="Hdelta_v0_err" type="real" />
+			<column name="Hdelta_vd" type="real" />
+			<column name="Hdelta_vd_err" type="real" />
+			<column name="HeI_4471_elid" type="int" />
+			<column name="HeI_4471_ew" type="real" />
+			<column name="HeI_4471_ew_err" type="real" />
+			<column name="HeI_4471_fcont" type="real" />
+			<column name="HeI_4471_fcont_err" type="real" />
+			<column name="HeI_4471_flux" type="real" />
+			<column name="HeI_4471_flux_err" type="real" />
+			<column name="HeI_4471_id_line" type="int" />
+			<column name="HeI_4471_sn" type="real" />
+			<column name="HeI_4471_v0" type="real" />
+			<column name="HeI_4471_v0_err" type="real" />
+			<column name="HeI_4471_vd" type="real" />
+			<column name="HeI_4471_vd_err" type="real" />
+			<column name="Hgamma_elid" type="int" />
+			<column name="Hgamma_ew" type="real" />
+			<column name="Hgamma_ew_err" type="real" />
+			<column name="Hgamma_fcont" type="real" />
+			<column name="Hgamma_fcont_err" type="real" />
+			<column name="Hgamma_flux" type="real" />
+			<column name="Hgamma_flux_err" type="real" />
+			<column name="Hgamma_id_line" type="int" />
+			<column name="Hgamma_sn" type="real" />
+			<column name="Hgamma_v0" type="real" />
+			<column name="Hgamma_v0_err" type="real" />
+			<column name="Hgamma_vd" type="real" />
+			<column name="Hgamma_vd_err" type="real" />
+			<column name="NII_6548_elid" type="int" />
+			<column name="NII_6548_ew" type="real" />
+			<column name="NII_6548_ew_err" type="real" />
+			<column name="NII_6548_fcont" type="real" />
+			<column name="NII_6548_fcont_err" type="real" />
+			<column name="NII_6548_flux" type="real" />
+			<column name="NII_6548_flux_err" type="real" />
+			<column name="NII_6548_id_line" type="int" />
+			<column name="NII_6548_sn" type="real" />
+			<column name="NII_6548_v0" type="real" />
+			<column name="NII_6548_v0_err" type="real" />
+			<column name="NII_6548_vd" type="real" />
+			<column name="NII_6548_vd_err" type="real" />
+			<column name="NII_6584_elid" type="int" />
+			<column name="NII_6584_ew" type="real" />
+			<column name="NII_6584_ew_err" type="real" />
+			<column name="NII_6584_fcont" type="real" />
+			<column name="NII_6584_fcont_err" type="real" />
+			<column name="NII_6584_flux" type="real" />
+			<column name="NII_6584_flux_err" type="real" />
+			<column name="NII_6584_id_line" type="int" />
+			<column name="NII_6584_sn" type="real" />
+			<column name="NII_6584_v0" type="real" />
+			<column name="NII_6584_v0_err" type="real" />
+			<column name="NII_6584_vd" type="real" />
+			<column name="NII_6584_vd_err" type="real" />
+			<column name="NeIII_3869_elid" type="int" />
+			<column name="NeIII_3869_ew" type="real" />
+			<column name="NeIII_3869_ew_err" type="real" />
+			<column name="NeIII_3869_fcont" type="real" />
+			<column name="NeIII_3869_fcont_err" type="real" />
+			<column name="NeIII_3869_flux" type="real" />
+			<column name="NeIII_3869_flux_err" type="real" />
+			<column name="NeIII_3869_id_line" type="int" />
+			<column name="NeIII_3869_sn" type="real" />
+			<column name="NeIII_3869_v0" type="real" />
+			<column name="NeIII_3869_v0_err" type="real" />
+			<column name="NeIII_3869_vd" type="real" />
+			<column name="NeIII_3869_vd_err" type="real" />
+			<column name="OIII_4363_elid" type="int" />
+			<column name="OIII_4363_ew" type="real" />
+			<column name="OIII_4363_ew_err" type="real" />
+			<column name="OIII_4363_fcont" type="real" />
+			<column name="OIII_4363_fcont_err" type="real" />
+			<column name="OIII_4363_flux" type="real" />
+			<column name="OIII_4363_flux_err" type="real" />
+			<column name="OIII_4363_id_line" type="int" />
+			<column name="OIII_4363_sn" type="real" />
+			<column name="OIII_4363_v0" type="real" />
+			<column name="OIII_4363_v0_err" type="real" />
+			<column name="OIII_4363_vd" type="real" />
+			<column name="OIII_4363_vd_err" type="real" />
+			<column name="OIII_4959_elid" type="int" />
+			<column name="OIII_4959_ew" type="real" />
+			<column name="OIII_4959_ew_err" type="real" />
+			<column name="OIII_4959_fcont" type="real" />
+			<column name="OIII_4959_fcont_err" type="real" />
+			<column name="OIII_4959_flux" type="real" />
+			<column name="OIII_4959_flux_err" type="real" />
+			<column name="OIII_4959_id_line" type="int" />
+			<column name="OIII_4959_sn" type="real" />
+			<column name="OIII_4959_v0" type="real" />
+			<column name="OIII_4959_v0_err" type="real" />
+			<column name="OIII_4959_vd" type="real" />
+			<column name="OIII_4959_vd_err" type="real" />
+			<column name="OIII_5007_elid" type="int" />
+			<column name="OIII_5007_ew" type="real" />
+			<column name="OIII_5007_ew_err" type="real" />
+			<column name="OIII_5007_fcont" type="real" />
+			<column name="OIII_5007_fcont_err" type="real" />
+			<column name="OIII_5007_flux" type="real" />
+			<column name="OIII_5007_flux_err" type="real" />
+			<column name="OIII_5007_id_line" type="int" />
+			<column name="OIII_5007_sn" type="real" />
+			<column name="OIII_5007_v0" type="real" />
+			<column name="OIII_5007_v0_err" type="real" />
+			<column name="OIII_5007_vd" type="real" />
+			<column name="OIII_5007_vd_err" type="real" />
+			<column name="OII_3727_elid" type="int" />
+			<column name="OII_3727_ew" type="real" />
+			<column name="OII_3727_ew_err" type="real" />
+			<column name="OII_3727_fcont" type="real" />
+			<column name="OII_3727_fcont_err" type="real" />
+			<column name="OII_3727_flux" type="real" />
+			<column name="OII_3727_flux_err" type="real" />
+			<column name="OII_3727_id_line" type="int" />
+			<column name="OII_3727_sn" type="real" />
+			<column name="OII_3727_v0" type="real" />
+			<column name="OII_3727_v0_err" type="real" />
+			<column name="OII_3727_vd" type="real" />
+			<column name="OII_3727_vd_err" type="real" />
+			<column name="OI_6300_elid" type="int" />
+			<column name="OI_6300_ew" type="real" />
+			<column name="OI_6300_ew_err" type="real" />
+			<column name="OI_6300_fcont" type="real" />
+			<column name="OI_6300_fcont_err" type="real" />
+			<column name="OI_6300_flux" type="real" />
+			<column name="OI_6300_flux_err" type="real" />
+			<column name="OI_6300_id_line" type="int" />
+			<column name="OI_6300_sn" type="real" />
+			<column name="OI_6300_v0" type="real" />
+			<column name="OI_6300_v0_err" type="real" />
+			<column name="OI_6300_vd" type="real" />
+			<column name="OI_6300_vd_err" type="real" />
+			<column name="SII_6716_elid" type="int" />
+			<column name="SII_6716_ew" type="real" />
+			<column name="SII_6716_ew_err" type="real" />
+			<column name="SII_6716_fcont" type="real" />
+			<column name="SII_6716_fcont_err" type="real" />
+			<column name="SII_6716_flux" type="real" />
+			<column name="SII_6716_flux_err" type="real" />
+			<column name="SII_6716_id_line" type="int" />
+			<column name="SII_6716_sn" type="real" />
+			<column name="SII_6716_v0" type="real" />
+			<column name="SII_6716_v0_err" type="real" />
+			<column name="SII_6716_vd" type="real" />
+			<column name="SII_6716_vd_err" type="real" />
+			<column name="SII_6731_elid" type="int" />
+			<column name="SII_6731_ew" type="real" />
+			<column name="SII_6731_ew_err" type="real" />
+			<column name="SII_6731_fcont" type="real" />
+			<column name="SII_6731_fcont_err" type="real" />
+			<column name="SII_6731_flux" type="real" />
+			<column name="SII_6731_flux_err" type="real" />
+			<column name="SII_6731_id_line" type="int" />
+			<column name="SII_6731_sn" type="real" />
+			<column name="SII_6731_v0" type="real" />
+			<column name="SII_6731_v0_err" type="real" />
+			<column name="SII_6731_vd" type="real" />
+			<column name="SII_6731_vd_err" type="real" />
+			<column name="synID" type="bigint" />
+		</view>
+	</schema>
+	<layout name="dbo" >
+		<entity schema="dbo" name="aux_index" x="195" y="416" />
+		<entity schema="dbo" name="cfg_el_fit" x="598" y="299" />
+		<entity schema="dbo" name="el_fit" x="481" y="299" />
+		<entity schema="dbo" name="galex_ais" x="598" y="39" />
+		<entity schema="dbo" name="galex_mis" x="481" y="39" />
+		<entity schema="dbo" name="obs_parameters" x="39" y="39" />
+		<entity schema="dbo" name="synthesis_params" x="299" y="39" />
+		<entity schema="dbo" name="synthesis_results" x="325" y="299" />
+		<query name="el_fit_all" >
+			<string> <![CDATA[SELECT * 
+FROM
+	dbo.el_fit_all l;]]> </string>
+		</query>
+	</layout>
+</project>

@@ -33,7 +33,7 @@ fig_width_pt = 448.07378
 inches_per_pt = 1.0 / 72.27
 golden_mean = (sqrt(5) - 1.0) / 2.0
 fig_width = fig_width_pt * inches_per_pt
-fig_height = fig_width * golden_mean
+fig_height = fig_width * golden_mean * 0.85
 fig_size = (fig_width, fig_height)
 params = {'backend': 'ps',
           'axes.labelsize': 10,
@@ -43,6 +43,7 @@ params = {'backend': 'ps',
           'ytick.labelsize': 10,
           'text.usetex': True,
           'font.family': 'serif',
+          'figure.subplot.bottom': 0.12,
           'figure.figsize': fig_size}
 pylab.rcParams.update(params)
 

@@ -16,7 +16,6 @@
 %                                                               %
 %***************************************************************%
 
-% FIXME: Título do cap. 4
 \chapter{Análise da amostra \STARLIGHTUV}
 \label{sec:Analise}
 
@@ -37,14 +36,6 @@ de galáxias pode ser aproximada por uma superfície polinomial de baixa ordem. 
 autores mostram que há uma forte correlação entre a cor $NUV-r$ e a morfologia
 da galáxia. Eles também estudam o histórico de formação estelar (SFH) no
 diagrama $NUV-r$ contra $g-r$, mas a exploração é um tanto superficial.
-
-Ainda segundo \citet[figura 1, exemplo na figura 4]{Chilingarian2011}, o
-espalhamento dos dados na relação entre $g-r$ e $NUV-r$ é mais estreito na faixa
-de magnitude $z$ entre $-24$ e $-20$. A densidade de galáxias da amostra
-\starlight+UV em função de $g-r$ e $NUV-r$ (diagrama cor-cor) pode ser vista na
-figura \ref{fig:DensityColor}. Foram selecionados somente objetos com magnitude
-$z$ entre $-23$ e $-21,5$. Este critério é utilizado em todos os diagramas de
-cor contra cor presentes neste trabalho.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-density.eps}
@@ -120,6 +111,7 @@ critérios:
 0,5\text{\AA}$.
 \end{list}
 
+% FIXME: Recalcular as quantidades
 O diagrama WHAN para a amostra \starlightUV pode ser visto na figura
 \ref{fig:Whan}. A cor dos pontos para cada classe é o mesmo utilizado por
 \citet{CidFernandes2011}. São $59\,180$ galáxias com formação estelar, $39\,053$
@@ -140,12 +132,13 @@ agora com a cor dos pontos representando a cor $NUV-r$ das galáxias (figura
 	\label{fig:Whan}
 \end{figure}
 
+% FIXME
 \begin{figure}
 	\includegraphics{figuras/whan-uv.eps}
 	\caption[Cores ultravioleta no diagrama WHAN.]
 	{Diagrama WHAN semelhante ao da figura \ref{fig:Whan}. A cor dos pontos
 	representa $NUV-r$. Pode-se notar que a cor típica dos pontos muda para cada
-	classe.}
+	classe.\fixme}
 	\label{fig:WhanUV}
 \end{figure}
 
@@ -174,7 +167,7 @@ forma que na figura \ref{fig:Whan}. Embora não esteja muito claro para as RG e
 PG, as classes formam uma sequência no diagrama cor--cor. Isto pode ser visto
 mais facilmente na figura \ref{fig:HistogramaCorClasse}. Esta figura é de certo
 modo uma versão resumida da figura \ref{fig:ColorClass}. Mesmo havendo uma
-sobreposição considerável, a sequência está bem definida.
+sobreposição considerável ente as classes, a sequência está bem definida.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-class.eps}
@@ -216,13 +209,15 @@ galáxias estão relacionadas à sua classe\ldots
 Não é idade das galáxias, mas idade da SSP que domina o fluxo/massa. O mesmo
 para a metalicidade.
 
+AV pode ser negativo?
+
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-at_flux-byclass.eps}
-	\caption[Idade média das galáxias ponderada em fluxo no diagrama cor--cor UV.]
-	{Idade média das galáxias ponderada pelo fluxo das suas componentes SSP, em
-	função de $NUV-r$ e $g-r$. O painel \textbf{(a)} contém todas as galáxias da
-	amostra. Os painéis de \textbf{(b)} a \textbf{(f)} contém somente as galáxias
-	con formação estelar (SFG), AGN fortes (sAGN), AGN fracas (wAGN), galáxias
+	\caption[Idade média das SSP ponderada em fluxo no diagrama cor--cor UV.]
+	{Idade média das SSP componentes das galáxias ponderada pelo fluxo, em função
+	de $NUV-r$ e $g-r$. O painel \textbf{(a)} contém todas as galáxias da amostra.
+	Os painéis de \textbf{(b)} a \textbf{(f)} contém somente as galáxias com
+	formação estelar (SFG), AGN fortes (sAGN), AGN fracas (wAGN), galáxias
 	aposentadas (RG) e galáxias passivas (PG), respectivamente. Os contornos
 	indicam a densidade de galáxias. A idade média da distribuição vai aumentando
 	conforme a classe, na sequência apresentada.}
@@ -231,26 +226,28 @@ para a metalicidade.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-at_mass-byclass.eps}
-	\caption[Idade média das galáxias ponderada em massa no diagrama cor--cor UV.]
-	{O mesmo que a figura \ref{fig:ATFluxColor}, para a idade média das galáxias
-	ponderada pela massa das suas componentes SSP. Note que a escala de idades não
+	\caption[Idade média das SSP ponderada em massa no diagrama cor--cor UV.]
+	{O mesmo que a figura \ref{fig:ATFluxColor}, para a idade média das SSP
+	componentes das galáxias, ponderada pela massa. Note que a escala de idades não
 	é a mesma.}
 	\label{fig:ATMassColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-am_flux-byclass.eps}
-	\caption[Metalicidade das galáxias ponderada em fluxo no diagrama cor--cor UV.]
+	\caption[Metalicidade média das SSP ponderada em fluxo no diagrama cor--cor
+	UV.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade média das
-	galáxias ponderada pelo fluxo das suas componentes SSP.}
+	SSP componentes das galáxias, ponderada pelo fluxo.}
 	\label{fig:AMFluxColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-am_mass-byclass.eps}
-	\caption[Metalicidade das galáxias ponderada em massa no diagrama cor--cor UV.]
+	\caption[Metalicidade média das SSP ponderada em massa no diagrama cor--cor
+	UV.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade média das
-	galáxias ponderada pelo massa das SSP componentes.}
+	SSP componentes das galáxias, ponderada pelo massa.}
 	\label{fig:AMMassColor}
 \end{figure}
 
@@ -264,9 +261,9 @@ para a metalicidade.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-AV-byclass.eps}
-	\caption[Absorção por poeira no diagrama cor--cor UV.]
+	\caption[Extinção por poeira no diagrama cor--cor UV.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a extinção por
-	poeira na banda V das galáxias.}
+	poeira na banda $V$ das galáxias.}
 	\label{fig:AVColor}
 \end{figure}
 
@@ -283,8 +280,12 @@ para a metalicidade.
 \subsection{A separação entre galáxias aposentadas e passivas}
 
 %TODO: Comparar galáxias aposentadas com passivas
-TODO: Comparar galáxias aposentadas com passivas
-\citep[In prep. perpetuum]{Mateus2013}.
+TODO: Comparar galáxias aposentadas com passivas.
+
+%\backslash citep[In prep. perpetuum]${$Mateus2013$}$.
+\textbackslash{}citep{[In prep. perpetuum]}\{Mateus2013\}
+
+%citep[In prep. perpetuum]${$Mateus2013$}$.
 
 
 % End of this chapter

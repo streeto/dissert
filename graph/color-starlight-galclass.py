@@ -19,7 +19,7 @@ def set_eps_output_1():
     inches_per_pt = 1.0 / 72.27
     golden_mean = (sqrt(5) - 1.0) / 2.0
     fig_width = fig_width_pt * inches_per_pt
-    fig_height = fig_width * golden_mean
+    fig_height = fig_width * golden_mean * 0.85
     fig_size = (fig_width, fig_height)
     params = {'backend': 'ps',
               'axes.labelsize': 10,
@@ -29,6 +29,7 @@ def set_eps_output_1():
               'ytick.labelsize': 10,
               'text.usetex': True,
               'font.family': 'serif',
+              'figure.subplot.bottom': 0.12,
               'figure.figsize': fig_size}
     pylab.rcParams.update(params)
 
@@ -163,19 +164,19 @@ param = {}
 
 vmin['at_flux'] = 7.25
 vmax['at_flux'] = 10.25
-param['at_flux'] = 'Logaritmo da idade [anos] ponderada em fluxo'
+param['at_flux'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em fluxo'
 
 vmin['at_mass'] = 9.2
 vmax['at_mass'] = 10.2
-param['at_mass'] = 'Logaritmo da idade [anos] ponderada em fluxo'
+param['at_mass'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em massa'
 
 vmin['am_flux'] = 0.25
 vmax['am_flux'] = 2.25
-param['am_flux'] = 'Metalicidade ponderada em fluxo'
+param['am_flux'] = 'Metalicidade m\\\'edia das SSP ponderada em fluxo [$Z_{\odot}$]'
 
 vmin['am_mass'] = 0.25
 vmax['am_mass'] = 2.25
-param['am_mass'] = 'Metalicidade ponderada em massa'
+param['am_mass'] = 'Metalicidade m\\\'edia das SSP ponderada em massa [$Z_{\odot}$]'
 
 vmin['mcor_gal'] = 10.25
 vmax['mcor_gal'] = 11.75
@@ -183,7 +184,7 @@ param['mcor_gal'] = 'Logaritmo da massa estelar [$M_{\odot}$]'
 
 vmin['AV'] = -0.25
 vmax['AV'] = 1.25
-param['AV'] = 'Extin\c{c}\~ao por poeira (magnitude)'
+param['AV'] = 'Extin\\c{c}\\~ao por poeira (magnitude)'
 
 vmin['halpha_ew'] = np.log10(0.1)
 vmax['halpha_ew'] = np.log10(110.0)

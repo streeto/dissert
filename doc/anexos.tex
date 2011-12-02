@@ -174,7 +174,6 @@ legenda das figuras estão listados abaixo.
 \end{figure}
 
 
-% TODO: Caption da figura fig:QuerySampleAIS
 \begin{figure}
 \begin{Verbatim}[frame=single,commandchars=\\\{\}]
 \textbf{SELECT INTO} MyDB..galex_ais_elines_z
@@ -206,9 +205,12 @@ legenda das figuras estão listados abaixo.
 	\textbf{AND} o.z > 0.04
 	\textbf{AND} o.z < 0.17
 \end{Verbatim}
-	\caption[Extração da amostra de galáxias.]
-	{TODO: Extração da amostra de galáxias. Explicar limites em z e nuv <> -999.
-	{\em Query} executada no {\em CasJobs} do \starlight.}
+	\caption[Extração da amostra \starlightUV.]
+	{Extração da amostra \starlightUV. Os limites em {\em redshift}
+	($0,04 < z < 0,17$) são explicados na seção
+	\ref{sec:Crossmatch:DefAmostras:StarlightUV}. O critério ``\texttt{g.nuv\_mag <>
+	-999}'' remove os objetos que não tiveram identificação em NUV. {\em Query}
+	executada no {\em CasJobs} do \starlight.}
 	\label{fig:QuerySampleAIS}
 \end{figure}
 

@@ -51,6 +51,10 @@ def set_eps_output_3x2():
               'font.family': 'serif',
               'figure.subplot.hspace': .2,
               'figure.subplot.wspace': .2,
+              'figure.subplot.left': 0.05,
+              'figure.subplot.right': 0.95,
+              'figure.subplot.top': 0.95,
+              'figure.subplot.bottom': 0.05,
               'figure.figsize': fig_size}
     pylab.rcParams.update(params)
 
@@ -61,9 +65,7 @@ def randomFraction(arr, f):
 tablename = sys.argv[1]
 t = Table(tablename)
 
-sample = (t.data['z'] < -21.5)
-sample &= (t.data['z'] > -23.0)
-sample &= (t.data['redshift'] > 0.04) 
+sample = (t.data['redshift'] > 0.04) 
 sample &= (t.data['redshift'] < 0.17) 
 
 NUV_r = t.data['NUV'][sample] - t.data['r'][sample]
@@ -77,7 +79,7 @@ set_eps_output_1()
 pylab.figure()
 pylab.axis(bounds)
 #pylab.title('Densidade')
-pylab.xlabel('$NUV - r$')
+pylab.xlabel('$\\mathrm{NUV} - r$')
 pylab.ylabel('$g - r$')
 pylab.hexbin(NUV_r, g_r, extent=bounds, bins='log', gridsize=50, cmap=cm.Greys)
 cb = pylab.colorbar()
@@ -99,33 +101,33 @@ vmax = {}
 label = {}
 position = {}
 
-vmin['at_flux'] = 7.25
-vmax['at_flux'] = 10.25
-label['at_flux'] = '{\\bf (a)} $\\log(\\mathrm{Idade}_{F}/\\mathrm{[a]})$'
+vmin['at_flux'] = 7.5
+vmax['at_flux'] = 10.0
+label['at_flux'] = '{\\bf (a)} $<\\!\\log(t_{\\star}/\\mathrm{[a]})\\!>_F$'
 position['at_flux'] = 321
 
-vmin['at_mass'] = 9.2
+vmin['at_mass'] = 9.4
 vmax['at_mass'] = 10.2
-label['at_mass'] = '{\\bf (b)} $\\log(\mathrm{Idade}_{M}/\\mathrm{[a]})$'
+label['at_mass'] = '{\\bf (b)} $<\\!\\log(t_{\\star}/\\mathrm{[a]})\\!>_M$'
 position['at_mass'] = 322
 
-vmin['am_flux'] = 0.25
-vmax['am_flux'] = 2.25
-label['am_flux'] = '{\\bf (c)} $Z_{F}/Z_{\\odot}$'
+vmin['am_flux'] = 0.0
+vmax['am_flux'] = 2.0
+label['am_flux'] = '{\\bf (c)} $<\\!Z_{\\star}/[Z_{\\odot}]\\!>_F$'
 position['am_flux'] = 323
 
-vmin['am_mass'] = 0.25
-vmax['am_mass'] = 2.25
-label['am_mass'] = '{\\bf (d)} $Z_{M}/Z_{\\odot}$'
+vmin['am_mass'] = 0.0
+vmax['am_mass'] = 2.0
+label['am_mass'] = '{\\bf (d)} $<\\!Z_{\\star}/[Z_{\\odot}]\\!>_M$'
 position['am_mass'] = 324
 
-vmin['mcor_gal'] = 10.25
-vmax['mcor_gal'] = 11.75
-label['mcor_gal'] = '{\\bf (e)} $\log(M_{\star}/[M_{\odot}])$'
+vmin['mcor_gal'] = 9.0
+vmax['mcor_gal'] = 12.0
+label['mcor_gal'] = '{\\bf (e)} $\log(M_{\\star}/[M_{\\odot}])$'
 position['mcor_gal'] = 325
 
 vmin['AV'] = -0.25
-vmax['AV'] = 1.25
+vmax['AV'] = 1.0
 label['AV'] = '{\\bf (f)} $A_V$'
 position['AV'] = 326
 
@@ -141,7 +143,7 @@ set_eps_output_3x2()
 pylab.figure()
 
 # Plot less points
-fraction = randomFraction(NUV_r, 0.1)
+fraction = randomFraction(NUV_r, 0.025)
 
 for col in vmin.keys():
     z = t.data[col][sample]
@@ -154,7 +156,7 @@ for col in vmin.keys():
 #    pylab.hexbin(NUV_r[fraction], g_r[fraction], z[fraction], extent=bounds,
 #               gridsize=50, vmin=vmin[col], vmax=vmax[col], cmap=cm.spectral)
     pylab.colorbar()
-    pylab.contour(h.T, extent=bounds, colors='black')
+    pylab.contour(h.T, extent=bounds, colors='black', linewidths=0.5)
 
 if debug:
     pylab.show()

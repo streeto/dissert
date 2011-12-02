@@ -51,6 +51,10 @@ def set_eps_output_3x2():
               'font.family': 'serif',
               'figure.subplot.hspace': .2,
               'figure.subplot.wspace': .2,
+              'figure.subplot.left': 0.05,
+              'figure.subplot.right': 0.95,
+              'figure.subplot.top': 0.90,
+              'figure.subplot.bottom': 0.05,
               'figure.figsize': fig_size}
     pylab.rcParams.update(params)
 
@@ -61,9 +65,7 @@ def randomFraction(arr, f):
 tablename = sys.argv[1]
 t = Table(tablename)
 
-sample = (t.data['z'] < -21.5)
-sample &= (t.data['z'] > -23.0)
-sample &= (t.data['redshift'] > 0.04) 
+sample = (t.data['redshift'] > 0.04) 
 sample &= (t.data['redshift'] < 0.17)
 
 NUV_r = t.data['NUV'][sample] - t.data['r'][sample]
@@ -139,12 +141,12 @@ for type in types:
     # Plot less points
     fraction = randomFraction(NUV_r[mask], 0.1)
     pylab.axis(bounds)
-    pylab.xlabel('$NUV - r$')
+    pylab.xlabel('$\\mathrm{NUV} - r$')
     pylab.ylabel('$g - r$')
-    pylab.plot(NUV_r[mask][fraction], g_r[mask][fraction], '.', label=label2[type],
-               color=color[type], markersize=0.5, zorder=1)
+    pylab.scatter(NUV_r[mask][fraction], g_r[mask][fraction],
+                  c=color[type], marker='o', edgecolor='None', s=1, label=label2[type])
     
-pylab.legend(loc='lower right', markerscale=20, numpoints=1)
+pylab.legend(loc='lower right', markerscale=5, numpoints=1)
 
 if debug:
     pylab.show()
@@ -162,32 +164,32 @@ vmin = {}
 vmax = {}
 param = {}
 
-vmin['at_flux'] = 7.25
-vmax['at_flux'] = 10.25
+vmin['at_flux'] = 7.5
+vmax['at_flux'] = 10.0
 param['at_flux'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em fluxo'
 
-vmin['at_mass'] = 9.2
+vmin['at_mass'] = 9.4
 vmax['at_mass'] = 10.2
 param['at_mass'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em massa'
 
-vmin['am_flux'] = 0.25
-vmax['am_flux'] = 2.25
-param['am_flux'] = 'Metalicidade m\\\'edia das SSP ponderada em fluxo [$Z_{\odot}$]'
+vmin['am_flux'] = 0.0
+vmax['am_flux'] = 2.0
+param['am_flux'] = 'Metalicidade m\\\'edia [$Z_{\odot}$] das SSP ponderada em fluxo'
 
-vmin['am_mass'] = 0.25
-vmax['am_mass'] = 2.25
-param['am_mass'] = 'Metalicidade m\\\'edia das SSP ponderada em massa [$Z_{\odot}$]'
+vmin['am_mass'] = 0.0
+vmax['am_mass'] = 2.0
+param['am_mass'] = 'Metalicidade m\\\'edia [$Z_{\odot}$] das SSP ponderada em massa'
 
-vmin['mcor_gal'] = 10.25
-vmax['mcor_gal'] = 11.75
+vmin['mcor_gal'] = 9.0
+vmax['mcor_gal'] = 12.0
 param['mcor_gal'] = 'Logaritmo da massa estelar [$M_{\odot}$]'
 
 vmin['AV'] = -0.25
-vmax['AV'] = 1.25
-param['AV'] = 'Extin\\c{c}\\~ao por poeira (magnitude)'
+vmax['AV'] = 1.0
+param['AV'] = 'Extin\\c{c}\\~ao por poeira [magnitude]'
 
-vmin['halpha_ew'] = np.log10(0.1)
-vmax['halpha_ew'] = np.log10(110.0)
+vmin['halpha_ew'] = -1.0
+vmax['halpha_ew'] = 2.0
 param['halpha_ew'] = 'Logaritmo da largura equivalente de $H_{\\alpha}$ [\AA]'
 
 # Hack: plot log(EWHa)
@@ -213,7 +215,7 @@ for p in param.keys():
                                    range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
         # Plot less points
-        fraction = randomFraction(NUV_r[mask], 0.1)
+        fraction = randomFraction(NUV_r[mask], 0.05)
 
         z = t.data[p][sample]
         ax = pylab.subplot(position[type])
@@ -224,7 +226,7 @@ for p in param.keys():
             vmin=vmin[p], vmax=vmax[p], zorder=1)
         pylab.colorbar()
 
-        pylab.contour(h.T, extent=bounds, colors='black')
+        pylab.contour(h.T, extent=bounds, colors='black', linewidths=0.5)
 
     if debug:
         pylab.show()

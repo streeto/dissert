@@ -58,5 +58,5 @@ for f in filters:
 pylab.legend()
 #pylab.show()
 #exit()
-pylab.savefig('../doc/figuras/galex-filters.eps', format='eps')
+pylab.savefig('../doc/figuras/galex-filters.pdf', format='pdf')
 

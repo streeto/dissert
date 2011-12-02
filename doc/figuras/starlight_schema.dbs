@@ -2,10 +2,10 @@
 <project name="SqlServer2000-2005" version="42" database="SqlServer2000-2005" >
 	<schema name="dbo" catalogname="starlight_DR7_926246" schemaname="dbo" defo="y" >
 		<table name="aux_index" >
-			<column name="objId" type="bigint" length="19" jt="-5" />
-			<column name="mjd" type="int" length="10" jt="4" />
-			<column name="plate" type="smallint" length="5" jt="5" />
-			<column name="fiberID" type="smallint" length="5" jt="5" />
+			<column name="objId" type="bigint" jt="-5" mandatory="y" />
+			<column name="mjd" type="int" jt="4" mandatory="y" />
+			<column name="plate" type="smallint" jt="5" mandatory="y" />
+			<column name="fiberID" type="smallint" jt="5" mandatory="y" />
 			<column name="SpecObjID" type="bigint" length="19" jt="-5" mandatory="y" />
 			<index name="IX_sample_dr7id" unique="NORMAL" >
 				<column name="objId" />
@@ -67,16 +67,16 @@
 			</fk>
 		</table>
 		<table name="galex_ais" >
-			<column name="galexObjid" type="bigint" length="19" jt="-5" />
-			<column name="nuv_mag" type="real" length="24" jt="7" />
-			<column name="nuv_magErr" type="real" length="24" jt="7" />
-			<column name="fuv_mag" type="real" length="24" jt="7" />
-			<column name="fuv_magErr" type="real" length="24" jt="7" />
-			<column name="e_bv" type="real" length="24" jt="7" />
-			<column name="band" type="smallint" length="5" jt="5" />
-			<column name="distance" type="real" length="24" jt="7" />
-			<column name="nexptime" type="real" length="24" jt="7" />
-			<column name="fexptime" type="real" length="24" jt="7" />
+			<column name="galexObjid" type="bigint" jt="-5" mandatory="y" />
+			<column name="nuv_mag" type="real" jt="7" mandatory="y" />
+			<column name="nuv_magErr" type="real" jt="7" mandatory="y" />
+			<column name="fuv_mag" type="real" jt="7" mandatory="y" />
+			<column name="fuv_magErr" type="real" jt="7" mandatory="y" />
+			<column name="e_bv" type="real" jt="7" mandatory="y" />
+			<column name="band" type="smallint" jt="5" mandatory="y" />
+			<column name="distance" type="real" jt="7" mandatory="y" />
+			<column name="nexptime" type="real" jt="7" mandatory="y" />
+			<column name="fexptime" type="real" jt="7" mandatory="y" />
 			<column name="SpecObjId" type="bigint" length="19" jt="-5" mandatory="y" />
 			<index name="IX_galex_ais_galexobjid" unique="NORMAL" >
 				<column name="galexObjid" />
@@ -86,16 +86,16 @@
 			</fk>
 		</table>
 		<table name="galex_mis" >
-			<column name="galexObjid" type="bigint" length="19" jt="-5" />
-			<column name="nuv_mag" type="real" length="24" jt="7" />
-			<column name="nuv_magErr" type="real" length="24" jt="7" />
-			<column name="fuv_mag" type="real" length="24" jt="7" />
-			<column name="fuv_magErr" type="real" length="24" jt="7" />
-			<column name="e_bv" type="real" length="24" jt="7" />
-			<column name="band" type="smallint" length="5" jt="5" />
-			<column name="distance" type="real" length="24" jt="7" />
-			<column name="nexptime" type="real" length="24" jt="7" />
-			<column name="fexptime" type="real" length="24" jt="7" />
+			<column name="galexObjid" type="bigint" jt="-5" mandatory="y" />
+			<column name="nuv_mag" type="real" jt="7" mandatory="y" />
+			<column name="nuv_magErr" type="real" jt="7" mandatory="y" />
+			<column name="fuv_mag" type="real" jt="7" mandatory="y" />
+			<column name="fuv_magErr" type="real" jt="7" mandatory="y" />
+			<column name="e_bv" type="real" jt="7" mandatory="y" />
+			<column name="band" type="smallint" jt="5" mandatory="y" />
+			<column name="distance" type="real" jt="7" mandatory="y" />
+			<column name="nexptime" type="real" jt="7" mandatory="y" />
+			<column name="fexptime" type="real" jt="7" mandatory="y" />
 			<column name="SpecObjId" type="bigint" jt="-5" mandatory="y" />
 			<index name="IX_galex_mis_galexobjid" unique="NORMAL" >
 				<column name="galexObjid" />
@@ -106,64 +106,64 @@
 		</table>
 		<table name="obs_parameters" >
 			<column name="SpecObjID" type="bigint" length="19" jt="-5" mandatory="y" />
-			<column name="ra" type="real" length="24" jt="7" />
-			<column name="dec" type="real" length="24" jt="7" />
-			<column name="z" type="real" length="24" jt="7" />
-			<column name="eClass" type="real" length="24" jt="7" />
-			<column name="m_u" type="real" length="24" jt="7" />
-			<column name="m_g" type="real" length="24" jt="7" />
-			<column name="m_r" type="real" length="24" jt="7" />
-			<column name="m_i" type="real" length="24" jt="7" />
-			<column name="m_z" type="real" length="24" jt="7" />
-			<column name="fm_u" type="real" length="24" jt="7" />
-			<column name="fm_g" type="real" length="24" jt="7" />
-			<column name="fm_r" type="real" length="24" jt="7" />
-			<column name="fm_i" type="real" length="24" jt="7" />
-			<column name="fm_z" type="real" length="24" jt="7" />
-			<column name="Mu" type="real" length="24" jt="7" />
-			<column name="Mg" type="real" length="24" jt="7" />
-			<column name="Mr" type="real" length="24" jt="7" />
-			<column name="Mi" type="real" length="24" jt="7" />
-			<column name="Mz" type="real" length="24" jt="7" />
-			<column name="SB_50_r" type="real" length="24" jt="7" />
-			<column name="CI_r" type="real" length="24" jt="7" />
-			<column name="petrorad_r" type="real" length="24" jt="7" />
-			<column name="petroR50_r" type="real" length="24" jt="7" />
-			<column name="petroR90_r" type="real" length="24" jt="7" />
-			<column name="expAB_r" type="real" length="24" jt="7" />
-			<column name="deVAB_r" type="real" length="24" jt="7" />
-			<column name="D" type="real" length="24" jt="7" />
-			<column name="DA" type="real" length="24" jt="7" />
-			<column name="R50" type="real" length="24" jt="7" />
-			<column name="R90" type="real" length="24" jt="7" />
-			<column name="DL" type="real" length="24" jt="7" />
-			<column name="log_L" type="real" length="24" jt="7" />
-			<column name="Mr_fiber" type="real" length="24" jt="7" />
-			<column name="log_L_fiber" type="real" length="24" jt="7" />
-			<column name="Mz_fiber" type="real" length="24" jt="7" />
-			<column name="log_L_fiber_z" type="real" length="24" jt="7" />
-			<column name="petrorad_z" type="real" length="24" jt="7" />
-			<column name="petroR50_z" type="real" length="24" jt="7" />
-			<column name="petroR90_z" type="real" length="24" jt="7" />
-			<column name="DA_z" type="real" length="24" jt="7" />
-			<column name="z50" type="real" length="24" jt="7" />
-			<column name="z90" type="real" length="24" jt="7" />
-			<column name="fib_corr" type="smallint" length="5" jt="5" />
+			<column name="ra" type="real" jt="7" mandatory="y" />
+			<column name="dec" type="real" jt="7" mandatory="y" />
+			<column name="z" type="real" jt="7" mandatory="y" />
+			<column name="eClass" type="real" jt="7" mandatory="y" />
+			<column name="m_u" type="real" jt="7" mandatory="y" />
+			<column name="m_g" type="real" jt="7" mandatory="y" />
+			<column name="m_r" type="real" jt="7" mandatory="y" />
+			<column name="m_i" type="real" jt="7" mandatory="y" />
+			<column name="m_z" type="real" jt="7" mandatory="y" />
+			<column name="fm_u" type="real" jt="7" mandatory="y" />
+			<column name="fm_g" type="real" jt="7" mandatory="y" />
+			<column name="fm_r" type="real" jt="7" mandatory="y" />
+			<column name="fm_i" type="real" jt="7" mandatory="y" />
+			<column name="fm_z" type="real" jt="7" mandatory="y" />
+			<column name="Mu" type="real" jt="7" mandatory="y" />
+			<column name="Mg" type="real" jt="7" mandatory="y" />
+			<column name="Mr" type="real" jt="7" mandatory="y" />
+			<column name="Mi" type="real" jt="7" mandatory="y" />
+			<column name="Mz" type="real" jt="7" mandatory="y" />
+			<column name="SB_50_r" type="real" jt="7" mandatory="y" />
+			<column name="CI_r" type="real" jt="7" mandatory="y" />
+			<column name="petrorad_r" type="real" jt="7" mandatory="y" />
+			<column name="petroR50_r" type="real" jt="7" mandatory="y" />
+			<column name="petroR90_r" type="real" jt="7" mandatory="y" />
+			<column name="expAB_r" type="real" jt="7" mandatory="y" />
+			<column name="deVAB_r" type="real" jt="7" mandatory="y" />
+			<column name="D" type="real" jt="7" mandatory="y" />
+			<column name="DA" type="real" jt="7" mandatory="y" />
+			<column name="R50" type="real" jt="7" mandatory="y" />
+			<column name="R90" type="real" jt="7" mandatory="y" />
+			<column name="DL" type="real" jt="7" mandatory="y" />
+			<column name="log_L" type="real" jt="7" mandatory="y" />
+			<column name="Mr_fiber" type="real" jt="7" mandatory="y" />
+			<column name="log_L_fiber" type="real" jt="7" mandatory="y" />
+			<column name="Mz_fiber" type="real" jt="7" mandatory="y" />
+			<column name="log_L_fiber_z" type="real" jt="7" mandatory="y" />
+			<column name="petrorad_z" type="real" jt="7" mandatory="y" />
+			<column name="petroR50_z" type="real" jt="7" mandatory="y" />
+			<column name="petroR90_z" type="real" jt="7" mandatory="y" />
+			<column name="DA_z" type="real" jt="7" mandatory="y" />
+			<column name="z50" type="real" jt="7" mandatory="y" />
+			<column name="z90" type="real" jt="7" mandatory="y" />
+			<column name="fib_corr" type="smallint" jt="5" mandatory="y" />
 			<index name="PK_obs_parameters" unique="PRIMARY_KEY" >
 				<column name="SpecObjID" />
 			</index>
 		</table>
 		<table name="synthesis_params" >
 			<column name="synid" type="bigint" length="19" jt="-5" mandatory="y" />
-			<column name="arq_syn" type="nvarchar" length="35" jt="12" />
-			<column name="arq_obs" type="nvarchar" length="21" jt="12" />
-			<column name="arq_base" type="nvarchar" length="13" jt="12" />
-			<column name="arq_masks" type="nvarchar" length="40" jt="12" />
-			<column name="arq_config" type="nvarchar" length="19" jt="12" />
-			<column name="n_base" type="smallint" length="5" jt="5" />
-			<column name="l_ini" type="smallint" length="5" jt="5" />
-			<column name="l_fin" type="smallint" length="5" jt="5" />
-			<column name="dl" type="smallint" length="5" jt="5" />
+			<column name="arq_syn" type="nvarchar" length="35" jt="12" mandatory="y" />
+			<column name="arq_obs" type="nvarchar" length="21" jt="12" mandatory="y" />
+			<column name="arq_base" type="nvarchar" length="13" jt="12" mandatory="y" />
+			<column name="arq_masks" type="nvarchar" length="40" jt="12" mandatory="y" />
+			<column name="arq_config" type="nvarchar" length="19" jt="12" mandatory="y" />
+			<column name="n_base" type="smallint" jt="5" mandatory="y" />
+			<column name="l_ini" type="smallint" jt="5" mandatory="y" />
+			<column name="l_fin" type="smallint" jt="5" mandatory="y" />
+			<column name="dl" type="smallint" jt="5" mandatory="y" />
 			<index name="PK_synthesis_params" unique="PRIMARY_KEY" >
 				<column name="synid" />
 			</index>
@@ -192,10 +192,10 @@
 			<column name="m2l_r" type="real" length="24" jt="7" mandatory="y" />
 			<column name="m2l_i" type="real" length="24" jt="7" mandatory="y" />
 			<column name="m2l_z" type="real" length="24" jt="7" mandatory="y" />
-			<column name="Mcor_fib" type="real" length="24" jt="7" />
-			<column name="Mcor_gal" type="real" length="24" jt="7" />
-			<column name="Mini_gal" type="real" length="24" jt="7" />
-			<column name="Mpho_gal" type="real" length="24" jt="7" />
+			<column name="Mcor_fib" type="real" jt="7" mandatory="y" />
+			<column name="Mcor_gal" type="real" jt="7" mandatory="y" />
+			<column name="Mini_gal" type="real" jt="7" mandatory="y" />
+			<column name="Mpho_gal" type="real" jt="7" mandatory="y" />
 			<index name="PK_synthesis_results" unique="PRIMARY_KEY" >
 				<column name="synID" />
 			</index>

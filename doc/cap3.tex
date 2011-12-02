@@ -79,9 +79,9 @@ quantidade de objetos retornados. Esta limitação é contornada através do sis
 criar {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês. Clone de um {\em
 website}.} do {\em SkyServer}. Tanto o banco de dados do \SDSS quanto o código
 fonte do {\em SkyServer} estão disponível no próprio {\em website} do {\em
-SkyServer}. Há um clone do banco de dados do {\em Data Release} 8 do \SDSS no
-servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
-\url{http://casjobs.starlight.ufsc.br/casjobs/}}.
+SkyServer}. Há um clone, feito por mim\fixme, do banco de dados do {\em Data
+Release} 8 do \SDSS no servidor {\em CasJobs} do \starlight \footnote{{\em
+CasJobs} do \starlight: \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
 \begin{figure}
 	\includegraphics[width=1.0\columnwidth]{figuras/skyserver.eps}
@@ -122,10 +122,10 @@ bancos de dados.
 
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
-CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo\citneed, e uma
-amostra do \galex e um catálogo de {\em redshifts} fotométricos
-\citep{OMill2011}. O {\em CasJobs} também foi adotado por outros projetos como o
-\galex, {\em Kepler}\footnote{{\em Kepler CasJobs}:
+CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo
+\citep{Lintott2008}, e uma amostra do \galex e um catálogo de {\em redshifts}
+fotométricos \citep{OMill2011}. O {\em CasJobs} também foi adotado por outros
+projetos como o \galex, {\em Kepler}\footnote{{\em Kepler CasJobs}:
 \url{http://mastweb.stsci.edu/kplrcasjobs/}} e o {\em Palomar Quest
 }\footnote{{\em Palomar Quest CasJobs}:
 \url{http://webvoy.cacr.caltech.edu/CasJobs/}} \citep{Djorgovski2008}.
@@ -150,8 +150,8 @@ De forma simplificada, o que o \starlight faz é encontrar as frações de massa
 luz correspondente a cada elemento da base, ou seja, cada SSP. Analisando as
 relações entre os componentes determinandos pela síntese, o programa determina
 diversas propriedades físicas da galáxia, como a massa estelar total, a massa
-separada por idade, metalicidade média, quantidade de poeira e velocidade de
-rotação, para citar apenas algumas. Quase um milhão de espectros foram
+separada por idade, metalicidade média, quantidade de poeira e dispersão de
+velocidade, para citar apenas algumas. Quase um milhão de espectros foram
 analisados, e o resultado da síntese foi armazenado em arquivos texto.
 
 Somente os componentes estelares do espectro são obtidos desta forma. Subtraindo
@@ -161,7 +161,7 @@ complementar de linhas de emissão.
 
 \subsection{Importação para o RDBMS}
 
-Os arquivos da síntese gerados pelo \starlight ocupam uma dezena de gigabytes.
+Os arquivos da síntese gerados pelo \starlight ocupam quase trezentos gigabytes.
 Mesmo o catálogo de propriedades físicas das galáxias, sozinho, ocupa mais de um
 gigabyte. Embora seja um volume razoavelmente grande de dados, é possível
 trabalhar com esta quantidade de dados num computador atual\footnote{Na época da
@@ -178,6 +178,7 @@ lhe for conveniente. Além disso, manter a base de dados num local central
 permite que sejam feitas correções e revisões, o que implicaria normalmente numa
 nova transferência caso cada usuário tivesse a sua cópia local.
 
+% FIXME: Deixar mais claro que fui eu que fiz.
 O {\em CasJobs} requer um servidor rodando {\em Windows Server} com {\em
 Internet Information Services} (IIS) e {\em Microsoft SQL Server} (MSSQL). A
 instalação do {\em CasJobs} está documentada no {\em website} do {\em SkyServer}
@@ -186,14 +187,14 @@ o trabalho consiste em importar os dados em arquivos texto para um banco de
 dados no MSSQL. A ferramenta principal para a manipulação dos bancos de dados no
 MSSQL é o {\em Microsoft SQL Server Management Studio}. Nele há um assistente
 para importação de dados baseado no {\em SQL Server Integrated Services} (SSIS).
-A importação das tabelas de propriedades físicas do \starlight é trivial. A
+A importação das tabelas de propriedades físicas do \starlight é trivial. Já a
 importação das linhas de emissão requer um trabalho extra para normalizar a
 tabela\footnote{A normalização consiste em decompor uma tabela em tabelas
 menores (com menos campos) de forma que elas fiquem melhor estruturadas. No caso
 das linhas de emissão, a tabela passa de ``todas as linhas de um dado objeto num
 único registro'' para ``uma linha para cada regsitro''. No primeiro caso,
 adicionar um novo tipo de linha de emissão implicaria em mudar a estrutura da
-tabela, o que é evitado utilizando a segunda abordagem.}.
+tabela, o que é evitado utilizando a segunda abordagem.}.\fixme
 
 \subsection{Estrutura do banco de dados}
 \label{sec:Crossmatch:EstruturaBDStarlight}
@@ -211,6 +212,7 @@ usadas na medida) está contida na tabela \texttt{cfg\_el\_fit}. As tabelas
 referentes ao \galex são explicadas na seção
 \ref{sec:Crossmatch:DefAmostras:IdSDSSGalex}.
 
+% FIXME: Tirar aux_index
 \begin{figure}
 	\includegraphics[width=\textwidth]{figuras/starlight-schema.eps}
 	\caption[Esquema do banco de dados do \starlight.]
@@ -222,17 +224,18 @@ referentes ao \galex são explicadas na seção
 \subsection{Amostra do \STARLIGHT}
 \label{sec:Crossmatch:AmostraStarlight}
 
-A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS. A
-identificação de cada espectro é feita através de um tripleto: a data juliana
-média da observação (\texttt{MJD}, {\em Mean Julian Date}), a identificação da
-placa de suporte das fibras ópticas (\texttt{Plate}) e a identificacão da fibra
-utilizada para a obtenção do espectro (\texttt{FiberID}). Este tripleto
-(\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}) identifica unicamente um
-espectro. Porém, é mais conveniente (e eficiente) ter um identificador único
-(uma chave primária\footnote{Chave primária é um conjunto de um ou mais campos
-tais que a combinação de todos os campos da chave não se repete.}) para os
-registros num banco de dados. No caso do \SDSS, a tabela de espectros
-(\texttt{SpecObjAll}) tem um identificador chamado \texttt{SpecObjID}.
+A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS DR7
+\citep{Abazajian2009}. A identificação de cada espectro é feita através de um
+tripleto: a data juliana média da observação (\texttt{MJD}, {\em Mean Julian
+Date}), a identificação da placa de suporte das fibras ópticas (\texttt{Plate})
+e a identificacão da fibra utilizada para a obtenção do espectro
+(\texttt{FiberID}). Este tripleto (\texttt{MJD}, \texttt{Plate},
+\texttt{FiberID}) identifica unicamente um espectro. Porém, é mais conveniente
+(e eficiente) ter um identificador único (uma chave primária\footnote{Chave
+primária é um conjunto de um ou mais campos tais que a combinação de todos os
+campos da chave não se repete.}) para os registros num banco de dados. No caso
+do \SDSS, a tabela de espectros (\texttt{SpecObjAll}) tem um identificador
+chamado \texttt{SpecObjID}.
 
 Além de espectros, o banco de dados do \SDSS contém fotometria de $1/4$ do céu.
 Os objetos com dados de fotometria também tem um identificador único,
@@ -270,7 +273,7 @@ medidas \citep{Budavari2008}.
 
 \citet{Budavari2009} aplicam este método probabilístico ao \SDSS e ao \galex. O
 {\em crossmatch} espacial é feito dentro de um RDMS (MSSQL, o mesmo usado no
-{\em CasJobs}), utilizando técnicas avançadas de indexação \citep[{\em
+{\em CasJobs}), utilizando técnicas avançadas de indexação \citep[ {\em
 Hierarchic Triangular Mesh}]{Kunszt2000}. A tabela resultante é uma relação
 ``muitos para muitos'', onde a maioria dos objetos \galex tem apenas um objeto
 \SDSS associado, mas outras associações podem ocorrer. Um exemplo onde pode
@@ -337,6 +340,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
 \label{sec:Crossmatch:DefAmostras:IdSDSSGalex}
 
+% FIXME: Procurar a SP que cria a tabela xSDSSDR7
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 \galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
 correspondentes ópticos no catálogo do \SDSS, chamada \texttt{xSDSSDR7}. A
@@ -463,7 +467,7 @@ feitas.
 A luz proveniente de outras galáxias sofre extinção causada por poeira dentro da
 nossa própria Galáxia\footnote{A existência de poeira na Via Láctea pode ser
 notada facilmente a olho nu em uma noite sem lua -- e bem longe da luz da
-cidade!}. Esta extincão depende da direção de onde vem a luz, e a sua influência
+cidade!}. Esta extinção depende da direção de onde vem a luz, e a sua influência
 depende do comprimento de onda. O efeito final, em geral, é o avermelhamento do
 espectro. O excesso de cor $E(B-V)$ representa quantitativamente este
 avermelhamento.
@@ -512,12 +516,17 @@ foi transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
 %***************************************************************%
 
 \section{Definição da amostra \STARLIGHTUV}
+\label{sec:Crossmatch:DefAmostras:StarlightUV}
 
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
-$ugriz$ do \SDSS, a magnitude $NUV$ do \galex e algumas propriedades físicas das
+$ugriz$ do \SDSS, a magnitude NUV do \galex e algumas propriedades físicas das
 galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
 equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
+
+% TODO: Justificar o abandono de FUV.
+%A análise apresentada no capítulo \ref{sec:Analise} não leva em consideração a
+%fotometria FUV.
 
 \begin{table}
 	\caption[Propriedades físicas das galáxias utilizados na amostra.]
@@ -547,48 +556,30 @@ $0,17$ a linha \NII fica deslocada para além do limite vermelho dos espectros d
 \SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 < z
 < 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 
-A figura \ref{ref:CompletezaRedshiftMag} mostra a distribuição das magnitudes
-$z$ das galáxias em função do {\em redshift}. Qual corte?
+A figura \ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude
+absoluta $r$ das galáxias em função do {\em redshift}. Mesmo limitada em {\em
+redshift}, a amostra não está completa. O corte, que vai de $-18$ em $z=0,04$
+até $-22$ em $z=0,17$, ocorre devido ao limite ``fraco" de detecção do \SDSS.
+Para esta amostra, as propriedades físicas e observacionais das galáxias estão
+distribuídas conforme os histogramas da figura \ref{fig:HistogramasAmostra}.
 
-% TODO: Adicionar figura: Diagrama de redshift contra magnitude z.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
-	\caption[Diagrama de {\em redshift} contra magnitude $z$.]
-	{Diagrama de {\em redshift} contra magnitude $z$.}
+	\includegraphics{figuras/completeness-volume.eps}
+	\caption[Magnitude $r$ em função do {\em redshift}.]
+	{Magnitude $r$ em função do {\em redshift} para a amostra \starlightUV.}
 	\label{fig:CompletezaRedshiftMag}
 \end{figure}
 
-% FIXME: Remover?
-FIXME: Remover? \\
-Ainda segundo \citet[veja figuras 1 e figura 4]{Chilingarian2011}, o
-espalhamento dos dados na relação entre $g-r$ e $NUV-r$ é mais estreito na faixa
-de magnitude $z$ entre $-24$ e $-20$.
-
-Foram selecionados somente objetos com magnitude $z$ entre $-23$ e $-21,5$.
-
-% FIXME: Rever este parágrafo quando tiver os histogramas. 
-Os histogramas mostrados na figura \ref{fig:HistogramasAmostra} mostram que para
-os critérios de seleção de {\em redshift} acima, os dados do AIS são completos.
-
-% TODO: Adicionar figura: Histogramas das medidas da amostra starlight+UV.
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figuras/test.eps}
+	\includegraphics{figuras/histogram-sample.eps}
 	\caption[Histogramas das medidas da amostra \starlight+UV.]
 	{Histogramas das medidas da amostra \starlight+UV.}
 	\label{fig:HistogramasAmostra}
 \end{figure}
 
-% TODO: Justificar o abandono de FUV.
-TODO: Justificar o abandono de FUV na análise. \\
-A análise apresentada no capítulo \ref{sec:Analise} não levou em consideração a
-fotometria FUV.
-
-%TODO: histogramas, muitos histogramas.
-TODO: histogramas, muitos histogramas.
-
 Resumindo, a amostra \starlightUV contém os objetos do AIS com fotometria NUV
-definida, com {\em redshift} entre $0,04$ e $0.17$, e magnitude $z$ entre $X$
-e $Y$, num total de $NNN\,NNN$ objetos.
+definida, limitada em {\em redshifts} entre $0,04$ e $0,17$. No total a amostra
+contém $133\,244$ objetos.
 
 
 %% End of this chapter

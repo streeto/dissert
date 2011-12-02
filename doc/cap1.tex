@@ -78,17 +78,17 @@ na nossa Galáxia. Convém mencionar também o {\em 2dF Galaxy Redshift Survey}
 concluídos, os seus dados permanecem disponíveis publicamente.
 
 % FIXME: Citações sobre as informações do JPAS.
-O projeto JPAS ({\em Javalambre Physics of the Accelerating Universe Survey}) é
-um {\em survey} que pretende mapear $8\,000$ graus quadrados do céu em 56
-cores\citep{Benitez2009}. Os filtros, de banda estreita, irão cobrir toda a
-região óptica, formando um espectro de baixa resolução para cada pixel do
-survey. Serão mais de 200 terabytes de dados brutos\citneed. O projeto é uma
-colaboração entre Espanha e Brasil, com mais de 70 pesquisadores e engenheiros
-envolvidos. Integrantes do Grupo de Astrofísica da UFSC estão envolvidos neste
-projeto\citneed. O objetivo do {\em survey} é a exploração das causas da
-aceleração do universo, relacionadas à energia escura. Entretanto, uma
-quantidade considerável de ciência adicional poderá ser feita com base no
-espectro de uma região tão ampla do céu. Seu início está previsto para 2013.
+O projeto JPAS ({\em Javalambre Physics of the Accelerating Universe
+Astrophysical Survey}) é um {\em survey} que pretende mapear $8\,000$ graus
+quadrados do céu em 56 cores \citep{Benitez2009}. Os filtros, de banda estreita,
+irão cobrir toda a região óptica, formando um espectro de baixa resolução para
+cada pixel do survey. Serão mais de 200 terabytes de dados brutos\citneed. O
+projeto é uma colaboração entre Espanha e Brasil, com mais de 70 pesquisadores e
+engenheiros envolvidos incluindo integrantes do Grupo de Astrofísica da UFSC. O
+objetivo do {\em survey} é a exploração das causas da aceleração do universo,
+relacionadas à energia escura. Entretanto, uma quantidade considerável de
+ciência adicional poderá ser feita com base no espectro de uma região tão ampla
+do céu. Seu início está previsto para 2013.
 
 O LSST ({\em Large Synoptic Survey Telecope}) mapeará metade do céu a cada mês,
 aproximadamente, durante cerca de dez anos \citep{Ivezic2008}. As suas operações
@@ -105,15 +105,16 @@ flat file}. Buscas neste tipo de banco de dados são feitas examinando
 individualmente cada registro do arquivo. Com o volume de dados obtido, por
 exemplo, pelo \SDSS ou pelo \galex (aproximadamente 222 milhões de objetos, 34
 mil campos), o uso de arquivos simples para armazenamento de dados se torna
-inviável.\citneed É preciso ``profissionalizar'' o gerenciamento de dados de um
-{\em survey} desta escala, e aprender a trabalhar com volumes imensos de dados.
+inviável. É preciso ``profissionalizar'' o gerenciamento de dados de um {\em
+survey} desta escala, e aprender a trabalhar com volumes imensos de dados
+\citep{Bell2006}.
 
 Técnicas de detecção de padrões em grandes conjuntos de dados são conhecidas
 como {\em Mineração de dados}, e tem um interesse crescente nos últimos anos
 \citep{SIGKDD2011}. Estas técnicas tem naturalmente um caráter interdisciplinar,
 indo desde aplicações científicas até áreas como Economia \citep{Spanos2000} e
 Inteligência de Mercado\footnote{Ferramentas como OLAP ({\em On-line Analytical
-Processing} são usadas por empresas para avaliação de mercado e tomada decisão,
+Processing}) são usadas por empresas para avaliação de mercado e tomada decisão,
 agindo sobre um grande volume de dados.}.
 
 A equipe de arquivamento do \SDSS desenvolveu uma ferramenta chamada {\em
@@ -153,10 +154,11 @@ espectros de base $F^\star_\lambda(t_i, Z_i)$, com $t_i$ e $Z_i$ representando
 respectivamente a idade e a metalicidade do elemento de base, são somados com
 pesos $x_i$. O conjunto $\{x_i, i=1,2,\ldots,N_\star\}$ é chamado {\em vetor de
 população} para a galáxia sendo considerada. O termo $g_\lambda$ corrige o
-espectro pelo efeito de extinção interestelar. São ao todo 45 SSP diferentes
-utilizadas na base. O problema torna-se então um ajuste num espaço de parâmetros
-bastante grande. A figura \ref{fig:StarlightSpectrumSample} mostra o ajuste
-feito para uma galáxia do \SDSS.
+espectro pelo efeito de extinção interestelar. São ao todo 150 SSP diferentes
+(25 idades e 6 metalicidades) utilizadas na base. O problema torna-se então um
+ajuste num espaço de parâmetros bastante grande. A figura
+\ref{fig:StarlightSpectrumSample} mostra o ajuste feito para uma galáxia do
+\SDSS.
 
 \begin{figure}
 	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}

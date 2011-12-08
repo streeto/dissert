@@ -35,18 +35,16 @@ tridimensional das cores $\mathrm{NUV}-r$ e $g-r$ contra a magnitude $z$, a
 distribuição de galáxias pode ser aproximada por uma superfície polinomial de
 baixa ordem. Os autores mostram que há uma forte correlação entre a cor
 $\mathrm{NUV}-r$ e a morfologia da galáxia. Eles também estudam o histórico de
-formação estelar (SFH) no diagrama $\mathrm{NUV}-r$ contra $g-r$, mas a
-exploração é um tanto superficial.
+formação estelar (SFH) no diagrama $\mathrm{NUV}-r$ contra $g-r$ (chamado daqui
+em diante de diagrama cor--cor), mas a exploração é um tanto superficial.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-density.eps}
 	\caption[Densidade de galáxias no diagrama cor--cor UV.]
 	{Densidade de galáxias em função de cor UV ($\mathrm{NUV}-r$) e cor óptica
-	($g-r$). A intensidade dos bins hexagonais é o logaritmo do número de pontos
-	dentro do bin, para melhorar a visualização. Esta figura é similar à figura 4
-	de \citet{Chilingarian2011}. Foram selecionados objetos da amostra do
-	\starlight com magnitude na banda $z$ entre $-23$ e $-21,5$ e {\em redshift}
-	entre $0,04$ e $0,17$. As magnitudes $g$, $r$ e $z$ são do \SDSS.}
+	($g-r$) para a amostra \starlightUV. A intensidade das caixas hexagonais é o
+	logaritmo do número de pontos dentro da caixa, para melhorar a visualização.
+	Esta figura é similar à figura 4 de \citet{Chilingarian2011}.}
 	\label{fig:DensityColor}
 \end{figure}
 
@@ -54,13 +52,13 @@ A figura \ref{fig:ColorStarlightParam} mostra as propriedades físicas das
 galáxias obtidos através do \starlight no diagrama cor--cor. Os eixos são os
 mesmo da figura \ref{fig:DensityColor}, com a cor dos pontos indicando o valor
 de cada parâmetro. \citeauthor{Chilingarian2011} chegam numa relação semelhante
-à do painel (a) para a idade das SSP, porém através de outros meios. Estas
-propriedades físicas são vistas com mais detalhes na seção
+à do painel (a) para a idade estelar das galáxias, porém através de outros
+meios. Estas propriedades físicas são vistas com mais detalhes na seção
 \ref{sec:Analise:PropFisicas}.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color.eps}
-	\caption[Diagrama cor--cor UV para os diversos parâmetros \starlight.]
+	\caption[Diagrama cor--cor para os diversos parâmetros \starlight.]
 	{Propriedades físicas das galáxias em função de cor UV e cor óptica. O contorno
 	das figuras representam os níveis referentes à figura \ref{fig:DensityColor},
 	e os eixos horizontal e vertical são os mesmos. As cores dos pontos nos painéis
@@ -104,7 +102,7 @@ temperatura do gás. Assim, as galáxias são separadas em classes neste diagram
 conforme os seguintes critérios:
 
 \begin{list}{}{\setlength\itemsep{0pt}}
-\item \textbf{(a)} Galáxias com formação estelar (SFG): $\log(\nII/\Halpha) <
+\item \textbf{(a)} Galáxias com formação estelar (SF): $\log(\nII/\Halpha) <
 -0,4$ e $\WHa > 3\text{\AA}$,
 \item \textbf{(b)} Galáxias com núcleo ativo forte (sAGN): $\log(\nII/\Halpha) >
 -0,4$ e $\WHa > 6\text{\AA}$,
@@ -115,11 +113,15 @@ conforme os seguintes critérios:
 0,5\text{\AA}$.
 \end{list}
 
+Neste esquema, as SF tem linhas de emissão devido a estrelas jovens e massivas,
+as sAGN e wAGN tem linhas devido a núcleos ativos, as RG tem linhas devido a
+HOLMES e as RG não tem emissão mensurável.
+
 O diagrama WHAN para a amostra \starlightUV pode ser visto na figura
 \ref{fig:Whan}. A cor dos pontos para cada classe é o mesmo utilizado por
-\citet{CidFernandes2011}. São $45\,086$ galáxias com formação estelar, $32\,491$
-galáxias com núcleo ativo forte, $12\,003$ galáxias com núcleo ativo fraco,
-$24\,439$ galáxias aposentadas e $13\,483$ galáxias passivas. O mesmo diagrama,
+\citet{CidFernandes2011}. São $42\,694$ galáxias com formação estelar, $42\,694$
+galáxias com núcleo ativo forte, $11\,972$ galáxias com núcleo ativo fraco,
+$24\,385$ galáxias aposentadas e $13\,425$ galáxias passivas. O mesmo diagrama,
 porém com a cor dos pontos representando a cor $\mathrm{NUV}-r$ das galáxias
 (figura \ref{fig:WhanUV}), mostra que a cor UV das galáxias está relacionada à
 sua classe.
@@ -128,7 +130,7 @@ sua classe.
 	\includegraphics{figuras/whan.eps}
 	\caption[Diagrama de diagnóstico WHAN.]
 	{Diagrama de diagnóstico WHAN. As linhas tracejadas separam as galáxias
-	em classes. \textbf{Azul}: galáxias com formação estelar (SFG). \textbf{Verde
+	em classes. \textbf{Azul}: galáxias com formação estelar (SF). \textbf{Verde
 	claro}: galáxias com núcleo ativo forte (sAGN). \textbf{Verde forte}:
 	galáxias com núcleo ativo fraco (wAGN). \textbf{Preto}: galáxias aposentadas
 	(RG). \textbf{Vermelho}: galáxias passivas (PG). \textbf{Magenta}: Galáxias
@@ -151,9 +153,10 @@ emissão $\nII/\Halpha$ e $\oIII/\Hbeta$. Este diagrama, conhecido como BPT
 \citet{CidFernandes2010} discute-se os detalhes da classificação das galáxias
 classificação utilizando o diagrama BPT. As linhas tracejadas separam as
 galáxias nas classes {\em Seyfert} (que corresponde à classe sAGN na
-classificação pelo WHAN), {\em LINER} (correspondente às wAGN e aposentadas) e
-galáxias de formação estelar (SFG). A cor UV das galáxias da amostra no diagrama
-BPT (figura \ref{fig:BPTUV}) é consistente com as cores para o diagrama WHAN.
+classificação pelo WHAN), {\em LINER}\footnote{{\em Low-Ionization Nuclear
+Emission-Line Region}, regiões} (correspondente às wAGN e aposentadas) e
+galáxias de formação estelar (SF). A cor UV das galáxias da amostra no diagrama BPT (figura
+\ref{fig:BPTUV}) é consistente com as cores para o diagrama WHAN.
 
 \begin{figure}
 	\includegraphics{figuras/bpt-uv.eps}
@@ -161,8 +164,8 @@ BPT (figura \ref{fig:BPTUV}) é consistente com as cores para o diagrama WHAN.
 	{Diagrama BPT, também usado para classificar galáxias. A cor dos
 	pontos representa $\mathrm{NUV}-r$. As linhas tracejadas separam das galáxias nas
 	classes {\em Seyfert}, {\em LINER} e formação estelar, conforme
-	\citet[linhas S06 e K06 da tabela 1]{CidFernandes2010}. A cor UV das galáxias
-	em cada classe é consistente com a classificação usando WHAN.}
+	\citet[linhas S06 e K06 da tabela 1]{CidFernandes2010}. As classes possuem
+	cores UV consistentes com a classificação proveniente do diagrama WHAN.}
 	\label{fig:BPTUV}
 \end{figure}
 
@@ -174,34 +177,34 @@ facilmente na figura \ref{fig:HistogramaCorClasse}. Esta figura é de certo modo
 uma versão resumida da figura \ref{fig:ColorClass}. Mesmo havendo uma
 sobreposição considerável ente as classes, a sequência está bem definida.
 
-% FIXME: Explicar por que chamar RG de azul em UV.
 É interessante notar que a separação entre as classes é mais pronunciada em UV.
 As classes RG e PG mal se distinguem no óptico, enquanto que em UV as RG se
-mostram consistentemente mais azuis\footnote{Azul em ultravioleta?\fixme}.
-Através de uma inspeção visual pode-se inferir, ainda que qualitativamente, que
-as distribuições em UV são significativamente assimétricas em comparação com as
-distribuições no óptico. Isto pode se um indício de uma contaminação entre as
-classes, evidenciada agora pelos novos dados em UV. No entanto é necessário
-fazer um estudo com base estatística.
+mostram consistentemente mais azuis\footnote{O conceito de ``mais azul'' não
+está relacionado à percepção de cor, mas sim ao fato de que um objeto emite mais
+luz em comprimentos de onda menores.}. Através de uma inspeção visual pode-se
+inferir, ainda que qualitativamente, que as distribuições em UV são
+significativamente assimétricas em comparação com as distribuições no óptico.
+Isto pode ser indício de uma contaminação entre as classes, evidenciada agora
+pelos novos dados em UV.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-class.eps}
 	\caption[Diagrama cor--cor UV de acordo com o tipo de galáxia.]
 	{Classes de galáxias no diagrama cor--cor UV. As cores referentes às classes de
 	galáxia são as mesmas do diagrama WHAN (figura \ref{fig:Whan}). É possível
-	notar uma separação entre as classes, embora não tão clara quanto no diagrama
-	WHAN.}
+	notar uma separação entre as classes, embora haja uma sobreposição severa
+	entre elas.}
 	\label{fig:ColorClass}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/histo_galtype_color.eps}
 	\caption[Histogramas de cores para as classes de galáxias.]
-	{Histogramas normalizado das cores óptica ($g-r$) e ultravioleta
+	{Histogramas normalizados das cores óptica ($g-r$) e ultravioleta
 	($\mathrm{NUV}-r$) para as classes de galáxias. A cor das linhas representa a
-	classe conforme a figura \ref{fig:Whan}. Em ultravioleta a separação entre as
-	classes de galáxias aposentadas (RG) e passivas (PG) torna-se mais clara. Note
-	que os histogramas seguem o agrupamento das classes na figura
+	classe conforme a figura \ref{fig:Whan}. Em ultravioleta aparece uma separação
+	entre as classes de galáxias aposentadas (RG) e passivas (PG). Note que os
+	histogramas seguem o agrupamento das classes na figura
 	\ref{fig:ColorClass}.}
 	\label{fig:HistogramaCorClasse}
 \end{figure}
@@ -209,71 +212,110 @@ fazer um estudo com base estatística.
 
 %***************************************************************%
 %                                                               %
-%          Análise - Pro. Físicas no diagrama cor -- cor        %
+%         Análise - Prop. Físicas no diagrama cor -- cor        %
 %                                                               %
 %***************************************************************%
 
 \section{Propriedades físicas no diagrama cor--cor}
 \label{sec:Analise:PropFisicas}
 
-% TODO: Parâmetros físicos das galáxias no diagrama de cores.
-TODO: Parâmetros físicos das galáxias no diagrama de cores. A sequência de
-classes no diagrama cor--cor. Figura \ref{fig:ATFluxColor}.
+Os agentes por trás das linhas de emissão das galáxias são fundamentalmente
+diferentes (estrelas jovens, núcleos ativos e HOLMES) para cada classe. Não é de
+se estranhar, portanto, que as propriedades físicas das galáxias esteja
+relacionada à sua classificação.
 
-Visto que os agentes por trás das linhas de emissão das galáxias são
-fundamentalmente diferentes (estrelas jovens, núcleos ativos e HOLMES) para
-cada classe, é de se esperar que as propriedades físicas das galáxias sejam
-diferentes para ca
+A idade estelar média para cada galáxia ponderada em fluxo e em massa (média
+sobre as suas SSP componentes), é mostrada nas figuras \ref{fig:ATFluxColor} e
+\ref{fig:ATMassColor}. O painel (a) destas figuras mostra histogramas
+normalizados para cada classe, semelhantes aos obtidos por \citet[figura
+10]{CidFernandes2011}. Os painéis de (b) até (f) mostram o diagrama cor--cor,
+com eixos idênticos aos da figura \ref{fig:DensityColor}, para as galáxias de
+cada classe. Como é esperado, as galáxias SF tem estrelas em média mais jovens
+do que as demais, seguidas das sAGN, wAGN, RG e PG, que consistem basicamente de
+populações de estrelas velhas. Em geral, as galáxias na região azul do diagrama
+cor--cor tem predominantemente populações jovens, enquanto galáxias vermelhas
+tem populações estelares velhas.
 
+A metalicidade estelar, ponderada em fluxo, das PG, RG e wAGN é em média
+superior à metalicidade solar e são virtualmente indistinguíveis, conforme os
+painéis (d), (e) e (f) da figura \ref{fig:AMFluxColor}. As SF e sAGN,
+respectivamente nos painéis (b) e (c) da mesma figura, por outro lado tem
+metalicidades sub-solares. No diagrama cor--cor, as galáxias azuis tem em geral
+metalicidade estelar mais baixa, embora não haja uma sequência tão clara quanto
+para a idade estelar. A figura \ref{fig:AMMassColor} mostra a mesma relação para
+a metalicidade estelar ponderada em massa, porém neste caso as sAGN tem
+metalicidade mais próxima das wAGN.
 
-A classificaão das galáxias na seção anterior\ldots As propriedades físicas das
-galáxias estão relacionadas à sua classe\ldots
+A massa estelar das SF é consideravelmente menor do que as outras classes
+(figura \ref{fig:MCorGalColor}). Estas tem praticamente a mesma distribuição de
+massa estelar, com as sAGN ligeiramente menos massivas em média. Como visto, as
+SF são em geral mais azuis, a distribuição de massa estelar no diagrama cor--cor
+mostra um certa tendência para massas menores no extremo azul.
 
-AV pode ser negativo?
+A extinção por poeira na banda $V$ no diagrama cor--cor pode ser visto para cada
+classe de galáxia na figura \ref{fig:AVColor}. A extinção também forma uma
+sequência: PG, RG, wAGN e sAGN, em ordem crescente de extinção, com as SF tendo
+extinção similar as sAGN. A cor também está correlacionada com a extinção, com
+galáxias azuis tendo extinção maior do que as vermelhas. Uma coisa que chama a
+atenção é o fato de haver galáxias com extinção negativa. Isto pode indicar que
+a galáxia tem populações mais velhas (e consequentemente mais vermelhas) do que
+as existentes na base de SSP. Como o espectro da galáxia é mais vermelho do que
+todos os espectros da base, o excesso de vermelho acaba sendo compensado através
+de um ``azulamento'' do espectro, que é equivalente a um avermelhamento $A_V$
+negativo. Isto só é possível porque $A_V$ é um parâmetro livre da síntese do
+\starlight.
+
+Em geral pode-se notar que a cor UV das galáxias está relacionada de alguma
+forma com as suas propriedades físicas. Para algumas propriedades, como a idade
+estelar média, esta relação é bastante pronunciada. Os novos dados
+observacionais, isto é, a cor NUV das galáxias, estão de acordo com o que seria
+esperado com base numa classificação feita por linhas de emissão, e também com a
+síntese feita pelo \starlight, ambos provenientes dos espectros óticos do \SDSS.
+O fato de estas informações vindas de comprimentos de onda diferentes (e {\em
+surveys} diferentes) concordarem fortalece a validade tanto do esquema de
+classificação quanto da síntese.
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-at_flux-byclass.eps}
-	\caption[Idade média das SSP ponderada em fluxo no diagrama cor--cor UV.]
-	{Idade média das SSP componentes das galáxias ponderada pelo fluxo, em função
-	de $\mathrm{NUV}-r$ e $g-r$. O painel \textbf{(a)} contém todas as galáxias da
-	amostra. Os painéis de \textbf{(b)} a \textbf{(f)} contém somente as galáxias
-	com formação estelar (SFG), AGN fortes (sAGN), AGN fracas (wAGN), galáxias
-	aposentadas (RG) e galáxias passivas (PG), respectivamente. Os contornos
-	indicam a densidade de galáxias. A idade média da distribuição vai aumentando
-	conforme a classe, na sequência apresentada.}
+	\caption[Idade estelar média ponderada em fluxo no diagrama cor--cor.]
+	{Idade estelar média das galáxias, ponderada pelo fluxo, em função de
+	$\mathrm{NUV}-r$ e $g-r$. O painel \textbf{(a)} mostra o histograma normalizado
+	das idades para cada classe, utilizando o mesmo código de cores da figura
+	\ref{fig:Whan}. Os painéis de \textbf{(b)} a \textbf{(f)} são diagramas
+	cor--cor com eixos iguais aos da figura \ref{fig:DensityColor} contendo somente
+	as galáxias com formação estelar (SF), AGN fortes (sAGN), AGN fracas (wAGN),
+	galáxias aposentadas (RG) e galáxias passivas (PG), respectivamente. Os
+	contornos indicam a densidade de galáxias.}
 	\label{fig:ATFluxColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-at_mass-byclass.eps}
-	\caption[Idade média das SSP ponderada em massa no diagrama cor--cor UV.]
-	{O mesmo que a figura \ref{fig:ATFluxColor}, para a idade média das SSP
-	componentes das galáxias, ponderada pela massa. Note que a escala de idades não
-	é a mesma.}
+	\caption[Idade estelar média ponderada em massa no diagrama cor--cor.]
+	{O mesmo que a figura \ref{fig:ATFluxColor}, para a idade estelar média das
+	galáxias, ponderada pela massa. Note que a escala de idades não é a mesma.}
 	\label{fig:ATMassColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-am_flux-byclass.eps}
-	\caption[Metalicidade média das SSP ponderada em fluxo no diagrama cor--cor
-	UV.]
-	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade média das
-	SSP componentes das galáxias, ponderada pelo fluxo.}
+	\caption[Metalicidade estelar média ponderada em fluxo no diagrama cor--cor.]
+	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade estelar média
+	das galáxias, ponderada pelo fluxo.}
 	\label{fig:AMFluxColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-am_mass-byclass.eps}
-	\caption[Metalicidade média das SSP ponderada em massa no diagrama cor--cor
-	UV.]
-	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade média das
-	SSP componentes das galáxias, ponderada pelo massa.}
+	\caption[Metalicidade estelar média ponderada em massa no diagrama cor--cor.]
+	{O mesmo que a figura \ref{fig:ATFluxColor}, para a metalicidade estelar média
+	das galáxias, ponderada pelo massa.}
 	\label{fig:AMMassColor}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-mcor_gal-byclass.eps}
-	\caption[Massa estelar das galáxias no diagrama cor--cor UV.]
+	\caption[Massa estelar das galáxias no diagrama cor--cor.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para o logaritmo da massa estelar
 	das galáxias em massas solares.}
 	\label{fig:MCorGalColor}
@@ -281,31 +323,11 @@ AV pode ser negativo?
 
 \begin{figure}
 	\includegraphics{figuras/uvcolor-color-AV-byclass.eps}
-	\caption[Extinção por poeira no diagrama cor--cor UV.]
+	\caption[Extinção por poeira no diagrama cor--cor.]
 	{O mesmo que a figura \ref{fig:ATFluxColor}, para a extinção por
 	poeira na banda $V$ das galáxias.}
 	\label{fig:AVColor}
 \end{figure}
-
-\begin{figure}
-	\includegraphics{figuras/uvcolor-color-halpha_ew-byclass.eps}
-	\caption[Largura equivalente de \Halpha no diagrama cor--cor UV.]
-	{O mesmo que a figura \ref{fig:ATFluxColor}, para o logaritmo da largura
-	equivalente de \Halpha das galáxias.}
-	\label{fig:EWHaColor}
-\end{figure}
-
-\section{Discussão}
-
-\subsection{A separação entre galáxias aposentadas e passivas}
-
-%TODO: Comparar galáxias aposentadas com passivas
-TODO: Comparar galáxias aposentadas com passivas.
-
-%\backslash citep[In prep. perpetuum]${$Mateus2013$}$.
-\textbackslash{}citep{[In prep. perpetuum]}\{Mateus2013\}
-
-%citep[In prep. perpetuum]${$Mateus2013$}$.
 
 
 % End of this chapter

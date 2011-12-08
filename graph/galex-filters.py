@@ -9,14 +9,14 @@ os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin:/opt/local/bin'
 
 filters = ['FUV', 'NUV', 'u', 'g', 'r', 'i', 'z']
 
-table_names2 = {}
-table_names2['FUV'] = 'galex1500.txt'
-table_names2['NUV'] = 'galex2500.txt'
-table_names2['u'] = 'u_SDSS.txt'
-table_names2['g'] = 'g_SDSS.txt'
-table_names2['r'] = 'r_SDSS.txt'
-table_names2['i'] = 'i_SDSS.txt'
-table_names2['z'] = 'z_SDSS.txt'
+table_names = {}
+table_names['FUV'] = 'galex1500.txt'
+table_names['NUV'] = 'galex2500.txt'
+table_names['u'] = 'u_SDSS.txt'
+table_names['g'] = 'g_SDSS.txt'
+table_names['r'] = 'r_SDSS.txt'
+table_names['i'] = 'i_SDSS.txt'
+table_names['z'] = 'z_SDSS.txt'
 
 filter_line = {
                'FUV': 'b-',
@@ -52,8 +52,8 @@ pylab.axis([1100, 10000, 0, 0.7])
 pylab.xlabel('Comprimento de onda [\AA]')
 pylab.ylabel('Transmit\^ancia')
 for f in filters:
-    t = Table('filters/' + table_names2[f], type='ascii')
-    pylab.plot(t.data['col1'], t.data['col2'], filter_line[f], label=f)
+    t = Table('filters/' + table_names[f], type='ascii')
+    pylab.plot(t.col1, t.col2, filter_line[f], label=f)
 
 pylab.legend()
 #pylab.show()

@@ -65,19 +65,19 @@ def randomFraction(arr, f):
 tablename = sys.argv[1]
 t = Table(tablename)
 
-sample = (t.data['redshift'] > 0.04) 
-sample &= (t.data['redshift'] < 0.17)
+sample = (t.redshift > 0.04) 
+sample &= (t.redshift < 0.17)
+sample &= (t.m_r < 17.77)
 
-NUV_r = t.data['NUV'][sample] - t.data['r'][sample]
-g_r = t.data['g'][sample] - t.data['r'][sample]
+NUV_r = t.NUV[sample] - t.r[sample]
+g_r = t.g[sample] - t.r[sample]
 
 
-logN2Ha = np.log10(t.data['nii_6584_flux'][sample] / t.data['halpha_flux'][sample])
-WHa = t.data['halpha_ew'][sample]
-WN2 = t.data['nii_6584_ew'][sample]
+logN2Ha = np.log10(t.nii_6584_flux[sample] / t.halpha_flux[sample])
+WHa = t.halpha_ew[sample]
+WN2 = t.nii_6584_ew[sample]
 
-types = ['all',
-         'starforming',
+types = ['starforming',
          'sAGN',
          'wAGN',
          'retired',
@@ -85,7 +85,6 @@ types = ['all',
 ]
 
 typemask = {
-            'all': np.zeros(len(NUV_r)) == 0,
             'starforming': (logN2Ha < -0.4) & (WHa > 3.0),
             'sAGN': (logN2Ha > -0.4) & (WHa > 6.0),
             'wAGN': (logN2Ha > -0.4) & (WHa < 6.0) & (WHa > 3.0),
@@ -94,7 +93,6 @@ typemask = {
             }
 
 position = {
-            'all': 321,
             'starforming': 322,
             'sAGN': 323,
             'wAGN': 324,
@@ -103,7 +101,6 @@ position = {
 }
 
 color = {
-         'all': None,
          'starforming': 'blue',
          'sAGN': 'lightgreen',
          'wAGN': 'darkgreen',
@@ -112,8 +109,7 @@ color = {
          }
 
 label = {
-         'all': '{\\bf (a)} Todas',
-         'starforming': '{\\bf (b)} SFG',
+         'starforming': '{\\bf (b)} SF',
          'sAGN': '{\\bf (c)} sAGN',
          'wAGN': '{\\bf (d)} wAGN',
          'retired': '{\\bf (e)} RG',
@@ -121,8 +117,7 @@ label = {
          }
 
 label2 = {
-         'all': 'Todas',
-         'starforming': 'SFG',
+         'starforming': 'SF',
          'sAGN': 'sAGN',
          'wAGN': 'wAGN',
          'retired': 'RG',
@@ -162,38 +157,54 @@ else:
 # AV: extincao
 vmin = {}
 vmax = {}
+vmin_h = {}
+vmax_h = {}
 param = {}
 
 vmin['at_flux'] = 7.5
 vmax['at_flux'] = 10.0
-param['at_flux'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em fluxo'
+vmin_h['at_flux'] = 7.0
+vmax_h['at_flux'] = 10.5
+param['at_flux'] = 'Logaritmo da idade estelar m\\\'edia [a] ponderada em fluxo'
 
 vmin['at_mass'] = 9.4
 vmax['at_mass'] = 10.2
-param['at_mass'] = 'Logaritmo da idade m\\\'edia [a] das SSP ponderada em massa'
+vmin_h['at_mass'] = 9.0
+vmax_h['at_mass'] = 10.4
+param['at_mass'] = 'Logaritmo da idade estelar m\\\'edia [a] ponderada em massa'
 
 vmin['am_flux'] = 0.0
 vmax['am_flux'] = 2.0
-param['am_flux'] = 'Metalicidade m\\\'edia [$Z_{\odot}$] das SSP ponderada em fluxo'
+vmin_h['am_flux'] = 0.0
+vmax_h['am_flux'] = 2.0
+param['am_flux'] = 'Metalicidade estelar m\\\'edia [$Z_{\odot}$] ponderada em fluxo'
 
 vmin['am_mass'] = 0.0
 vmax['am_mass'] = 2.0
-param['am_mass'] = 'Metalicidade m\\\'edia [$Z_{\odot}$] das SSP ponderada em massa'
+vmin_h['am_mass'] = 0.0
+vmax_h['am_mass'] = 2.0
+param['am_mass'] = 'Metalicidade estelar m\\\'edia [$Z_{\odot}$] ponderada em massa'
 
 vmin['mcor_gal'] = 9.0
 vmax['mcor_gal'] = 12.0
+vmin_h['mcor_gal'] = 9.0
+vmax_h['mcor_gal'] = 12.5
 param['mcor_gal'] = 'Logaritmo da massa estelar [$M_{\odot}$]'
 
 vmin['AV'] = -0.25
 vmax['AV'] = 1.0
+vmin_h['AV'] = -0.4
+vmax_h['AV'] = 1.2
 param['AV'] = 'Extin\\c{c}\\~ao por poeira [magnitude]'
 
 vmin['halpha_ew'] = -1.0
 vmax['halpha_ew'] = 2.0
-param['halpha_ew'] = 'Logaritmo da largura equivalente de $H_{\\alpha}$ [\AA]'
+vmin_h['halpha_ew'] = -1.5
+vmax_h['halpha_ew'] = 2.5
+param['halpha_ew'] = 'Logaritmo da largura equivalente de $\\mathrm{H}_{\\alpha}$ [\AA]'
 
 # Hack: plot log(EWHa)
-t.data['halpha_ew'] = np.log10(t.data['halpha_ew'])
+t.halpha_ew = np.log10(t.halpha_ew)
 
 #if debug:
 #    for col in label.keys():
@@ -209,6 +220,15 @@ set_eps_output_3x2()
 for p in param.keys():
     pylab.figure()
     pylab.suptitle(param[p])
+    ax = pylab.subplot(321)
+    for type in types:
+        x = t.data[p][sample][typemask[type]]
+        h, e = pylab.histogram(x, 40, (vmin_h[p], vmax_h[p]))
+        pylab.title('\\textbf{(a)} Histograma', fontsize=8, ha='left', x=0.06, y=0.83)
+        pylab.ylim(0.0, 1.2)
+        pylab.setp(pylab.gca(), 'yticklabels', [])
+        pylab.plot(e[:-1], h*1.0/np.max(h), color=color[type])
+        
     for type in types:
         mask = typemask[type]
         h, ex, ey = np.histogram2d(NUV_r[mask], g_r[mask], bins=20,

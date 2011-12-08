@@ -71,7 +71,7 @@ provê acesso aos dados armazenados no banco de dados do \SDSS
 locais famosos ({\em famous places}), que mostra imagens coloridas de objetos
 celestes conhecidos. Há formulários para buscas mais sérias, gerando coleções de
 imagens, espectros e tabelas de dados. No {\em SkyServer} é possível fazer
-buscas avançadas utlizando SQL, embora haja limites de tempo de execução e de
+buscas avançadas utilizando SQL, embora haja limites de tempo de execução e de
 quantidade de objetos retornados. Esta limitação é contornada através do sistema
 {\em CasJobs}, que é tratado na seção \ref{sec:CrossMatch:SDSS:CasJobs}.
 
@@ -79,9 +79,9 @@ quantidade de objetos retornados. Esta limitação é contornada através do sis
 criar {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês. Clone de um {\em
 website}.} do {\em SkyServer}. Tanto o banco de dados do \SDSS quanto o código
 fonte do {\em SkyServer} estão disponível no próprio {\em website} do {\em
-SkyServer}. Há um clone, feito por mim\fixme, do banco de dados do {\em Data
-Release} 8 do \SDSS no servidor {\em CasJobs} do \starlight \footnote{{\em
-CasJobs} do \starlight: \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
+SkyServer}. Temos um clone do banco de dados do {\em Data Release} 8 do \SDSS no
+servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
+\url{http://casjobs.starlight.ufsc.br/casjobs/}}.
 
 \begin{figure}
 	\includegraphics[width=1.0\columnwidth]{figuras/skyserver.eps}
@@ -148,7 +148,7 @@ como um arquivo texto. Ele usa uma biblioteca de espectros SSPs com diferentes
 idades e metalicidades como uma base do espaço de espectros galáticos possíveis.
 De forma simplificada, o que o \starlight faz é encontrar as frações de massa e
 luz correspondente a cada elemento da base, ou seja, cada SSP. Analisando as
-relações entre os componentes determinandos pela síntese, o programa determina
+relações entre os componentes determinados pela síntese, o programa determina
 diversas propriedades físicas da galáxia, como a massa estelar total, a massa
 separada por idade, metalicidade média, quantidade de poeira e dispersão de
 velocidade, para citar apenas algumas. Quase um milhão de espectros foram
@@ -164,12 +164,12 @@ complementar de linhas de emissão.
 Os arquivos da síntese gerados pelo \starlight ocupam quase trezentos gigabytes.
 Mesmo o catálogo de propriedades físicas das galáxias, sozinho, ocupa mais de um
 gigabyte. Embora seja um volume razoavelmente grande de dados, é possível
-trabalhar com esta quantidade de dados num computador atual\footnote{Na época da
-escrita desta dissertação, é bastante comum encontrar um computador novo com 4
-gigabytes de memória RAM ou mais.}. A transferência de arquivos com tamanho da
-ordem de gigabytes pela internet também também é lugar-comum atualmente.
-Poderia-se argumentar que distribuir os dados neste formato seja a forma mais
-adequada.
+trabalhar com esta quantidade de dados num computador atual\footnote{Quando esta
+dissertação foi escrita, era bastante comum comprar um computador pessoal novo
+com 4 gigabytes de memória RAM ou mais.}. A transferência de arquivos com
+tamanho da ordem de gigabytes pela internet também também é lugar-comum
+atualmente. Poderia-se argumentar que distribuir os dados neste formato seja a
+forma mais adequada.
 
 Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
 CasJobs} em prover acesso aos dados o \SDSS não é o tamanho da base de dados, e
@@ -178,43 +178,42 @@ lhe for conveniente. Além disso, manter a base de dados num local central
 permite que sejam feitas correções e revisões, o que implicaria normalmente numa
 nova transferência caso cada usuário tivesse a sua cópia local.
 
-% FIXME: Deixar mais claro que fui eu que fiz.
 O {\em CasJobs} requer um servidor rodando {\em Windows Server} com {\em
 Internet Information Services} (IIS) e {\em Microsoft SQL Server} (MSSQL). A
 instalação do {\em CasJobs} está documentada no {\em website} do {\em SkyServer}
-(ver secão \ref{sec:CrossMatch:SDSS:SkyServer}). Com um servidor {\em CasJobs},
+(ver seção \ref{sec:CrossMatch:SDSS:SkyServer}). Com um servidor {\em CasJobs},
 o trabalho consiste em importar os dados em arquivos texto para um banco de
 dados no MSSQL. A ferramenta principal para a manipulação dos bancos de dados no
 MSSQL é o {\em Microsoft SQL Server Management Studio}. Nele há um assistente
 para importação de dados baseado no {\em SQL Server Integrated Services} (SSIS).
-A importação das tabelas de propriedades físicas do \starlight é trivial. Já a
-importação das linhas de emissão requer um trabalho extra para normalizar a
-tabela\footnote{A normalização consiste em decompor uma tabela em tabelas
+A importação das tabelas de propriedades físicas do \starlight foi feita
+rapidamente através desta ferramenta. Entretanto, foi necessário
+normalizar\footnote{A normalização consiste em decompor uma tabela em tabelas
 menores (com menos campos) de forma que elas fiquem melhor estruturadas. No caso
 das linhas de emissão, a tabela passa de ``todas as linhas de um dado objeto num
-único registro'' para ``uma linha para cada regsitro''. No primeiro caso,
+único registro'' para ``uma linha para cada registro''. No primeiro caso,
 adicionar um novo tipo de linha de emissão implicaria em mudar a estrutura da
-tabela, o que é evitado utilizando a segunda abordagem.}.\fixme
+tabela, o que é evitado utilizando a segunda abordagem.} a tabela de linhas de
+emissão para facilitar a inclusão de novas linhas no futuro.
 
 \subsection{Estrutura do banco de dados}
 \label{sec:Crossmatch:EstruturaBDStarlight}
 
 O esquema do banco de dados do \starlight pode ser visto na figura
-\ref{fig:EsquemaBDStarlight}. A tabela \texttt{observational\_params} contém os
-dados obtidos do \SDSS. Estes dados, junto com os parâmtetros de entrada da
-síntese (tabela \texttt{synthesis\_params}), foram usados como parâmetros para a
-obtenção das propriedades físicas das galáxias, armazzenadas na tabela
-\texttt{synthesis\_results}. Estas tabelas estão ligadas através dos campos
-\texttt{SpecObjID} e \texttt{SynID}. As linhas de emissão estão armazenadas na
-tabela \texttt{el\_fit}, ligada à \texttt{synthesis\_results} através do campo
-\texttt{SynID}. A definição das linhas (comprimento de onda e faixas contínuo
-usadas na medida) está contida na tabela \texttt{cfg\_el\_fit}. As tabelas
-referentes ao \galex são explicadas na seção
+\ref{fig:EsquemaBDStarlight}. Os dados observacionais obtidos do \SDSS estão na
+tabela \texttt{observational\_params}. Estes dados, junto com os parâmetros de
+entrada da síntese (tabela \texttt{synthesis\_params}), foram usados como
+parâmetros para a obtenção das propriedades físicas das galáxias, armazenadas na
+tabela \texttt{synthesis\_results}. Estas tabelas estão ligadas através dos
+campos \texttt{SpecObjID} e \texttt{SynID}. As linhas de emissão estão
+armazenadas na tabela \texttt{el\_fit}, ligada à \texttt{synthesis\_results}
+através do campo \texttt{SynID}. A definição das linhas (comprimento de onda e
+faixas contínuo usadas na medida) está contida na tabela \texttt{cfg\_el\_fit}.
+As tabelas referentes ao \galex são explicadas na seção
 \ref{sec:Crossmatch:DefAmostras:IdSDSSGalex}.
 
-% FIXME: Tirar aux_index
 \begin{figure}
-	\includegraphics[width=\textwidth]{figuras/starlight-schema.eps}
+	\includegraphics{figuras/starlight-schema.eps}
 	\caption[Esquema do banco de dados do \starlight.]
 	{Esquema do banco de dados do \starlight. As linhas indicam chaves
 	estrangeiras, relacionando dois campos de duas tabelas diferentes.}
@@ -228,7 +227,7 @@ A amostra de galáxias do \starlight contém $926246$ espectros do \SDSS DR7
 \citep{Abazajian2009}. A identificação de cada espectro é feita através de um
 tripleto: a data juliana média da observação (\texttt{MJD}, {\em Mean Julian
 Date}), a identificação da placa de suporte das fibras ópticas (\texttt{Plate})
-e a identificacão da fibra utilizada para a obtenção do espectro
+e a identificação da fibra utilizada para a obtenção do espectro
 (\texttt{FiberID}). Este tripleto (\texttt{MJD}, \texttt{Plate},
 \texttt{FiberID}) identifica unicamente um espectro. Porém, é mais conveniente
 (e eficiente) ter um identificador único (uma chave primária\footnote{Chave
@@ -340,7 +339,6 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
 \label{sec:Crossmatch:DefAmostras:IdSDSSGalex}
 
-% FIXME: Procurar a SP que cria a tabela xSDSSDR7
 Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 \galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
 correspondentes ópticos no catálogo do \SDSS, chamada \texttt{xSDSSDR7}. A
@@ -405,7 +403,7 @@ ver seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
 detecção do objeto no \galex e no \SDSS (\texttt{distance}). Esta tabela é
 esparsamente populada, com um registro para cada objeto do \starlight, e os
 dados UV preenchidos somente para os objetos com identificação positiva. Caso o
-objeto não tenha um correspodente \galex, os valores serão nulos\footnote{Numa
+objeto não tenha um correspondente \galex, os valores serão nulos\footnote{Numa
 tabela, quando um campo de um registro não possui valor definido, seu valor é
 dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
 null}''.}. De forma similar, os dados UV para o {\em survey} MIS foram
@@ -421,10 +419,10 @@ forma, optou-se por uma confiabilidade maior nos dados utilizando apenas
 identificações unívocas, em troca de uma amostra menor.
 
 Outro artefato importante é que somente um objeto \galex foi escolhido para cada
-objeto do catálogo do \starlight, indepente do {\em survey} utilizado. Se existe
-um correspondente AIS e outro MIS para o mesmo objeto da amostra, apenas o mais
-próximo é considerado. Nos campos onde os dois {surveys} se sobrepõem, há uma
-maior quantidade de objetos no MIS do que no AIS, devido ao maior tempo de
+objeto do catálogo do \starlight, independente do {\em survey} utilizado. Se
+existe um correspondente AIS e outro MIS para o mesmo objeto da amostra, apenas
+o mais próximo é considerado. Nos campos onde os dois {surveys} se sobrepõem, há
+uma maior quantidade de objetos no MIS do que no AIS, devido ao maior tempo de
 exposição no MIS. Assim, nesses campos, os objetos do MIS têm maior chance de
 estar mais próximos ao objeto do \SDSS. Isto também não é um problema muito
 grave para o AIS, já que a sua cobertura do céu é muito maior do que a do MIS. A
@@ -446,7 +444,8 @@ ficando abaixo do nível limite de sinal-ruído do {\em survey}.
 	surveys} AIS e MIS nas bandas FUV e NUV, respectivamente. A linha FUV+NUV
 	lista a quantidade de objetos com detecção simultânea em FUV e NUV. A figura
 	\ref{fig:QueryListaPorBandaSurvey} contém a {\em query} que gera esta lista.}
-	\begin{tabular}{l|r r}
+	\setlength{\tabcolsep}{1cm}
+	\begin{tabular}{l r r}
 		Banda   &        AIS &       MIS \\
 		\midrule
 		FUV     & $107\,902$ & $13\,685$ \\
@@ -524,10 +523,6 @@ $ugriz$ do \SDSS, a magnitude NUV do \galex e algumas propriedades físicas das
 galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
 equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 
-% TODO: Justificar o abandono de FUV.
-%A análise apresentada no capítulo \ref{sec:Analise} não leva em consideração a
-%fotometria FUV.
-
 \begin{table}
 	\caption[Propriedades físicas das galáxias utilizados na amostra.]
 	{Propriedades físicas das galáxias, obtidos do \starlight.}
@@ -545,41 +540,46 @@ equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 \end{table}
 
 É preciso fazer algumas  considerações com respeito ao {\em redshifts} das
-galáxias que pertencem à amostra. O {\em redshift} deve ser superior a $0,04$
-para evitar efeitos de abertura da fibra\footnote{Os espectros obtidos pelo
-\SDSS foram feitos através de fibras ópticas. Cada fibra coleta a luz de uma
-região de 3 segundos de arco de diâmetro. Em {\em redshifts} próximos, uma
+galáxias que pertencem à amostra. O {\em redshift} não deve ser inferior a
+$0,04$ para evitar efeitos de abertura da fibra\footnote{Os espectros obtidos
+pelo \SDSS foram feitos através de fibras ópticas. Cada fibra coleta a luz de
+uma região de 3 segundos de arco de diâmetro. Em {\em redshifts} próximos, uma
 fração considerável da luz das galáxias (em geral das partes externas) cai fora
 da fibra. Nestes casos, o espectro obtido não é o espectro integrado da galáxia,
-mas sim o espectro das regiões centrais.}. Em {\em redshifts} superiores a
-$0,17$ a linha \NII fica deslocada para além do limite vermelho dos espectros do
-\SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 < z
-< 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
+mas sim o espectro das regiões centrais.}. Já em {\em redshifts} superiores a
+$0,17$, a linha \NII fica deslocada para além do limite vermelho dos espectros
+do \SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 <
+z < 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 
-A figura \ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude
-absoluta $r$ das galáxias em função do {\em redshift}. Mesmo limitada em {\em
-redshift}, a amostra não está completa. O corte, que vai de $-18$ em $z=0,04$
-até $-22$ em $z=0,17$, ocorre devido ao limite ``fraco" de detecção do \SDSS.
-Para esta amostra, as propriedades físicas e observacionais das galáxias estão
-distribuídas conforme os histogramas da figura \ref{fig:HistogramasAmostra}.
+Foram rejeitadas galáxias com magnitude aparente $r<17,77$. Este critério remove
+da amostra galáxias distantes muito brilhantes. A figura
+\ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude absoluta
+$M_r$ das galáxias da amostra em função do {\em redshift}. Mesmo limitada em
+{\em redshift}, a amostra não está completa. O corte em magnitude, que vai de
+$M_r=-18$ em $z=0,04$ até $M_r=-22$ em $z=0,17$, ocorre devido ao limite
+``fraco" de detecção do \SDSS. Para esta amostra, as propriedades físicas e
+observacionais das galáxias estão distribuídas conforme os histogramas da figura
+\ref{fig:HistogramasAmostra}. Estas propriedades serão exploradas com mais
+detalhes na seção \ref{sec:Analise:PropFisicas}.
 
 \begin{figure}
 	\includegraphics{figuras/completeness-volume.eps}
-	\caption[Magnitude $r$ em função do {\em redshift}.]
-	{Magnitude $r$ em função do {\em redshift} para a amostra \starlightUV.}
+	\caption[Magnitude $M_r$ em função do {\em redshift}.]
+	{Magnitude $M_r$ em função do {\em redshift} para a amostra \starlightUV. A
+	cor dos bins hexagonais indica a densidade de pontos.}
 	\label{fig:CompletezaRedshiftMag}
 \end{figure}
 
 \begin{figure}
 	\includegraphics{figuras/histogram-sample.eps}
-	\caption[Histogramas das medidas da amostra \starlight+UV.]
-	{Histogramas das medidas da amostra \starlight+UV.}
+	\caption[Histogramas das medidas da amostra \starlightUV.]
+	{Histogramas das medidas da amostra \starlightUV.}
 	\label{fig:HistogramasAmostra}
 \end{figure}
 
 Resumindo, a amostra \starlightUV contém os objetos do AIS com fotometria NUV
-definida, limitada em {\em redshifts} entre $0,04$ e $0,17$. No total a amostra
-contém $133\,244$ objetos.
+definida, limitada em {\em redshifts} entre $0,04$ e $0,17$, e com magnitude
+aparente $r$ menor que $17,77$, num total de $130\,362$ galáxias.
 
 
 %% End of this chapter

@@ -179,8 +179,8 @@ legenda das figuras estão listados abaixo.
 \textbf{SELECT INTO} MyDB..galex_ais_elines_z
 	s.specobjid,
 	g.nuv_mag \textbf{AS} NUV,
-	o.Mu \textbf{AS} u, o.Mg \textbf{AS} g, o.Mr \textbf{AS} r,
-	o.Mi \textbf{AS} i, o.Mz \textbf{AS} z,
+	o.Mu, o.Mg, o.Mr, o.Mi, o.Mz,
+	o.m_u, o.m_g, o.m_r, o.m_i, o.m_z,
 	s.mcor_gal, s.at_flux, s.at_mass, s.am_flux,
 	s.am_mass, s.AV,
 	e.oiii_5007_flux, e.oiii_5007_flux_err,
@@ -204,12 +204,13 @@ legenda das figuras estão listados abaixo.
 	\textbf{AND} g.nuv_mag <> -999
 	\textbf{AND} o.z > 0.04
 	\textbf{AND} o.z < 0.17
+	\textbf{AND} o.m_r < 17.77
 \end{Verbatim}
 	\caption[Extração da amostra \starlightUV.]
 	{Extração da amostra \starlightUV. Os limites em {\em redshift}
-	($0,04 < z < 0,17$) são explicados na seção
-	\ref{sec:Crossmatch:DefAmostras:StarlightUV}. O critério ``\texttt{g.nuv\_mag <>
-	-999}'' remove os objetos que não tiveram identificação em NUV. {\em Query}
+	($0,04 < z < 0,17$) e magnitude ($r<17,77$) são explicados na seção
+	\ref{sec:Crossmatch:DefAmostras:StarlightUV}. O critério ``\texttt{g.nuv\_mag
+	<> -999}'' remove os objetos que não tiveram identificação em NUV. {\em Query}
 	executada no {\em CasJobs} do \starlight.}
 	\label{fig:QuerySampleAIS}
 \end{figure}

@@ -65,11 +65,12 @@ def randomFraction(arr, f):
 tablename = sys.argv[1]
 t = Table(tablename)
 
-sample = (t.data['redshift'] > 0.04) 
-sample &= (t.data['redshift'] < 0.17) 
+sample = (t.redshift > 0.04) 
+sample &= (t.redshift < 0.17)
+sample &= (t.m_r < 17.77)
 
-NUV_r = t.data['NUV'][sample] - t.data['r'][sample]
-g_r = t.data['g'][sample] - t.data['r'][sample]
+NUV_r = t.NUV[sample] - t.r[sample]
+g_r = t.g[sample] - t.r[sample]
 
 bounds = [.5,7,.2,.9]
 h, ex, ey = np.histogram2d(NUV_r, g_r, bins=20,
@@ -103,22 +104,22 @@ position = {}
 
 vmin['at_flux'] = 7.5
 vmax['at_flux'] = 10.0
-label['at_flux'] = '{\\bf (a)} $<\\!\\log(t_{\\star}/\\mathrm{[a]})\\!>_F$'
+label['at_flux'] = '{\\bf (a)} $\\langle\\log(t_{\\star}/\\mathrm{[a]})\\rangle_F$'
 position['at_flux'] = 321
 
 vmin['at_mass'] = 9.4
 vmax['at_mass'] = 10.2
-label['at_mass'] = '{\\bf (b)} $<\\!\\log(t_{\\star}/\\mathrm{[a]})\\!>_M$'
+label['at_mass'] = '{\\bf (b)} $\\langle\\log(t_{\\star}/\\mathrm{[a]})\\rangle_M$'
 position['at_mass'] = 322
 
 vmin['am_flux'] = 0.0
 vmax['am_flux'] = 2.0
-label['am_flux'] = '{\\bf (c)} $<\\!Z_{\\star}/[Z_{\\odot}]\\!>_F$'
+label['am_flux'] = '{\\bf (c)} $\\langle Z_{\\star}/[Z_{\\odot}]\\rangle_F$'
 position['am_flux'] = 323
 
 vmin['am_mass'] = 0.0
 vmax['am_mass'] = 2.0
-label['am_mass'] = '{\\bf (d)} $<\\!Z_{\\star}/[Z_{\\odot}]\\!>_M$'
+label['am_mass'] = '{\\bf (d)} $\\langle Z_{\\star}/[Z_{\\odot}]\\rangle_M$'
 position['am_mass'] = 324
 
 vmin['mcor_gal'] = 9.0

@@ -18,64 +18,76 @@
 \chapter{Conclusões e perspectivas}
 \label{sec:conclusao}
 
+
 %***************************************************************%
 %                                                               %
 %                    Conclusao - este trabalho                  %
 %                                                               %
 %***************************************************************%
 
-%***************************************************************%
-%                                                               %
-%              Análise - separação entre RG e PG                %
-%                                                               %
-%***************************************************************%
-
-\section{A separação entre galáxias aposentadas e passivas}
-
-Sequência de classes no diagrama cor--cor.
-
-% FIXME: Separacão RG e RG
-FIXME:\\
-Tecnicamente, as galáxias passivas (PG) e as aposentadas (RG) deveriam ser
-essencialmente as mesmas, com as RG apresentando linhas de emissão fracas. Em
-geral as propriedades físicas destas duas classes se sobrepõem, e são distintas
-das duas classes AGN. Ainda assim, é preciso levar em conta que existem
-diferenças sistemáticas entre as PG e as RG.
-
-
-%TODO: Comparar galáxias aposentadas com passivas
-TODO: Comparar galáxias aposentadas com passivas no diagrama cor--cor.
-
-Nas figuras \ref{fig:ATFluxColor} até \ref{fig:AVColor} pode-se notar que a
-distribuição de RG tem um espalhamento considerável na direção das AGN\ldots
-
-
-\textbackslash citep{[In prep. perpetuum]}\{Mateus2013\}
-
-
 \section{Este trabalho}
 
-Este estudo teve como objetivo explorar o uso de bancos de dados em astronomia.
-{\em Mega-surveys} estão gerando um dilúvio de dados, é de extrema importância
-que sejam desenvolvidas de técnicas e ferramentas adequadas para absorver
-este volume de dados.
+Este estudo teve como objetivo principal explorar o uso de bancos de dados em
+astronomia. Com a previsão de um diluvio de dados, é de extrema importância que
+sejam desenvolvidas técnicas e ferramentas adequadas para absorver este volume
+de dados.
 
-O uso de bancos de dados relacionais facilitou muito o acesso e o gerenciamento
-dos dados de um {\em survey}. As diversas ferramentas disponíveis permitem que
-se manipule os dados de uma forma eficiente.
+% FIXME: Onde estao os maiores usuários do starlight?
+A importação do catálogo do \starlight para um banco de dados relacional foi uma
+tarefa relativamente simples. O uso de um banco de dados relacional, neste caso
+{\em MS SQL Server}, facilitou muito o gerenciamento do catálogo. As diversas
+ferramentas disponíveis permitem que se manipule os dados de uma forma
+eficiente. Em especial, grande parte do presente trabalho foi feito nos
+ambientes {\em CasJobs}, tanto do \starlight quanto do \SDSS e do \galex. O
+catálogo tem sido usado intensamente por colaboradores do \starlight em São
+Paulo e na Espanha, além de ter diversos usuários espalhados pelo mundo (figura
+\ref{fig:AcessosStarlight}).\fixme
 
-Importação dos dados do \starlight para um banco de dados relacional.
+\begin{figure}
+	\includegraphics[width=\textwidth]{figuras/starlight-analytics.eps}
+	\caption[Localização dos acessos ao {\em CasJobs} do \starlight.]
+	{Localização dos acessos ao {\em CasJobs} do \starlight. O número de acessos é
+	referente ao mês de novembro de 2011.}	
+	\label{fig:AcessosStarlight}
+\end{figure}
 
-Crossmatch com o \galex.
+Por si só, o uso dos dados provenientes de um único {\em survey} de grande porte
+tem o potencial de gerar resultados até então inimagináveis. A identificação
+cruzada de objetos em {\em surveys} diferentes, por sua vez, promete ampliar e
+muito este espaço de possibilidades. O esforço de \citet{Budavari2009},
+utilizando as técnicas de indexação espacial descritas por \citet{Kunszt2001},
+na identificação cruzada de objetos entre \SDSS e \galex é de suma importância
+neste sentido: a maioria dos {\em surveys} atuais provê (ou planeja) formas de
+integração com o \SDSS e outros {\em surveys}. Esta informação cruzada foi
+utilizada para obter os dados fotométricos em UV dos objetos do catálogo do
+\starlight. Assim, o banco de dados agora contém as propriedades físicas de
+quase um milhão de galáxias, os seus correspondentes parâmetros observacionais
+provenientes do \SDSS, e as magnitudes UV absolutas e corrigidas (poeira e
+correção-$k$) para aproximadamente $170$ mil galáxias, obtidas pelo \galex.
 
-Como um exemplo do uso
+Como um estudo de caso, foi montada uma amostra de galáxias do catálogo do
+\starlight, com as suas propriedades físicas, algumas linhas de emissão e
+fotometria óptica e UV (chamada amostra \starlightUV). Dados os critérios de
+seleção da amostra, a extração da amostra resume-se a executar uma {\em query}
+no {\em CasJobs} e obter o seu resultado em um arquivo no formato desejado, FITS
+por exemplo. É claro, este processo pode ser repetido caso os critérios de
+seleção mudem (o que foi feito muitas vezes neste estudo, diga-se de passagem).
+Ainda assim, a ideia é abandonar a cultura de ter todo o conjunto de dados do
+catálogo presentes no computador do usuário. Com os catálogos imensos que estão
+sendo planejados (J-PAS e LSST, por exemplo), é bastante provável que este seja
+o caminho mais eficiente a seguir.
 
-Estudo das propriedades físicas de uma amostra de galáxias com relação às suas
-cores UV.
-
-
-Esta análise serviu para ilustrar a facilidade de se obter uma amostra
-partindo de um banco de dados obedecendo certos critérios.
+No capítulo \ref{sec:Analise} mostrou-se que as classes de galáxias da amostra
+\starlightUV, segundo os critérios de classificação descritos por
+\citet{CidFernandes2011}, tendem a ocupar regiões distintas do diagrama
+cor--cor. Nas figuras \ref{fig:ATFluxColor} até \ref{fig:AVColor} pode-se notar
+que a distribuição de RG tem um espalhamento considerável na direção das AGN e
+SF. Tecnicamente, as galáxias passivas (PG) e as aposentadas (RG) deveriam ser
+essencialmente as mesmas, com as RG apresentando linhas de emissão fracas. Em
+geral as propriedades físicas destas duas classes se sobrepõem, e são distintas
+das duas classes AGN. Ainda assim, é preciso ter em mente de que parece haver
+diferenças sistemáticas entre as PG e as RG. É preciso estudar estas diferenças
+mais a fundo.
 
 
 %***************************************************************%
@@ -86,16 +98,44 @@ partindo de um banco de dados obedecendo certos critérios.
 
 \section{Trabalhos futuros}
 
-% TODO: Trabalhos futuros.
-Expandir banco de dados do \starlight para o IR (WISE).
+% TODO: Expandir BD para o IR
+TODO: Expandir banco de dados do \starlight para o IR (WISE).
+A expansão do banco de dados do \starlight para o UV permite\ldots É natural
+tentar fazer a mesma abordagem para comprimentos de onda. IR permite investigar
+a emissão térmica da poeira.
 
-Estudo mais profundo da amostra \starlightUV. Examinar a contaminação entre as
-classes RG e PG.
+O estudo da amostra \starlightUV presente neste trabalho foi feito de forma
+superficial. A intenção foi apenas demonstrar uma forma de trabalhar com dados
+provenientes de diversos catálogos. As observações feitas no capítulo
+\ref{sec:Analise} são em geral de caráter qualitativo. Entretanto, os dados
+sugerem que existe uma contaminação entre as classes de galáxia. Um provável
+candidato é o erro na medida de \WHa na amostra. Isto causa uma contaminação de
+galáxias SF e wAGN nas RG. É preciso determinar se o erro nas medidas é,
+sozinho, capaz de explicar esta contaminação.
 
-Ainda poderia haver mais trabalho no servidor de banco de dados. Muita coisa foi
-executada no meu computador. A classificação e alguma análise básica podem ser
-feitas de forma simples pendurando scripts no casjobs.
+Embora a seleção da amostra tenha sido feita no banco de dados, uma boa parte da
+análise foi feita num computador pessoal. Isto custou diversas iterações de
+extração e diagnóstico da amostra. Alguns procedimentos como a classificação das
+galáxias e histogramas de propriedades físicas poderia ser feita facilmente do
+lado do servidor. O próximo passo, com relação ao banco de dados do \starlight,
+é criar ferramentas de diagnóstico que rodem do lado do servidor. A ideia é que
+estas ferramentas possam ser facilmente estendidas, e abstraiam a forma como as
+informações estão armazenadas no banco de dados.
 
-Mais o que?
+Esta forma de trabalho deve se tornar a regra nos próximos anos. Pode-se pensar
+que será possível armazenar dezenas de petabytes obtidas pelo LSST no computador
+do pesquisador, dado o crescimento que vem ocorrendo na densidade de
+armazenamento. Entretanto, é preciso cautela. \citet{Way2011} compara o
+crescimento da densidade de armazenamento com a largura de banda de
+entrada/saída (E/S) e a velocidade de processamento. Embora uma {\em query} em
+geral escale linearmente com o tamanho de um banco de dados, as operações
+científicas comumente aplicadas aos dados incluem classificação, cálculo de
+distância e densidade, por exemplo, e são geralmente de complexidade $O(N^2)$.
+Ou seja, mesmo que seja possível armazenar todo o conteúdo de um {\em survey}
+deste porte, é bastante provável que uma abordagem tradicional, acessando os
+dados de forma sequencial, esbarre na limitação de E/S e poder computacional.
+Tudo indica que a aposta mais segura seja manter os dados em centros de
+processamento do dados ({\em data centers}) poderosos, possivelmente espalhados
+geograficamente para melhorar a velocidade do acesso.
 
 % End of this chapter

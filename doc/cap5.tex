@@ -28,11 +28,10 @@
 \section{Este trabalho}
 
 Este estudo teve como objetivo principal explorar o uso de bancos de dados em
-astronomia. Com a previsão de um diluvio de dados, é de extrema importância que
+astronomia. Com a previsão de um dilúvio de dados, é de extrema importância que
 sejam desenvolvidas técnicas e ferramentas adequadas para absorver este volume
 de dados.
 
-% FIXME: Onde estao os maiores usuários do starlight?
 A importação do catálogo do \starlight para um banco de dados relacional foi uma
 tarefa relativamente simples. O uso de um banco de dados relacional, neste caso
 {\em MS SQL Server}, facilitou muito o gerenciamento do catálogo. As diversas
@@ -41,7 +40,7 @@ eficiente. Em especial, grande parte do presente trabalho foi feito nos
 ambientes {\em CasJobs}, tanto do \starlight quanto do \SDSS e do \galex. O
 catálogo tem sido usado intensamente por colaboradores do \starlight em São
 Paulo e na Espanha, além de ter diversos usuários espalhados pelo mundo (figura
-\ref{fig:AcessosStarlight}).\fixme
+\ref{fig:AcessosStarlight}).
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{figuras/starlight-analytics.eps}
@@ -75,7 +74,7 @@ seleção mudem (o que foi feito muitas vezes neste estudo, diga-se de passagem)
 Ainda assim, a ideia é abandonar a cultura de ter todo o conjunto de dados do
 catálogo presentes no computador do usuário. Com os catálogos imensos que estão
 sendo planejados (J-PAS e LSST, por exemplo), é bastante provável que este seja
-o caminho mais eficiente a seguir.
+o caminho mais eficiente a se seguir.
 
 No capítulo \ref{sec:Analise} mostrou-se que as classes de galáxias da amostra
 \starlightUV, segundo os critérios de classificação descritos por
@@ -98,28 +97,23 @@ mais a fundo.
 
 \section{Trabalhos futuros}
 
-% TODO: Expandir BD para o IR
-TODO: Expandir banco de dados do \starlight para o IR (WISE).
-A expansão do banco de dados do \starlight para o UV permite\ldots É natural
-tentar fazer a mesma abordagem para comprimentos de onda. IR permite investigar
-a emissão térmica da poeira.
-
 O estudo da amostra \starlightUV presente neste trabalho foi feito de forma
 superficial. A intenção foi apenas demonstrar uma forma de trabalhar com dados
 provenientes de diversos catálogos. As observações feitas no capítulo
 \ref{sec:Analise} são em geral de caráter qualitativo. Entretanto, os dados
-sugerem que existe uma contaminação entre as classes de galáxia. Um provável
+sugerem que existe uma contaminação entre as classes de galáxias. Um provável
 candidato é o erro na medida de \WHa na amostra. Isto causa uma contaminação de
 galáxias SF e wAGN nas RG. É preciso determinar se o erro nas medidas é,
-sozinho, capaz de explicar esta contaminação.
+sozinho, capaz de explicar esta contaminação, ou se ela é inerente à
+classificação simplificada adotada.
 
 Embora a seleção da amostra tenha sido feita no banco de dados, uma boa parte da
 análise foi feita num computador pessoal. Isto custou diversas iterações de
 extração e diagnóstico da amostra. Alguns procedimentos como a classificação das
-galáxias e histogramas de propriedades físicas poderia ser feita facilmente do
-lado do servidor. O próximo passo, com relação ao banco de dados do \starlight,
-é criar ferramentas de diagnóstico que rodem do lado do servidor. A ideia é que
-estas ferramentas possam ser facilmente estendidas, e abstraiam a forma como as
+galáxias e histogramas de propriedades físicas poderia ser feita diretamente no
+servidor. O próximo passo, com relação ao banco de dados do \starlight, é criar
+ferramentas de diagnóstico que rodem no servidor. A ideia é que estas
+ferramentas possam ser facilmente estendidas e abstraiam a forma como as
 informações estão armazenadas no banco de dados.
 
 Esta forma de trabalho deve se tornar a regra nos próximos anos. Pode-se pensar
@@ -135,7 +129,7 @@ Ou seja, mesmo que seja possível armazenar todo o conteúdo de um {\em survey}
 deste porte, é bastante provável que uma abordagem tradicional, acessando os
 dados de forma sequencial, esbarre na limitação de E/S e poder computacional.
 Tudo indica que a aposta mais segura seja manter os dados em centros de
-processamento do dados ({\em data centers}) poderosos, possivelmente espalhados
+processamento de dados ({\em data centers}) poderosos, possivelmente espalhados
 geograficamente para melhorar a velocidade do acesso.
 
 % End of this chapter

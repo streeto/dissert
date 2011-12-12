@@ -43,7 +43,7 @@ crescimento da performance do {\em hardware}.
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
 de banco de dados relacional} \citep[RDBMS;][]{Codd1970} num esforço guiado por
 \citeauthor{Thakar2004}. RDBMS pode ser considerado o padrão da indústria.
-Praticamente todas as linguagens de programação tem bibliotecas de interface às
+Praticamente todas as linguagens de programação têm bibliotecas de interface às
 implementações de RDBMS comerciais mais comuns (Oracle, IBM e Microsoft,
 Postgres). Há uma diversidade de ferramentas para desenvolvimento e
 gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
@@ -55,8 +55,8 @@ SkyServer: \url{http://skyserver.sdss.org/}}. O servidor de banco de dados
 escolhido pelo \SDSS foi o {\em Microsoft SQL Server}.
 
 A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
-necessariamente a superioridade do segundo em relação ao primeiro. Tanto a
-abordagem orientada a objetos quanto a abordagem relacional tem suas vantagens e
+necessariamente na superioridade do segundo em relação ao primeiro. Tanto a
+abordagem orientada a objetos quanto a abordagem relacional têm suas vantagens e
 desvantagens. O estudo de caso do \SDSS é apenas uma evidência anedótica em
 favor do uso de bancos de dados relacionais. No entanto, para aplicações
 semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
@@ -73,12 +73,12 @@ celestes conhecidos. Há formulários para buscas mais sérias, gerando coleçõ
 imagens, espectros e tabelas de dados. No {\em SkyServer} é possível fazer
 buscas avançadas utilizando SQL, embora haja limites de tempo de execução e de
 quantidade de objetos retornados. Esta limitação é contornada através do sistema
-{\em CasJobs}, que é tratado na seção \ref{sec:CrossMatch:SDSS:CasJobs}.
+{\em CasJobs}, que é tratado na próxima seção.
 
 É importante ressaltar que é possível (de fato, a equipe do \SDSS encoraja)
 criar {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês. Clone de um {\em
 website}.} do {\em SkyServer}. Tanto o banco de dados do \SDSS quanto o código
-fonte do {\em SkyServer} estão disponível no próprio {\em website} do {\em
+fonte do {\em SkyServer} estão disponíveis no próprio {\em website} do {\em
 SkyServer}. Temos um clone do banco de dados do {\em Data Release} 8 do \SDSS no
 servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
@@ -123,7 +123,7 @@ bancos de dados.
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
 CasJobs} com bancos de dados do \starlight, \SDSS DR8, GalaxyZoo
-\citep{Lintott2008}, e uma amostra do \galex e um catálogo de {\em redshifts}
+\citep{Lintott2008} e uma amostra do \galex e um catálogo de {\em redshifts}
 fotométricos \citep{OMill2011}. O {\em CasJobs} também foi adotado por outros
 projetos como o \galex, {\em Kepler}\footnote{{\em Kepler CasJobs}:
 \url{http://mastweb.stsci.edu/kplrcasjobs/}} e o {\em Palomar Quest
@@ -147,12 +147,13 @@ programa é executado uma vez para cada galáxia do \SDSS, recebendo seu espectr
 como um arquivo texto. Ele usa uma biblioteca de espectros SSPs com diferentes
 idades e metalicidades como uma base do espaço de espectros galáticos possíveis.
 De forma simplificada, o que o \starlight faz é encontrar as frações de massa e
-luz correspondente a cada elemento da base, ou seja, cada SSP. Analisando as
+luz correspondentes a cada elemento da base, ou seja, cada SSP. Analisando as
 relações entre os componentes determinados pela síntese, o programa determina
-diversas propriedades físicas da galáxia, como a massa estelar total, a massa
-separada por idade, metalicidade média, quantidade de poeira e dispersão de
-velocidade, para citar apenas algumas. Quase um milhão de espectros foram
-analisados, e o resultado da síntese foi armazenado em arquivos texto.
+diversas propriedades físicas da galáxia, como massa estelar total, idade
+estelar média, metalicidade estelar média, extinção causada por poeira e
+dispersão de velocidades, para citar apenas algumas. Quase um milhão de
+espectros foram analisados, e o resultado da síntese foi armazenado em arquivos
+texto.
 
 Somente os componentes estelares do espectro são obtidos desta forma. Subtraindo
 o espectro sintetizado de luz estelar é possível medir as linhas de emissão do
@@ -167,12 +168,12 @@ gigabyte. Embora seja um volume razoavelmente grande de dados, é possível
 trabalhar com esta quantidade de dados num computador atual\footnote{Quando esta
 dissertação foi escrita, era bastante comum comprar um computador pessoal novo
 com 4 gigabytes de memória RAM ou mais.}. A transferência de arquivos com
-tamanho da ordem de gigabytes pela internet também também é lugar-comum
+tamanho da ordem de gigabytes pela {\em internet} também é lugar-comum
 atualmente. Poderia-se argumentar que distribuir os dados neste formato seja a
 forma mais adequada.
 
 Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
-CasJobs} em prover acesso aos dados o \SDSS não é o tamanho da base de dados, e
+CasJobs} em prover acesso aos dados do \SDSS não é o tamanho da base de dados, e
 sim a facilidade com que o usuário pode acessar os dados e filtrar somente o que
 lhe for conveniente. Além disso, manter a base de dados num local central
 permite que sejam feitas correções e revisões, o que implicaria normalmente numa
@@ -237,7 +238,7 @@ do \SDSS, a tabela de espectros (\texttt{SpecObjAll}) tem um identificador
 chamado \texttt{SpecObjID}.
 
 Além de espectros, o banco de dados do \SDSS contém fotometria de $1/4$ do céu.
-Os objetos com dados de fotometria também tem um identificador único,
+Cada objeto do catálogo de fotometria tem um identificador único,
 \texttt{ObjID}. Existe uma coluna na tabela de espectros chamada
 \texttt{BestObjID}, que aponta para o registro de fotometria (tabela {\tt
 PhotoObjAll}) mais provável para cada espectro. É importante salientar que nem
@@ -424,7 +425,7 @@ existe um correspondente AIS e outro MIS para o mesmo objeto da amostra, apenas
 o mais próximo é considerado. Nos campos onde os dois {surveys} se sobrepõem, há
 uma maior quantidade de objetos no MIS do que no AIS, devido ao maior tempo de
 exposição no MIS. Assim, nesses campos, os objetos do MIS têm maior chance de
-estar mais próximos ao objeto do \SDSS. Isto também não é um problema muito
+estarem mais próximos ao objeto do \SDSS. Isto também não é um problema muito
 grave para o AIS, já que a sua cobertura do céu é muito maior do que a do MIS. A
 fração exata de objetos perdidos em cada caso ainda precisa ser determinada.
 Esta correção será feita futuramente numa revisão do catálogo.
@@ -503,9 +504,9 @@ $E(B-V)$ é dada por
 \end{eqnarray*}
 Esta correção é então aplicada às magnitudes do catálogo.
 
-Foi aplicada também a correção $k(z)$ devida ao {\em redshift}, e a magnitude
-foi transformada em magnitude absoluta, utilizando o código \textsc{kcorrect}
-(v4\_2) de \citet{Blanton2007}.
+Foi aplicada também a correção $k(z)$ devida ao {\em redshift} e a magnitude foi
+transformada em magnitude absoluta utilizando o código \textsc{kcorrect} (v4\_2)
+de \citet{Blanton2007}.
 
 
 %***************************************************************%
@@ -539,7 +540,7 @@ equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
 	\label{tab:ParamFisicos}
 \end{table}
 
-É preciso fazer algumas  considerações com respeito ao {\em redshifts} das
+É preciso fazer algumas  considerações com respeito ao {\em redshift} das
 galáxias que pertencem à amostra. O {\em redshift} não deve ser inferior a
 $0,04$ para evitar efeitos de abertura da fibra\footnote{Os espectros obtidos
 pelo \SDSS foram feitos através de fibras ópticas. Cada fibra coleta a luz de
@@ -551,14 +552,11 @@ $0,17$, a linha \NII fica deslocada para além do limite vermelho dos espectros
 do \SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 <
 z < 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 
-Foram rejeitadas galáxias com magnitude aparente $r<17,77$. Este critério remove
-da amostra galáxias distantes muito brilhantes. A figura
-\ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude absoluta
-$M_r$ das galáxias da amostra em função do {\em redshift}. Mesmo limitada em
-{\em redshift}, a amostra não está completa. O corte em magnitude, que vai de
-$M_r=-18$ em $z=0,04$ até $M_r=-22$ em $z=0,17$, ocorre devido ao limite
-``fraco" de detecção do \SDSS. Para esta amostra, as propriedades físicas e
-observacionais das galáxias estão distribuídas conforme os histogramas da figura
+Foram selecionadas somente galáxias com magnitude aparente $r<17,77$. Obtém-se
+assim uma amostra limitada em fluxo. A figura \ref{fig:CompletezaRedshiftMag}
+mostra a distribuição da magnitude absoluta $M_r$ das galáxias da amostra em
+função do {\em redshift}. As propriedades físicas e observacionais das galáxias
+estão distribuídas conforme os histogramas da figura
 \ref{fig:HistogramasAmostra}. Estas propriedades serão exploradas com mais
 detalhes na seção \ref{sec:Analise:PropFisicas}.
 

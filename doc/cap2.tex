@@ -87,11 +87,12 @@ Os {\em surveys} do \galex foram planejados de forma a se valer de outros {\em
 surveys} já existentes em outros comprimentos de onda. A figura
 \ref{fig:GalexSDSSOverlap} mostra a sobreposição da área observada
 \footnote{{\em Footprint}, no linguajar astronômico.} pelos {\em surveys} AIS e
-MIS do \galex e do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário da
-missão do \galex é calibrar da taxa de formação estelar no universo local e a
+MIS do \galex e do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário
+da missão do \galex é calibrar da taxa de formação estelar no universo local e
 determinar o histórico cosmológico de formação estelar entre os {\em redshifts}
-$0 < z < 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em outros
-comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
+$0 < z < 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em
+outros comprimentos de onda tem um papel fundamental no cumprimento deste
+objetivo.
 
 \begin{figure}
 	\includegraphics[width=1.0\columnwidth]{figuras/footprint.eps}
@@ -111,12 +112,11 @@ comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
 \section{Histórico do estudo do céu no UV}
 \label{sec:Galex:CeuUV}
 
-% FIXME: Usar referência de livro-texto para céu UV.
 A camada de ozônio, tão desejável pela proteção que oferece aos seres vivos,
 cobra a sua taxa na astronomia. Observações na banda UV precisam ser feitas fora
 da atmosfera terrestre, portanto não é de se estranhar que o trabalho nesta
 faixa espectral tenha progredido menos do que na faixa do óptico e do
-infravermelho.\citneed
+infravermelho.
 
 O primeiro trabalho sistemático de observação em UV foi feito pelo {\em Orbiting
 Astronomical Observatory 2} \citep{Code1970}, obtendo fotometria e
@@ -143,15 +143,15 @@ do {\em Skylab} \citep{Henize1975} e pelo instrumento {\em FAUST} a bordo do
 \section{Resultados obtidos pelo \galex}
 \label{sec:Galex:Resultados}
 
-o \galex fez o primeiro {\em survey} do céu inteiro em UV. As regiões próximas
-ao plano da Galáxia foram evitados para não danificar os detetores. Pode-se ter
+O \galex fez o primeiro {\em survey} do céu inteiro em UV. As regiões próximas
+ao plano da Galáxia foram evitadas para não danificar os detetores. Pode-se ter
 uma ideia do sucesso desta missão considerando a grande quantidade de artigos
 publicados\footnote{Há uma lista com as mais de 500 publicações relacionadas ao
 projeto do \galex em
 \url{http://www.galex.caltech.edu/researcher/publications.html}}. Abaixo segue
 um resumo dos resultados mais notáveis.
 
-\citet{Wyder2007} analisam a distribuição de galáxias em função da cor UV e da
+\citet{Wyder2007} analisaram a distribuição de galáxias em função da cor UV e da
 magnitude absoluta no universo local. Esta distribuição é conhecida como {\em
 Diagrama Cor--Magnitude} (CMD, na sigla em inglês para {\em Color--Magnitude
 Diagram}). Os autores usam {\em redshifts} e fotometria óptica obtidas do \SDSS
@@ -190,7 +190,8 @@ A missão do \galex se encerra em 31 de dezembro de 2011. Dados coletados após 
 GR6, como as observações no mesmo campo utilizado na missão {\em Kepler},
 observações de M31 e da Nuvem de Magalhães, entre outros, serão liberados num
 último {\em data release}, GR7. Os dados obtidos pelo \galex permanecerão
-disponíveis publicamente no MAST.
+disponíveis publicamente no {\em Multi-Mission archive at the Space Telescope
+Science Institute} (MAST).
 
 
 
@@ -203,15 +204,13 @@ disponíveis publicamente no MAST.
 \section{Data releases e banco de dados}
 \label{sec:Galex:BancoDeDados}
 
-Os dados obtidos pelo \galex são armazenados no {\em Multi-Mission archive at
-the Space Telescope Science Institute} (MAST). O acesso a estes dados é público,
-a liberação é feita anualmente em {\em General Releases} (GR). Os dados
-consistem basicamente em imagens e catálogos, divididos em campos ({\em tiles})
-com área de aproximadamente $1,2$ graus quadrados. Devido ao modo como o \galex
-faz as observações, um determinado objeto pode estar presente em mais de um
-campo. A tabela \ref{tab:GalexReleases} mostra o número cumulativo de campos
-observados por {\em survey} em cada GR\footnote{Informações retiradas do {em
-website} do GR6: \url{http://galex.stsci.edu/GR6/}}. Observações de
+A liberação dos dados do \galex é feita anualmente em {\em General Releases}
+(GR). Os dados consistem basicamente em imagens e catálogos, divididos em campos
+({\em tiles}) com área de aproximadamente $1,2$ graus quadrados. Devido ao modo
+como o \galex faz as observações, um determinado objeto pode estar presente em
+mais de um campo. A tabela \ref{tab:GalexReleases} mostra o número cumulativo de
+campos observados por {\em survey} em cada GR\footnote{Informações retiradas do
+{\em website} do GR6: \url{http://galex.stsci.edu/GR6/}}. Observações de
 pesquisadores convidados ({\em Guest Investigators}, GI) foram selecionadas de
 forma a complementar os {\em surveys}.
 
@@ -268,7 +267,7 @@ Tanto o {\em GalexView} quanto outras ferramentas de busca do MAST, como o
 {\em banco de dados relacional} acessado através da linguagem {\em SQL}
 \citep{Chamberlin1974}. Muito comum na indústria, bancos de dados relacionais
 dispõem em geral de uma vasta gama de ferramentas para gerenciamento dos dados.
-Uma de suas grandes vantagens é o uso de índices\footnote{Un índice numa tabela
+Uma de suas grandes vantagens é o uso de índices\footnote{Um índice numa tabela
 de banco de dados é uma estrutura que copia partes da tabela numa determinada
 ordem, de forma a aumentar a velocidade de acesso aos dados ao custo de espaço
 de armazenamento.} para agilizar o acesso a dados. Embora a tecnologia exista

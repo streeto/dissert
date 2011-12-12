@@ -231,7 +231,7 @@ for p in param.keys():
         
     for type in types:
         mask = typemask[type]
-        h, ex, ey = np.histogram2d(NUV_r[mask], g_r[mask], bins=20,
+        h, ex, ey = np.histogram2d(NUV_r[mask], g_r[mask], bins=30,
                                    range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
         # Plot less points

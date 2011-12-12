@@ -51,48 +51,47 @@ muito claro \citep{Norris2010}.
 
 \subsection{Mega-levantamentos de dados}
 
-O {\em Sloan Digital Sky Survey} \citep[\SDSS; ][]{York2000}, é referência
-quando falamos em {\em surveys} modernos. Em seus 8 anos de funcionamento, obteve
+O {\em Sloan Digital Sky Survey} \citep[\SDSS; ][]{York2000} é referência quando
+falamos em {\em surveys} modernos. Em seus 8 anos de funcionamento, obteve
 imagens em 5 filtros (ver figura \ref{fig:GalexFilters}) de um quarto do céu e
 espectros de um milhão de galáxias. O seu catálogo contém 4 terabytes de dados
 fotométricos e espectroscópicos, sem contar as imagens. O \SDSS foi praticamente
 o primeiro {\em survey} a conseguir popularizar o acesso aos seus dados. Estes
-foram feitos públicos desde o início, iniciando uma ``corrida do ouro'' no seu
-vasto volume de dados. Esta filosofia é compartilhada hoje pela grande maioria
-dos {\em surveys} de grande porte.
+foram feitos públicos desde o princípio, iniciando uma ``corrida do ouro'' no
+seu vasto volume de dados. Esta filosofia é compartilhada hoje pela grande
+maioria dos {\em surveys} de grande porte.
 
 Existem diversos {\em surveys} em operação atualmente. O {\em Wide-field
 Infrared Survey Explorer} (WISE) é um telescópio espacial da NASA\footnote{{\em
-NASA Explorer Mission} - \url{http://explorers.gsfc.nasa.gov/missions.html}},
-que está mapeando o céu inteiro nas faixas de $3,4$, $4,6$, $12$ e $22\mu$m do
+NASA Explorer Mission} - \url{http://explorers.gsfc.nasa.gov/missions.html}} que
+está mapeando o céu inteiro nas faixas de $3,4$, $4,6$, $12$ e $22\mu$m do
 infravermelho \citep{Wright2010}. O {\em Visible and Infrared Survey Telescope
 for Astronomy} (VISTA) é um telescópio no Chile fazendo um {\em survey} do céu
 do hemisfério sul no infravermelho próximo \citep{Born2010}. Tratado com mais
 detalhes no capítulo \ref{sec:Galex}, o {\em Galaxy Evolution Explorer} (\galex)
-mapeou o céu em ultravioleta. O {\em Kepler} é um telescópio espacial da NASA
-\citep{Borucki2010}, semelhante ao WISE, e está fazendo um {\em survey} de uma
-região da Via Láctea para descobrir a fração de estrelas com planetas similares
-à Terra na nossa Galáxia. Convém mencionar também o {\em 2dF Galaxy Redshift
-Survey} \citep[2dFGRS;][]{Colless1999} e o {\em Two Micron All Sky Survey}
-\citep[2MASS;][]{Skrutskie2006}. Embora estes {\em surveys} já tenham sido
-concluídos, os seus dados permanecem disponíveis publicamente.
+está mapeando o céu em ultravioleta. O {\em Kepler} é um telescópio espacial da
+NASA \citep{Borucki2010}, semelhante ao WISE, e está fazendo um {\em survey} de
+uma região da Via Láctea para descobrir a fração de estrelas com planetas
+similares à Terra na nossa Galáxia. Convém mencionar também o {\em 2dF Galaxy
+Redshift Survey} \citep[2dFGRS;][]{Colless1999} e o {\em Two Micron All Sky
+Survey} \citep[2MASS;][]{Skrutskie2006}. Embora estes {\em surveys} já tenham
+sido concluídos, os seus dados permanecem disponíveis publicamente.
 
-% FIXME: Citações sobre as informações do JPAS.
 O projeto J-PAS ({\em Javalambre Physics of the Accelerating Universe
 Astrophysical Survey}) é um {\em survey} que pretende mapear $8\,000$ graus
 quadrados do céu em 56 cores \citep{Benitez2009}. Os filtros, de banda estreita,
 irão cobrir toda a região óptica, formando um espectro de baixa resolução para
-cada pixel do {\em survey}. Serão mais de 200 terabytes de dados brutos\citneed.
-O projeto é uma colaboração entre Espanha e Brasil, com mais de 70 pesquisadores
-e engenheiros envolvidos, incluindo integrantes do Grupo de Astrofísica da UFSC.
-O objetivo do {\em survey} é a exploração das causas da aceleração do universo,
+cada pixel do {\em survey}. Serão mais de 200 terabytes de dados brutos. O
+projeto é uma colaboração entre Espanha e Brasil, com mais de 70 pesquisadores e
+engenheiros envolvidos, incluindo integrantes do Grupo de Astrofísica da UFSC. O
+objetivo do {\em survey} é a exploração das causas da aceleração do universo,
 relacionadas à energia escura. Entretanto, uma quantidade considerável de
 ciência adicional poderá ser feita com base no espectro de uma região tão ampla
 do céu. Seu início está previsto para 2013.
 
 O LSST ({\em Large Synoptic Survey Telecope}) mapeará metade do céu a cada mês,
 aproximadamente, durante cerca de dez anos \citep{Ivezic2008}. As suas operações
-científicas tem início previsto para 2020. Serão mais de um petabyte em imagens
+científicas têm início previsto para 2020. Serão mais de um petabyte em imagens
 brutas por ano, muito mais do que poderia ser revisado por humanos. Este {\em
 survey} também pretende explorar a natureza da energia escura, embora, da mesma
 forma que o J-PAS, os dados possam ser aproveitados para diversos outros fins.
@@ -100,27 +99,27 @@ forma que o J-PAS, os dados possam ser aproveitados para diversos outros fins.
 \subsection{Mineração de dados}
 
 Tradicionalmente astrônomos armazenam seus dados em arquivos texto ou binários
-contendo um registro por linha, de um forma tecnicamente conhecida como {\em
+contendo um registro por linha, de uma forma tecnicamente conhecida como {\em
 flat file}. Buscas neste tipo de banco de dados são feitas examinando
 individualmente cada registro do arquivo. Com o volume de dados obtido, por
 exemplo, pelo \SDSS ou pelo \galex (aproximadamente 222 milhões de objetos, 34
 mil campos), o uso de arquivos simples para armazenamento de dados se torna
 inviável. É preciso ``profissionalizar'' o gerenciamento de dados de um {\em
-survey} desta escala, e aprender a trabalhar com volumes imensos de dados
+survey} desta escala e aprender a trabalhar com volumes imensos de dados
 \citep{Bell2006}.
 
-Técnicas de detecção de padrões em grandes conjuntos de dados são conhecidas
-como {\em Mineração de dados}, e tem um interesse crescente nos últimos anos
-\citep{SIGKDD2011}. Estas técnicas tem naturalmente um caráter interdisciplinar,
+Técnicas de detecção de padrões em grandes conjuntos de dados, conhecidas como
+{\em Mineração de dados}, tiveram um interesse crescente nos últimos anos
+\citep{SIGKDD2011}. Estas técnicas têm naturalmente um caráter interdisciplinar,
 indo desde aplicações científicas até áreas como Economia \citep{Spanos2000} e
 Inteligência de Mercado\footnote{Ferramentas como OLAP ({\em On-line Analytical
-Processing}) são usadas por empresas para avaliação de mercado e tomada decisão,
-agindo sobre um grande volume de dados.}.
+Processing}) são usadas por empresas para avaliação de mercado e tomada de
+decisão, agindo sobre um grande volume de dados.}.
 
 A equipe de arquivamento do \SDSS desenvolveu uma ferramenta chamada {\em
 CasJobs} (ver seção \ref{sec:CrossMatch:SDSS:CasJobs}), que permite que
-múltiplos usuários possam fazer buscas e coleta de dados em seu banco de dados
-através. Embora o {\em CasJobs} não seja estritamente falando uma ferramenta de
+múltiplos usuários possam fazer buscas e coleta de dados em seu banco de dados.
+Embora o {\em CasJobs} não seja, estritamente falando, uma ferramenta de
 mineração de dados, ele facilita e muito o acesso aos dados de um {\em survey}.
 O presente trabalho se baseia fortemente no uso desta ferramenta.
 
@@ -162,21 +161,20 @@ ajuste num espaço de parâmetros bastante grande. A figura
 
 \begin{figure}
 	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}
-	\caption[Amostra de ajuste de espectro com o \starlight.]
-	{Amostra de ajuste com o \starlight para o espectro de SDSS
-	J1119+5130 \citep[figura 2]{CidFernandes2006}. O espectro observado é mostrado
-	em preto, enquanto o modelo aparece em vermelho. Linhas de emissão (não
-	modeladas) e {\em pixels} ruins são mostradas em ciano. Os espectros na parte
-	inferior são a soma das SSP para as faixas de idade dadas na figura. A
-	contribuição percentual no fluxo de cada grupo de idade é mostrada na legenda,
-	entre parênteses.}
+	\caption[Exemplo de ajuste de espectro com o \starlight.]
+	{Exemplo de ajuste com o \starlight para o espectro de SDSS J1119+5130
+	\citep[figura 2]{CidFernandes2006}. O espectro observado é mostrado em preto,
+	enquanto o modelo aparece em vermelho. Linhas de emissão (não modeladas) e {\em
+	pixels} ruins são mostradas em ciano. Os espectros na parte inferior são a soma
+	das SSP para as faixas de idade dadas na figura. A contribuição percentual no
+	fluxo de cada grupo de idade é mostrada na legenda, entre parênteses.}
 	\label{fig:StarlightSpectrumSample}
 \end{figure}
 
 Analisando o vetor de população das galáxias é possível obter algumas de suas
 propriedades físicas. É possível também extrair as medidas das linhas de emissão
 -- não modeladas no ajuste -- com bastante precisão. A técnica foi aplicada aos
-espectros de galáxias do \SDSS, e o resultado da síntese gerou um catálogo de
+espectros de galáxias do \SDSS e o resultado da síntese gerou um catálogo de
 propriedades físicas e linhas de emissão de quase um milhão de galáxias.
 
 
@@ -221,16 +219,16 @@ correlações e tendências.
 
 \subsection{Organização deste trabalho}
 
-No capítulo seguinte a missão \galex é tratada em mais detalhes. As
-características do {\em survey} são discutidas, e são apresentados alguns
+No capítulo seguinte, a missão \galex é tratada em mais detalhes. As
+características do {\em survey} são discutidas e são apresentados alguns
 resultados importantes. Os produtos gerados pelos {\em surveys} do \galex e o
 acesso a estes dados são descritos no final do capítulo.
 
 O terceiro capítulo introduz o uso de bancos de dados em astronomia. Em seguida
 é tratado do problema genérico de identificação cruzada ({\em crossmatch}) de
 objetos em catálogos de {\em surveys} astronômicos. Os bancos de dados do \SDSS
-e do \starlight são apresentados, e processo de {\em crossmatch} é feito entre
-os catálogos do \SDSS e do \galex. Finalmente define-se uma amostra com
+e do \starlight são apresentados, e o processo de {\em crossmatch} é feito entre
+os catálogos do \SDSS e do \galex. Finalmente, define-se uma amostra com
 magnitudes absolutas (ópticas e UV) e propriedades físicas das galáxias.
 
 No quarto capítulo é feita a análise da amostra obtida no capítulo anterior. As

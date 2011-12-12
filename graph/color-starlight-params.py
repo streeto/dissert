@@ -73,7 +73,7 @@ NUV_r = t.NUV[sample] - t.r[sample]
 g_r = t.g[sample] - t.r[sample]
 
 bounds = [.5,7,.2,.9]
-h, ex, ey = np.histogram2d(NUV_r, g_r, bins=20,
+h, ex, ey = np.histogram2d(NUV_r, g_r, bins=30,
                            range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
 set_eps_output_1()
@@ -82,9 +82,10 @@ pylab.axis(bounds)
 #pylab.title('Densidade')
 pylab.xlabel('$\\mathrm{NUV} - r$')
 pylab.ylabel('$g - r$')
-pylab.hexbin(NUV_r, g_r, extent=bounds, bins='log', gridsize=50, cmap=cm.Greys)
+pylab.hexbin(NUV_r, g_r, extent=bounds, bins='log', gridsize=50, cmap=cm.OrRd)
 cb = pylab.colorbar()
 cb.set_label('$\\log{N}$')
+pylab.contour(h.T, extent=bounds, colors='black', linewidths=0.5)
 if debug:
     pylab.show()
     #exit()

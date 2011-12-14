@@ -33,7 +33,9 @@ telescópios e detetores.} da astronomia extragalática começaram a ser feitos 
 forma sistemática na década de 80 \citep{Huchra1988}. Foram observadas cerca de
 $2400$ galáxias pelo {\em Center for Astrophysics} em Harvard \citep{Huchra1983}
 e aproximadamente $2000$ galáxias pelo {\em Southern Redshift Survey}
-\citep{DaCosta1988}.
+\citep{DaCosta1988}. Estes {\em surveys} pioneiros, assim como alguns dos
+atuais, visavam primariamente medir {\em redshifts} para estudos da estrutura em
+larga escala do Universo.
 
 Nos últimos anos, com o advento dos {\em mega-surveys}, está ocorrendo uma
 revolução na forma de fazer ciência na astronomia. Os diversos {\em surveys} em
@@ -75,7 +77,10 @@ uma região da Via Láctea para descobrir a fração de estrelas com planetas
 similares à Terra na nossa Galáxia. Convém mencionar também o {\em 2dF Galaxy
 Redshift Survey} \citep[2dFGRS;][]{Colless1999} e o {\em Two Micron All Sky
 Survey} \citep[2MASS;][]{Skrutskie2006}. Embora estes {\em surveys} já tenham
-sido concluídos, os seus dados permanecem disponíveis publicamente.
+sido concluídos, os seus dados permanecem disponíveis publicamente. Outro
+exemplo é o arquivo do {\em Hubble Space Telescope}, onde, embora não sendo um
+{\em survey} estritamente falando, todas as observações são disponibilizadas
+após um ano.
 
 O projeto J-PAS ({\em Javalambre Physics of the Accelerating Universe
 Astrophysical Survey}) é um {\em survey} que pretende mapear $8\,000$ graus
@@ -152,12 +157,15 @@ Nesta equação, $F_\lambda$ é o fluxo em cada comprimento de onda. Os $N_\star
 espectros de base $F^\star_\lambda(t_i, Z_i)$, com $t_i$ e $Z_i$ representando
 respectivamente a idade e a metalicidade do elemento de base, são somados com
 pesos $x_i$. O conjunto $\{x_i, i=1,2,\ldots,N_\star\}$ é chamado {\em vetor de
-população} para a galáxia sendo considerada. O termo $g_\lambda$ corrige o
-espectro pelo efeito de extinção interestelar. São ao todo 150 SSP diferentes
-(25 idades e 6 metalicidades) utilizadas na base. O problema torna-se então um
-ajuste num espaço de parâmetros bastante grande. A figura
-\ref{fig:StarlightSpectrumSample} mostra o ajuste feito para uma galáxia do
-\SDSS.
+população} para a galáxia considerada. O termo $g_\lambda$ corrige o espectro
+pelo efeito de extinção interestelar.Os espectros da base provêm de modelos de
+síntese evolutiva de populações estelares. A maior parte dos resultados
+publicados do \starlight usa os modelos de \citet[BC03]{Bruzual2003}, do quais
+foram extraídas SSPs cobrindo uma ampla gama de idades e metalicidades.São ao
+todo 150 SSP diferentes (25 idades e 6 metalicidades) utilizadas na base. O
+problema torna-se então um ajuste num espaço de parâmetros bastante grande. A
+figura \ref{fig:StarlightSpectrumSample} mostra o ajuste feito para uma galáxia
+do \SDSS.
 
 \begin{figure}
 	\includegraphics[width=0.7\textwidth]{figuras/starlight-fit.eps}
@@ -171,11 +179,15 @@ ajuste num espaço de parâmetros bastante grande. A figura
 	\label{fig:StarlightSpectrumSample}
 \end{figure}
 
+% FIXME: Referências para artigos e teses do starlight.
 Analisando o vetor de população das galáxias é possível obter algumas de suas
 propriedades físicas. É possível também extrair as medidas das linhas de emissão
 -- não modeladas no ajuste -- com bastante precisão. A técnica foi aplicada aos
 espectros de galáxias do \SDSS e o resultado da síntese gerou um catálogo de
 propriedades físicas e linhas de emissão de quase um milhão de galáxias.
+Disponibilizado em \url{http://www.starlight.ufsc.br/}, este banco de dados já
+foi utilizado por dezenas de pesquisadores em todo o mundo, resultando em vários
+artigos \citep{Bla, Bla1, Bla2} e teses \citep{Ble, Ble1, Ble2}.\fixme
 
 
 %***************************************************************%
@@ -232,9 +244,10 @@ os catálogos do \SDSS e do \galex. Finalmente, define-se uma amostra com
 magnitudes absolutas (ópticas e UV) e propriedades físicas das galáxias.
 
 No quarto capítulo é feita a análise da amostra obtida no capítulo anterior. As
-galáxias são classificadas através do diagrama WHAN e as propriedades físicas
-destas galáxias (obtidas do \starlight) são analisadas de acordo com as suas
-cores ópticas e UV.
+galáxias são classificadas através do diagrama WHAN, introduzido por
+\citet{CidFernandes2010, CidFernandes2011}, e as propriedades físicas destas
+galáxias (obtidas do \starlight) são analisadas de acordo com as suas cores
+ópticas e UV.
 
 No quinto e último capítulo são apresentadas as conclusões e perspectivas deste
 trabalho.

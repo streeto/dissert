@@ -30,9 +30,10 @@
 Um dos maiores responsáveis pela promoção do uso de bancos de dados relacionais
 na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente o
 \SDSS utilizou um {\em sistema de gerenciamento de banco de dados orientado a
-objetos} \citep[OODBMS;][]{Maier1986}. Após pouco mais de um ano a abordagem se
-mostrou inadequada: entre os principais problemas, uma linguagem de {\em query}
-inadequada e performance ruim. O motivo, segundo \citet{Thakar2004}, foi a
+objetos} \citep[{\em Object Oriented Database Management System},
+OODBMS;][]{Maier1986}. Após pouco mais de um ano a abordagem se mostrou
+inadequada: entre os principais problemas, uma linguagem de {\em query}
+inadequada e performance fraca. O motivo, segundo \citet{Thakar2004}, foi a
 incapacidade da empresa desenvolvedora do OODBMS em prover novas funcionalidades
 requisitadas pelo projeto e correção de {\em bugs}, bem como em acompanhar o
 crescimento da performance do {\em hardware}.
@@ -41,18 +42,19 @@ crescimento da performance do {\em hardware}.
 \label{sec:CrossMatch:SDSS:MigracaoRDBMS}
 
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
-de banco de dados relacional} \citep[RDBMS;][]{Codd1970} num esforço guiado por
-\citeauthor{Thakar2004}. RDBMS pode ser considerado o padrão da indústria.
-Praticamente todas as linguagens de programação têm bibliotecas de interface às
-implementações de RDBMS comerciais mais comuns (Oracle, IBM e Microsoft,
-Postgres). Há uma diversidade de ferramentas para desenvolvimento e
-gerenciamento de RDBMS. E talvez o maior benefício de todos, o acesso aos dados
-é feito utilizando uma linguagem padronizada: {\em Simple Query Language}, ou
-simplesmente SQL \citep{Chamberlin1974}. A migração dos dados do \SDSS para um
-RDBMS comercial implicou num aumento significativo da performance do acesso aos
-dados, e resultou no desenvolvimento do {\em SkyServer}\footnote{\SDSS
-SkyServer: \url{http://skyserver.sdss.org/}}. O servidor de banco de dados
-escolhido pelo \SDSS foi o {\em Microsoft SQL Server}.
+de banco de dados relacional} \citep[Relational Database Management System,
+RDBMS;][]{Codd1970} num esforço guiado por \citeauthor{Thakar2004}. RDBMS pode
+ser considerado o padrão da indústria. Praticamente todas as linguagens de
+programação têm bibliotecas de interface às implementações de RDBMS comerciais
+mais comuns (Oracle, IBM e Microsoft, Postgres). Há uma diversidade de
+ferramentas para desenvolvimento e gerenciamento de RDBMS. E talvez o maior
+benefício de todos, o acesso aos dados é feito utilizando uma linguagem
+padronizada: {\em Simple Query Language}, ou simplesmente SQL
+\citep{Chamberlin1974}. A migração dos dados do \SDSS para um RDBMS comercial
+implicou num aumento significativo da performance do acesso aos dados, e
+resultou no desenvolvimento do {\em SkyServer}\footnote{\SDSS SkyServer:
+\url{http://skyserver.sdss.org/}}. O servidor de banco de dados escolhido pelo
+\SDSS foi o {\em Microsoft SQL Server}.
 
 A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
 necessariamente na superioridade do segundo em relação ao primeiro. Tanto a
@@ -394,7 +396,7 @@ ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} 
 
 A amostra do \starlight descrita na seção \ref{sec:Crossmatch:AmostraStarlight}
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
-o mesmo utilizado na tabela \texttt{XSDSSDR7}. A {\em query} da figura
+o mesmo utilizado na tabela \texttt{xSDSSDR7}. A {\em query} da figura
 \ref{fig:QueryMatchAIS} preenche a tabela chamada \texttt{galex\_ais} com todos
 os objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
 (\texttt{FUV\_mag}) e FUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
@@ -465,12 +467,10 @@ galáxias possam ser analisadas de forma adequada, algumas correções precisam 
 feitas.
 
 A luz proveniente de outras galáxias sofre extinção causada por poeira dentro da
-nossa própria Galáxia\footnote{A existência de poeira na Via Láctea pode ser
-notada facilmente a olho nu em uma noite sem lua -- e bem longe da luz da
-cidade!}. Esta extinção depende da direção de onde vem a luz, e a sua influência
-depende do comprimento de onda. O efeito final, em geral, é o avermelhamento do
-espectro. O excesso de cor $E(B-V)$ representa quantitativamente este
-avermelhamento.
+nossa própria Galáxia. Esta extinção depende da direção de onde vem a luz, e a
+sua influência depende do comprimento de onda. O efeito final, em geral, é o
+avermelhamento do espectro. O excesso de cor $E(B-V)$ representa
+quantitativamente este avermelhamento.
 
 O catálogo do \galex provê os valores de excesso de cor $E(B-V)$ das galáxias
 com base nos mapas de extinção interestelar de \citet{Schlegel1998}. A correção
@@ -481,7 +481,7 @@ magnitudes) é dada por
 	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
 	x &=& \frac{10000\text{\AA}}{\lambda}.
 \end{eqnarray*}
-No caso das bandas FUV ($\lambda_{eff}=1528\text{\AA}$) e NUV
+No caso das bandas FUV ($\lambda_{eff}=2271\text{\AA}$) e NUV
 ($\lambda_{eff}=1528\text{\AA}$),
 \begin{eqnarray*}
 	x_{FUV} &=& 6,54\\
@@ -502,11 +502,20 @@ $E(B-V)$ é dada por
 	A_{FUV} &=& 8,15\,E(B-V) \\
 	A_{NUV} &=& 9,17\,E(B-V).
 \end{eqnarray*}
-Esta correção é então aplicada às magnitudes do catálogo.
+Esta correção é então aplicada às magnitudes do catálogo. Vale notar que, para
+um mesmo objeto, $A_{FUV} < A_{NUV}$. Ou seja, ao contrário do que ocorre para
+outros filtros (por exemplo, $B$ e $V$), a extinção causa um azulamento do
+espectro na faixa do UV observado pelo \galex. Isto ocorre devido à banda de
+$2100$\AA na curva de extinção da nossa Galáxia.
 
-Foi aplicada também a correção $k(z)$ devida ao {\em redshift} e a magnitude foi
-transformada em magnitude absoluta utilizando o código \textsc{kcorrect} (v4\_2)
-de \citet{Blanton2007}.
+Quando se observa, através de um determinado filtro, galáxias em {\em redshifts}
+diferentes, é preciso levar em conta que a ``janela'' observada do espectro
+depende do {\em redshift}. Pensando de outro modo, é como se o filtro não fosse
+o mesmo para todas as galáxias. Para obter medidas comparáveis, neste caso, é
+preciso compensar o efeito do {\em redshift}; este procedimento é chamado de
+correção $k(z)$. Assim, as magnitudes aparente NUV e FUV das galáxias da amostra
+foram transformadas em magnitudes absolutas utilizando a correção $k(z)$ através
+do código \textsc{kcorrect} (v4\_2) de \citet{Blanton2007}.
 
 
 %***************************************************************%
@@ -520,9 +529,10 @@ de \citet{Blanton2007}.
 
 A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
-$ugriz$ do \SDSS, a magnitude NUV do \galex e algumas propriedades físicas das
-galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também a largura
-equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e \NII.
+$ugriz$ do \SDSS, a magnitude NUV do AIS do \galex e algumas propriedades
+físicas das galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também
+a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
+\NII.
 
 \begin{table}
 	\caption[Propriedades físicas das galáxias utilizados na amostra.]
@@ -552,13 +562,14 @@ $0,17$, a linha \NII fica deslocada para além do limite vermelho dos espectros
 do \SDSS, escapando da detecção. Assim, as galáxias da amostra devem ter $0,04 <
 z < 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 
-Foram selecionadas somente galáxias com magnitude aparente $r<17,77$. Obtém-se
-assim uma amostra limitada em fluxo. A figura \ref{fig:CompletezaRedshiftMag}
-mostra a distribuição da magnitude absoluta $M_r$ das galáxias da amostra em
-função do {\em redshift}. As propriedades físicas e observacionais das galáxias
-estão distribuídas conforme os histogramas da figura
-\ref{fig:HistogramasAmostra}. Estas propriedades serão exploradas com mais
-detalhes na seção \ref{sec:Analise:PropFisicas}.
+Foram selecionadas somente galáxias com magnitude aparente $r<17,77$, que é o
+limite nominal da amostra principal de galáxias do \SDSS \citep[\SDSS {\em Main
+Galaxy Sample}; ][]{Strauss2002}. Obtém-se assim uma amostra limitada em fluxo.
+A figura \ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude
+absoluta $M_r$ das galáxias da amostra em função do {\em redshift}. As
+propriedades físicas e observacionais das galáxias estão distribuídas conforme
+os histogramas da figura \ref{fig:HistogramasAmostra}. Estas propriedades serão
+exploradas com mais detalhes na seção \ref{sec:Analise:PropFisicas}.
 
 \begin{figure}
 	\includegraphics{figuras/completeness-volume.eps}

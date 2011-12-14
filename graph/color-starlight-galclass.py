@@ -165,13 +165,13 @@ vmin['at_flux'] = 7.5
 vmax['at_flux'] = 10.0
 vmin_h['at_flux'] = 7.0
 vmax_h['at_flux'] = 10.5
-param['at_flux'] = 'Logaritmo da idade estelar m\\\'edia [a] ponderada em fluxo'
+param['at_flux'] = 'M\\\'edia do logaritmo da idade estelar [a] ponderada em fluxo'
 
 vmin['at_mass'] = 9.4
 vmax['at_mass'] = 10.2
 vmin_h['at_mass'] = 9.0
 vmax_h['at_mass'] = 10.4
-param['at_mass'] = 'Logaritmo da idade estelar m\\\'edia [a] ponderada em massa'
+param['at_mass'] = 'M\\\'edia do logaritmo da idade estelar [a] ponderada em massa'
 
 vmin['am_flux'] = 0.0
 vmax['am_flux'] = 2.0

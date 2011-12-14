@@ -32,32 +32,34 @@ O {\em Galaxy Evolution Explorer} (\galex) é um telescópio espacial de pequeno
 porte da NASA\footnote{{\em NASA Small Explorer} ({\em SMEX}) -
 \url{http://explorers.gsfc.nasa.gov/missions.html}}, lançado em 28 de abril de
 2003 para conduzir um {\em survey} de todo o céu numa faixa espectral do UV,
-entre $1350$ e $2750$\AA. O objetivo principal do \galex é estudar a evolução da
-taxa de formação estelar em galáxias \citep{Martin2005}. Os dados coletados pela
-missão são publicados em {\em Data Releases} periódicos, denominados {\em
-General Releases}. Este trabalho foi realizado sobre os dados do sexto {\em
-General Release}, GR6.
+entre $1350$ e $2750\,\mathrm{\AA}$. O objetivo principal do \galex é estudar a
+evolução da taxa de formação estelar em galáxias \citep{Martin2005}. Os dados
+coletados pela missão são publicados em {\em Data Releases} periódicos,
+denominados {\em General Releases}. Este trabalho foi realizado sobre os dados
+do sexto {\em General Release}, GR6.
 
 A missão consiste em uma série de {\em surveys} fotométricos e espectroscópicos
 (ver tabela \ref{tab:GalexSurveys}). Destes, os principais {\em surveys} são o
-{\em All Sky Survey} (AIS) e o {\em Medium Imaging Survey} (MIS), que foram
-utilizados neste trabalho. O imageamento é feito em duas bandas espectrais:
-ultravioleta distante ({\em far ultraviolet}, FUV), de $1350$ a $1750$\AA, e
-ultravioleta próximo ({\em near ultraviolet}, NUV), de $1750$ a $2750$\AA. As
-curvas de transmissão dos filtros utilizados nessas bandas podem ser vistos na
-figura \ref{fig:GalexFilters}. A espectroscopia é feita inserindo-se no caminho
-ótico um {\em grism}, que consiste num prisma combinado com uma rede de
-difração. Obtém-se deste modo um espectro de baixa resolução para cada objeto na
-imagem, conforme descrito por \citet{Morrissey2007}.
+{\em All Sky Survey} (AIS), cobrindo todo o céu numa profundidade menor, e o
+{\em Medium Imaging Survey} (MIS), cobrindo uma área limitada porém mais
+profunda, que foram utilizados neste trabalho. O imageamento é feito em duas
+bandas espectrais: ultravioleta distante ({\em far ultraviolet}, FUV), de $1350$
+a $1750\,\mathrm{\AA}$, e ultravioleta próximo ({\em near ultraviolet}, NUV), de
+$1750$ a $2750\,\mathrm{\AA}$. As curvas de transmissão dos filtros utilizados
+nessas bandas podem ser vistos na Figura \ref{fig:GalexFilters}. A
+espectroscopia é feita inserindo-se no caminho ótico um {\em grism}, que
+consiste num prisma combinado com uma rede de difração. Obtém-se deste modo um
+espectro de baixa resolução para cada objeto na imagem, conforme descrito por
+\citet{Morrissey2007}.
 
 \begin{table}
 	\caption[{\em Surveys} realizados pelo \galex.]{{\em Surveys} realizados pelo
 	\galex. O CAI consiste em observações de anãs brancas para calibração. A
 	cobertura do céu é dada em graus quadrados. No caso do NGS, a magnitude limite
-	é dada em unidades de densidade superficial de magnitude. Informações retiradas
-	de \citet{Martin2005}.}
+	é dada em unidades de densidade superficial de magnitude
+	[$\mathrm{arcsec}^{-2}$]. Informações retiradas de \citet{Martin2005}.}
 	\begin{tabular}{l r r}
-		{\em Survey} & Cobertura do céu & Mag. AB limite \\ 
+		{\em Survey} & Cobertura [$\mathrm{graus}^2$] & Mag. AB limite \\ 
 		\midrule
 		{\em Calibration Imaging (CAI)}              &         - &            - \\
 		{\em All-sky Imaging Survey (AIS)}           & $26\,000$ &       $20.5$ \\
@@ -83,16 +85,16 @@ imagem, conforme descrito por \citet{Morrissey2007}.
 	\label{fig:GalexFilters}
 \end{figure}
 
+% FIXME: Aplicar correção da Nat.
 Os {\em surveys} do \galex foram planejados de forma a se valer de outros {\em
-surveys} já existentes em outros comprimentos de onda. A figura
-\ref{fig:GalexSDSSOverlap} mostra a sobreposição da área observada
-\footnote{{\em Footprint}, no linguajar astronômico.} pelos {\em surveys} AIS e
-MIS do \galex e do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário
-da missão do \galex é calibrar da taxa de formação estelar no universo local e
-determinar o histórico cosmológico de formação estelar entre os {\em redshifts}
-$0 < z < 2$ \citep{Martin2005}. A comparação com dados de {\em surveys} em
-outros comprimentos de onda tem um papel fundamental no cumprimento deste
-objetivo.
+surveys} já existentes em outros comprimentos de onda. A Figura
+\ref{fig:GalexSDSSOverlap} mostra a sobreposição da área observada\footnote{{\em
+Footprint}, no linguajar astronômico.} pelos {\em surveys} AIS e MIS do \galex e
+do {\em Sloan Digital Sky Survey} (\SDSS). O objetivo primário da missão do
+\galex é calibrar da taxa de formação estelar no universo local e determinar o
+histórico cosmológico de formação estelar entre os {\em redshifts} $0 < z < 2$
+\citep{Martin2005}. A comparação com dados de {\em surveys} em outros
+comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
 
 \begin{figure}
 	\includegraphics[width=1.0\columnwidth]{figuras/footprint.eps}
@@ -160,7 +162,7 @@ correlacionada com a do \galex procurando o objeto do \galex mais próximo de
 cada objeto \SDSS até um limite de $4$ segundos de arco.
 
 O diagrama cor--magnitude elaborado por \citeauthor{Wyder2007} mostra a
-separação das galáxias nas sequências azul e vermelha (figura
+separação das galáxias nas sequências azul e vermelha (Figura
 \ref{fig:WyderCMD}). Esta distribuição bimodal é um resultado bem conhecido na
 astronomia \citep{Baldry2004}. Porém, diferente do diagrama cor--magnitude para
 a faixa espectral do óptico, a distribuição de cores em UV não pode ser ajustada
@@ -175,6 +177,7 @@ sequências é atribuída a uma maior sensibilidade à formação estelar recent
 	\label{fig:WyderCMD}
 \end{figure}
 
+% FIXME: Qual o fluxo?
 \citet{Martin2007} investigaram as propriedades das galáxias entre as sequências
 vermelha e azul para a mesma amostra citada acima. As galáxias nesta região
 intermediária são preferencialmente galáxias com núcleo ativo ({\em Active
@@ -229,9 +232,9 @@ forma a complementar os {\em surveys}.
 \end{table}
 
 Para facilitar o acesso aos dados do \galex, o MAST desenvolveu uma ferramenta
-chamada {\em GalexView}, utilizando tecnologia {\em Adobe Flex}\footnote{{\em
-Adobe Flex} é um {\em framework} de código aberto que permite desenvolver
-aplicações para {\em web browsers}. Ver
+chamada {\em GalexView} (Figura \ref{fig:GalexView}), utilizando tecnologia {\em
+Adobe Flex}\footnote{{\em Adobe Flex} é um {\em framework} de código aberto que
+permite desenvolver aplicações para {\em web browsers}. Ver
 \url{http://www.adobe.com/products/flex.html}.}. Desta forma o {\em GalexView }
 pode ser acessado através de seu {\em website}\footnote{GalexView:
 \url{http://galex.stsci.edu/GalexView/}} em qualquer {\em web browser} que tenha
@@ -247,13 +250,12 @@ versátil, tanto pelo nome do objeto quanto pelas coordenadas do céu. O formato
 de entrada é flexível o suficiente para evitar os problemas causados por
 idiossincrasias na notação de coordenadas (por exemplo, tanto ``14h03m12.6s
 +54d20m56.7s'' quanto ``14 03 12.6 54 20 56.7'' ou ``210.83 54.35'' apontam para
-a mesma região). A sua interface (figura \ref{fig:GalexView}) permite filtrar o
-conteúdo retornado pelas buscas, separando por {\em surveys}. Há também uma
-ferramenta de histograma, permitindo filtrar pelos valores das colunas dos
-catálogos. Os objetos selecionados na busca aparecem marcados na visualização da
-imagem. Utilizando um sistema do tipo ``carrinho de compras'', pode-se
-selecionar campos e objetos de interesse, para ao final do uso do sistema baixar
-toda a seleção de uma vez.
+a mesma região). A sua interface permite filtrar o conteúdo retornado pelas
+buscas, separando por {\em surveys}. Há também uma ferramenta de histograma,
+permitindo filtrar pelos valores das colunas dos catálogos. Os objetos
+selecionados na busca aparecem marcados na visualização da imagem. Utilizando um
+sistema do tipo ``carrinho de compras'', pode-se selecionar campos e objetos de
+interesse, para ao final do uso do sistema baixar toda a seleção de uma vez.
 
 \begin{figure}
 	\includegraphics[width=0.7\columnwidth]{figuras/galexview.eps}

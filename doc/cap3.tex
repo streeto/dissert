@@ -44,7 +44,7 @@ crescimento da performance do {\em hardware}.
 Todo o banco de dados do \SDSS foi migrado para um {\em sistema de gerenciamento
 de banco de dados relacional} \citep[Relational Database Management System,
 RDBMS;][]{Codd1970} num esforço guiado por \citeauthor{Thakar2004}. RDBMS pode
-ser considerado o padrão da indústria. Praticamente todas as linguagens de
+ser considerado o padrão da indústria, praticamente todas as linguagens de
 programação têm bibliotecas de interface às implementações de RDBMS comerciais
 mais comuns (Oracle, IBM e Microsoft, Postgres). Há uma diversidade de
 ferramentas para desenvolvimento e gerenciamento de RDBMS. E talvez o maior
@@ -56,6 +56,8 @@ resultou no desenvolvimento do {\em SkyServer}\footnote{\SDSS SkyServer:
 \url{http://skyserver.sdss.org/}}. O servidor de banco de dados escolhido pelo
 \SDSS foi o {\em Microsoft SQL Server}.
 
+% FIXME: Por quê? Alguma vantagem, ou só porque o SDSS usou e todo mundo vai
+% "copiar"? 
 A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
 necessariamente na superioridade do segundo em relação ao primeiro. Tanto a
 abordagem orientada a objetos quanto a abordagem relacional têm suas vantagens e
@@ -67,7 +69,7 @@ semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
 \subsection{{\em SkyServer}}
 \label{sec:CrossMatch:SDSS:SkyServer}
 
-O {\em SkyServer} é um {\em website} (figura \ref{fig:TelaDoSkyServer}) que
+O {\em SkyServer} é um {\em website} (Figura \ref{fig:TelaDoSkyServer}) que
 provê acesso aos dados armazenados no banco de dados do \SDSS
 \citep{Szalay2002}. O acesso mais simples pode ser feito através de um atlas de
 locais famosos ({\em famous places}), que mostra imagens coloridas de objetos
@@ -132,7 +134,7 @@ projetos como o \galex, {\em Kepler}\footnote{{\em Kepler CasJobs}:
 }\footnote{{\em Palomar Quest CasJobs}:
 \url{http://webvoy.cacr.caltech.edu/CasJobs/}} \citep{Djorgovski2008}.
 
-A figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
+A Figura \ref{fig:CasJobs} mostra uma tela típica de uma sessão no {\em
 CasJobs}.
 
 
@@ -150,9 +152,9 @@ como um arquivo texto. Ele usa uma biblioteca de espectros SSPs com diferentes
 idades e metalicidades como uma base do espaço de espectros galáticos possíveis.
 De forma simplificada, o que o \starlight faz é encontrar as frações de massa e
 luz correspondentes a cada elemento da base, ou seja, cada SSP. Analisando as
-relações entre os componentes determinados pela síntese, o programa determina
+relações entre as componentes determinados pela síntese, o programa determina
 diversas propriedades físicas da galáxia, como massa estelar total, idade
-estelar média, metalicidade estelar média, extinção causada por poeira e
+estelar média, metalicidade estelar média, atenuação causada por poeira e
 dispersão de velocidades, para citar apenas algumas. Quase um milhão de
 espectros foram analisados, e o resultado da síntese foi armazenado em arquivos
 texto.
@@ -184,7 +186,7 @@ nova transferência caso cada usuário tivesse a sua cópia local.
 O {\em CasJobs} requer um servidor rodando {\em Windows Server} com {\em
 Internet Information Services} (IIS) e {\em Microsoft SQL Server} (MSSQL). A
 instalação do {\em CasJobs} está documentada no {\em website} do {\em SkyServer}
-(ver seção \ref{sec:CrossMatch:SDSS:SkyServer}). Com um servidor {\em CasJobs},
+(ver Seção \ref{sec:CrossMatch:SDSS:SkyServer}). Com um servidor {\em CasJobs},
 o trabalho consiste em importar os dados em arquivos texto para um banco de
 dados no MSSQL. A ferramenta principal para a manipulação dos bancos de dados no
 MSSQL é o {\em Microsoft SQL Server Management Studio}. Nele há um assistente
@@ -202,7 +204,7 @@ emissão para facilitar a inclusão de novas linhas no futuro.
 \subsection{Estrutura do banco de dados}
 \label{sec:Crossmatch:EstruturaBDStarlight}
 
-O esquema do banco de dados do \starlight pode ser visto na figura
+O esquema do banco de dados do \starlight pode ser visto na Figura
 \ref{fig:EsquemaBDStarlight}. Os dados observacionais obtidos do \SDSS estão na
 tabela \texttt{observational\_params}. Estes dados, junto com os parâmetros de
 entrada da síntese (tabela \texttt{synthesis\_params}), foram usados como
@@ -212,14 +214,17 @@ campos \texttt{SpecObjID} e \texttt{SynID}. As linhas de emissão estão
 armazenadas na tabela \texttt{el\_fit}, ligada à \texttt{synthesis\_results}
 através do campo \texttt{SynID}. A definição das linhas (comprimento de onda e
 faixas contínuo usadas na medida) está contida na tabela \texttt{cfg\_el\_fit}.
-As tabelas referentes ao \galex são explicadas na seção
+As tabelas referentes ao \galex são explicadas na Seção
 \ref{sec:Crossmatch:DefAmostras:IdSDSSGalex}.
 
 \begin{figure}
 	\includegraphics{figuras/starlight-schema.eps}
 	\caption[Esquema do banco de dados do \starlight.]
 	{Esquema do banco de dados do \starlight. As linhas indicam chaves
-	estrangeiras, relacionando dois campos de duas tabelas diferentes.}
+	estrangeiras, relacionando dois campos (marcados com uma chave) de duas tabelas
+	diferentes. Os triângulos indicam campos indexados. A descrição completa dos
+	campos pode ser encontrada no site do \starlight
+	\url{http://casjobs.starlight.ufsc.br/casjobs/field_list.html}.}
 	\label{fig:EsquemaBDStarlight}
 \end{figure}
 
@@ -250,7 +255,7 @@ A tabela de índices da amostra de galáxias do \starlight contém inicialmente 
 tripletos [\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Esta tabela é
 importada para o ambiente {CasJobs} do \SDSS DR7\footnote{{\em CasJobs} \SDSS
 DR7 - \url{http://casjobs.sdss.org/CasJobs/}}. Através da execução da {\em
-query} da figura \ref{fig:QueryAtualizaObjIds} a tabela tem os valores de
+query} da Figura \ref{fig:QueryAtualizaObjIds} a tabela tem os valores de
 \texttt{SpecObjID} e \texttt{BestObjID} preenchida. Entre os objetos na amostra
 do \starlight, $622$ objetos não possuem um valor de \texttt{BestObjID}
 definido, ou seja, não foi possível encontrar a sua contrapartida fotométrica.
@@ -295,10 +300,11 @@ utilizada por \citeauthor{Budavari2009} agora faz parte do {\em pipeline} do
 \galex. A distribuição do {\em CasJobs} inclui as ferramentas necessárias para
 fazer o {\em crossmatch} espacial entre bancos de dados.
 
+% FIXME: Divisão dos campos está confusa.
 \begin{table}
 	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6, por
-	associação. A lista foi gerada pela {\em query} mostrada na figura
+	associação. A lista foi gerada pela {\em query} mostrada na Figura
 	\ref{fig:QueryIDGalexSDSS}.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
@@ -315,7 +321,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \begin{table}
 	\caption[Identificações entre \SDSS DR7 e {\em survey} AIS do \galex GR6.]
 	{Número de identificações entre \SDSS DR7 e {\em survey} MIS do \galex GR6, por
-	associação. A lista foi gerada pela {\em query} mostrada na figura
+	associação. A lista foi gerada pela {\em query} mostrada na Figura
 	\ref{fig:QueryIDGalexSDSS}.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{r r r r}
@@ -342,7 +348,7 @@ fazer o {\em crossmatch} espacial entre bancos de dados.
 \subsection{Relação de {\em crossmatch} entre \SDSS e \galex}
 \label{sec:Crossmatch:DefAmostras:IdSDSSGalex}
 
-Como comentado na seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
+Como comentado na Seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 \galex há uma tabela de {\em crossmatch} entre os objetos do \galex e os seus
 correspondentes ópticos no catálogo do \SDSS, chamada \texttt{xSDSSDR7}. A
 descrição completa dos campos pode ser vista na tabela \ref{tab:CamposXSDSSDR7}.
@@ -394,15 +400,15 @@ ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} 
 
 \subsection{Dados UV}
 
-A amostra do \starlight descrita na seção \ref{sec:Crossmatch:AmostraStarlight}
+A amostra do \starlight descrita na Seção \ref{sec:Crossmatch:AmostraStarlight}
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
-o mesmo utilizado na tabela \texttt{xSDSSDR7}. A {\em query} da figura
+o mesmo utilizado na tabela \texttt{xSDSSDR7}. A {\em query} da Figura
 \ref{fig:QueryMatchAIS} preenche a tabela chamada \texttt{galex\_ais} com todos
 os objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
 (\texttt{FUV\_mag}) e FUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
 ({\tt FUV\_magErr} e \texttt{NUV\_magErr}), o tempo de exposição em cada filtro
 ({\tt fexptime} e \texttt{nexptime}), o excesso de cor $E(B-V)$ (\texttt{e\_bv},
-ver seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
+ver Seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
 detecção do objeto no \galex e no \SDSS (\texttt{distance}). Esta tabela é
 esparsamente populada, com um registro para cada objeto do \starlight, e os
 dados UV preenchidos somente para os objetos com identificação positiva. Caso o
@@ -411,7 +417,7 @@ tabela, quando um campo de um registro não possui valor definido, seu valor é
 dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
 null}''.}. De forma similar, os dados UV para o {\em survey} MIS foram
 armazenados na tabela \texttt{galex\_mis}. Estas tabelas podem ser vistas no
-contexto do banco de dados do \starlight na seção
+contexto do banco de dados do \starlight na Seção
 \ref{sec:Crossmatch:EstruturaBDStarlight}.
 
 Foram escolhidas somente identificações cruzadas do tipo um-para-um, ou seja,
@@ -436,7 +442,7 @@ No total foram obtidas $173\,218$ detecções no AIS e $41\,274$ no MIS. Nem tod
 os objetos tiveram detecção simultânea nas bandas FUV e NUV. A tabela
 \ref{tab:DetBanda} lista a quantidade de objetos que possuem valor definido de
 acordo com cada banda UV. Alguns objetos podem ser muito fracos em FUV. Isto
-combinado com a baixa eficiência do filtro (figura \ref{fig:GalexFilters}) e do
+combinado com a baixa eficiência do filtro (Figura \ref{fig:GalexFilters}) e do
 detetor podem fazer com que a contagem de fótons deste objeto seja muito baixa,
 ficando abaixo do nível limite de sinal-ruído do {\em survey}.
 
@@ -445,7 +451,7 @@ ficando abaixo do nível limite de sinal-ruído do {\em survey}.
 	{Número de detecções por banda no catálogo UV do \starlight. Nas linhas FUV e
 	NUV, é listada a quantidade de objetos com detecção para os {\em
 	surveys} AIS e MIS nas bandas FUV e NUV, respectivamente. A linha FUV+NUV
-	lista a quantidade de objetos com detecção simultânea em FUV e NUV. A figura
+	lista a quantidade de objetos com detecção simultânea em FUV e NUV. A Figura
 	\ref{fig:QueryListaPorBandaSurvey} contém a {\em query} que gera esta lista.}
 	\setlength{\tabcolsep}{1cm}
 	\begin{tabular}{l r r}
@@ -474,15 +480,15 @@ quantitativamente este avermelhamento.
 
 O catálogo do \galex provê os valores de excesso de cor $E(B-V)$ das galáxias
 com base nos mapas de extinção interestelar de \citet{Schlegel1998}. A correção
-é feita usando o modelo de extinção CCM \citep[equações 4a e 4b]{Cardelli1989}.
+é feita usando o modelo de extinção CCM \citep*[equações 4a e 4b]{Cardelli1989}.
 Para um comprimento de onda $\lambda$ qualquer, a extinção absoluta (em
 magnitudes) é dada por
 \begin{eqnarray*}
 	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
 	x &=& \frac{10000\text{\AA}}{\lambda}.
 \end{eqnarray*}
-No caso das bandas FUV ($\lambda_{eff}=2271\text{\AA}$) e NUV
-($\lambda_{eff}=1528\text{\AA}$),
+No caso das bandas FUV ($\lambda_{eff}=2271\,\text{\AA}$) e NUV
+($\lambda_{eff}=1528\,\text{\AA}$),
 \begin{eqnarray*}
 	x_{FUV} &=& 6,54\\
 	x_{NUV} &=& 4,40
@@ -506,7 +512,7 @@ Esta correção é então aplicada às magnitudes do catálogo. Vale notar que, 
 um mesmo objeto, $A_{FUV} < A_{NUV}$. Ou seja, ao contrário do que ocorre para
 outros filtros (por exemplo, $B$ e $V$), a extinção causa um azulamento do
 espectro na faixa do UV observado pelo \galex. Isto ocorre devido à banda de
-$2100$\AA na curva de extinção da nossa Galáxia.
+$2100\,\mathrm{\AA}$ na curva de extinção da nossa Galáxia.
 
 Quando se observa, através de um determinado filtro, galáxias em {\em redshifts}
 diferentes, é preciso levar em conta que a ``janela'' observada do espectro
@@ -527,7 +533,7 @@ do código \textsc{kcorrect} (v4\_2) de \citet{Blanton2007}.
 \section{Definição da amostra \STARLIGHTUV}
 \label{sec:Crossmatch:DefAmostras:StarlightUV}
 
-A {\em query} mostrada na figura \ref{fig:QuerySampleAIS} monta a amostra a ser
+A {\em query} mostrada na Figura \ref{fig:QuerySampleAIS} monta a amostra a ser
 utilizada no capítulo seguinte. As colunas selecionadas são as magnitudes
 $ugriz$ do \SDSS, a magnitude NUV do AIS do \galex e algumas propriedades
 físicas das galáxias (tabela \ref{tab:ParamFisicos}). Foram selecionadas também
@@ -536,16 +542,30 @@ a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
 
 \begin{table}
 	\caption[Propriedades físicas das galáxias utilizados na amostra.]
-	{Propriedades físicas das galáxias, obtidos do \starlight.}
+	{Propriedades físicas das galáxias, obtidas do \starlight.}
 	\begin{tabular}{l l}
 		Coluna & Descrição \\
 		\midrule
-		\texttt{mcor\_gal} & Logaritmo da massa estelar \\
-		\texttt{at\_flux}  & Logaritmo da idade média ponderada em fluxo \\
-		\texttt{at\_mass}  & Logaritmo da idade média ponderada em massa \\
-		\texttt{am\_flux}  & Metalicidade média ponderada em fluxo \\
-		\texttt{am\_mass}  & Metalicidade média ponderada em massa \\
-		\texttt{AV}        & Extinção causada por poeira (magnitude) \\
+		\texttt{mcor\_gal} &
+		Logaritmo da massa estelar [$M_{\odot}$]
+		\\
+		\texttt{at\_flux} &
+		Média do logaritmo da idade estelar [anos] ponderada em
+		fluxo
+		\\
+		\texttt{at\_mass} &
+		Média do logaritmo da idade estelar [anos] ponderada em
+		massa
+		 \\
+		 \texttt{am\_flux} &
+		 Metalicidade estelar média [$Z_{\odot}$] ponderada em fluxo
+		 \\
+		\texttt{am\_mass} &
+		Metalicidade estelar média [$Z_{\odot}$] ponderada em massa
+		\\
+		\texttt{AV} &
+		Extinção causada por poeira [magnitude]
+		\\
 	\end{tabular}
 	\label{tab:ParamFisicos}
 \end{table}
@@ -565,11 +585,11 @@ z < 0,17$. Este foi o mesmo critério usado por \citet{CidFernandes2011}.
 Foram selecionadas somente galáxias com magnitude aparente $r<17,77$, que é o
 limite nominal da amostra principal de galáxias do \SDSS \citep[\SDSS {\em Main
 Galaxy Sample}; ][]{Strauss2002}. Obtém-se assim uma amostra limitada em fluxo.
-A figura \ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude
+A Figura \ref{fig:CompletezaRedshiftMag} mostra a distribuição da magnitude
 absoluta $M_r$ das galáxias da amostra em função do {\em redshift}. As
 propriedades físicas e observacionais das galáxias estão distribuídas conforme
-os histogramas da figura \ref{fig:HistogramasAmostra}. Estas propriedades serão
-exploradas com mais detalhes na seção \ref{sec:Analise:PropFisicas}.
+os histogramas da Figura \ref{fig:HistogramasAmostra}. Estas propriedades serão
+exploradas com mais detalhes na Seção \ref{sec:Analise:PropFisicas}.
 
 \begin{figure}
 	\includegraphics{figuras/completeness-volume.eps}

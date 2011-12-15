@@ -79,6 +79,14 @@ buscas avançadas utilizando SQL, embora haja limites de tempo de execução e d
 quantidade de objetos retornados. Esta limitação é contornada através do sistema
 {\em CasJobs}, que é tratado na próxima seção.
 
+\begin{figure}
+	\includegraphics[width=0.9\columnwidth]{figuras/skyserver.eps}
+	\caption[Telas do {\em SkyServer}.]
+	{Telas do {\em SkyServer}. À esquerda, formulário para submeter uma {\em
+	query} SQL. À direita, ferramenta {\em Explore} mostrando a galáxia NGC 799.}
+	\label{fig:TelaDoSkyServer}
+\end{figure}
+
 É importante ressaltar que é possível (de fato, a equipe do \SDSS encoraja)
 criar {\em mirrors}\footnote{{\em Mirror}: Espelho, em inglês. Clone de um {\em
 website}.} do {\em SkyServer}. Tanto o banco de dados do \SDSS quanto o código
@@ -86,14 +94,6 @@ fonte do {\em SkyServer} estão disponíveis no próprio {\em website} do {\em
 SkyServer}. Temos um clone do banco de dados do {\em Data Release} 8 do \SDSS no
 servidor {\em CasJobs} do \starlight \footnote{{\em CasJobs} do \starlight:
 \url{http://casjobs.starlight.ufsc.br/casjobs/}}.
-
-\begin{figure}
-	\includegraphics[width=1.0\columnwidth]{figuras/skyserver.eps}
-	\caption[Telas do {\em SkyServer}.]
-	{Telas do {\em SkyServer}. À esquerda, formulário para submeter uma {\em
-	query} SQL. À direita, ferramenta {\em Explore} mostrando a galáxia NGC 799.}
-	\label{fig:TelaDoSkyServer}
-\end{figure}
 
 \subsection{{\em CasJobs}}
 \label{sec:CrossMatch:SDSS:CasJobs}
@@ -104,16 +104,7 @@ desenvolvido pela equipe do \SDSS para expandir a capacidade do {\em SkyServer}
 \SDSS da mesma forma que no {\em SkyServer}. Porém, além de consultas rápidas, é
 possível agendar a execução de consultas mais longas. O {\em CasJobs} gerencia
 estas consultas agendadas numa fila de execução, de modo a não sobrecarregar a
-rede ou os servidores de banco de dados. Cada usuário possui seu próprio banco
-de dados, chamado {\em MyDB}. Pode-se importar tabelas para o {\em MyDB} para
-utilizar em {\em queries} correlacionando com os dados presentes no {\em
-CasJobs}. O {\em MyDB} serve como armazenamento de tabelas do usuário, e há
-mecanismos para exportar estas tabelas para arquivos nos formatos FITS, CSV, XML
-e VOTable. Estes arquivos podem ser lidos por programas de análise de dados como
-o {\em TopCat}\footnote{{\em TopCat} é um visualizador gráfico interativo e
-editor de dados tabulares usado em astronomia. Ver
-\url{http://www.star.bris.ac.uk/~mbt/topcat/}.}, ou mesmo importados para outros
-bancos de dados.
+rede ou os servidores de banco de dados.
 
 \begin{figure}
 	\includegraphics[width=0.7\columnwidth]{figuras/casjobs.eps}
@@ -123,6 +114,16 @@ bancos de dados.
 	espectroscopia.}
 	\label{fig:CasJobs}
 \end{figure}
+
+Cada usuário possui seu próprio banco de dados, chamado {\em MyDB}. Pode-se
+importar tabelas para o {\em MyDB} para utilizar em {\em queries}
+correlacionando com os dados presentes no {\em CasJobs}. O {\em MyDB} serve como
+armazenamento de tabelas do usuário, e há mecanismos para exportar estas tabelas
+para arquivos nos formatos FITS, CSV, XML e VOTable. Estes arquivos podem ser
+lidos por programas de análise de dados como o {\em TopCat}\footnote{{\em
+TopCat} é um visualizador gráfico interativo e editor de dados tabulares usado
+em astronomia. Ver \url{http://www.star.bris.ac.uk/~mbt/topcat/}.}, ou mesmo
+importados para outros bancos de dados.
 
 É possível utilizar o {\em CasJobs} para acessar virtualmente qualquer banco de
 dados. No momento, o Grupo de Astrofísica da UFSC possui um servidor {\em
@@ -223,7 +224,7 @@ As tabelas referentes ao \galex são explicadas na Seção
 	{Esquema do banco de dados do \starlight. As linhas indicam chaves
 	estrangeiras, relacionando dois campos (marcados com uma chave) de duas tabelas
 	diferentes. Os triângulos indicam campos indexados. A descrição completa dos
-	campos pode ser encontrada no site do \starlight
+	campos pode ser encontrada no site do \starlight através do {\em link}
 	\url{http://casjobs.starlight.ufsc.br/casjobs/field_list.html}.}
 	\label{fig:EsquemaBDStarlight}
 \end{figure}
@@ -512,7 +513,7 @@ Esta correção é então aplicada às magnitudes do catálogo. Vale notar que, 
 um mesmo objeto, $A_{FUV} < A_{NUV}$. Ou seja, ao contrário do que ocorre para
 outros filtros (por exemplo, $B$ e $V$), a extinção causa um azulamento do
 espectro na faixa do UV observado pelo \galex. Isto ocorre devido à banda de
-$2100\,\mathrm{\AA}$ na curva de extinção da nossa Galáxia.
+$2100\,\text{\AA}$ na curva de extinção da nossa Galáxia.
 
 Quando se observa, através de um determinado filtro, galáxias em {\em redshifts}
 diferentes, é preciso levar em conta que a ``janela'' observada do espectro

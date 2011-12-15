@@ -32,7 +32,7 @@ O {\em Galaxy Evolution Explorer} (\galex) é um telescópio espacial de pequeno
 porte da NASA\footnote{{\em NASA Small Explorer} ({\em SMEX}) -
 \url{http://explorers.gsfc.nasa.gov/missions.html}}, lançado em 28 de abril de
 2003 para conduzir um {\em survey} de todo o céu numa faixa espectral do UV,
-entre $1350$ e $2750\,\mathrm{\AA}$. O objetivo principal do \galex é estudar a
+entre $1350$ e $2750\,\text{\AA}$. O objetivo principal do \galex é estudar a
 evolução da taxa de formação estelar em galáxias \citep{Martin2005}. Os dados
 coletados pela missão são publicados em {\em Data Releases} periódicos,
 denominados {\em General Releases}. Este trabalho foi realizado sobre os dados
@@ -44,8 +44,8 @@ A missão consiste em uma série de {\em surveys} fotométricos e espectroscópi
 {\em Medium Imaging Survey} (MIS), cobrindo uma área limitada porém mais
 profunda, que foram utilizados neste trabalho. O imageamento é feito em duas
 bandas espectrais: ultravioleta distante ({\em far ultraviolet}, FUV), de $1350$
-a $1750\,\mathrm{\AA}$, e ultravioleta próximo ({\em near ultraviolet}, NUV), de
-$1750$ a $2750\,\mathrm{\AA}$. As curvas de transmissão dos filtros utilizados
+a $1750\,\text{\AA}$, e ultravioleta próximo ({\em near ultraviolet}, NUV), de
+$1750$ a $2750\,\text{\AA}$. As curvas de transmissão dos filtros utilizados
 nessas bandas podem ser vistos na Figura \ref{fig:GalexFilters}. A
 espectroscopia é feita inserindo-se no caminho ótico um {\em grism}, que
 consiste num prisma combinado com uma rede de difração. Obtém-se deste modo um
@@ -161,6 +161,13 @@ junto com fotometria UV do {\em survey} MIS do \galex. A amostra do \SDSS é
 correlacionada com a do \galex procurando o objeto do \galex mais próximo de
 cada objeto \SDSS até um limite de $4$ segundos de arco.
 
+\begin{figure}
+	\includegraphics[width=0.5\columnwidth]{figuras/cmd-wyder.eps}
+	\caption[Diagrama cor--margnitude em ultravioleta.]
+	{Diagrama cor--margnitude em ultravioleta. \citep[figura 7]{Wyder2007}.}
+	\label{fig:WyderCMD}
+\end{figure}
+
 O diagrama cor--magnitude elaborado por \citeauthor{Wyder2007} mostra a
 separação das galáxias nas sequências azul e vermelha (Figura
 \ref{fig:WyderCMD}). Esta distribuição bimodal é um resultado bem conhecido na
@@ -169,13 +176,6 @@ a faixa espectral do óptico, a distribuição de cores em UV não pode ser ajus
 somente pela soma de duas gaussianas, há um excesso de objetos nas cores
 intermediárias entre os picos azul e vermelho. A boa separação entre as
 sequências é atribuída a uma maior sensibilidade à formação estelar recente.
-
-\begin{figure}
-	\includegraphics[width=0.7\columnwidth]{figuras/cmd-wyder.eps}
-	\caption[Diagrama cor--margnitude em ultravioleta.]
-	{Diagrama cor--margnitude em ultravioleta. \citep[figura 7]{Wyder2007}.}
-	\label{fig:WyderCMD}
-\end{figure}
 
 % FIXME: Qual o fluxo?
 \citet{Martin2007} investigaram as propriedades das galáxias entre as sequências
@@ -244,6 +244,13 @@ visualização de conteúdo {\em flash} gerado tanto pelos seus editores
 proprietários quanto por ferramentas de terceiros. Ver
 \url{http://www.adobe.com/products/flashplayer/}.}.
 
+\begin{figure}
+	\includegraphics[width=0.7\columnwidth]{figuras/galexview.eps}
+	\caption[Tela do programa{\em GalexView}.]
+	{Tela do programa {\em GalexView}, com a visualização da galáxia M101.}
+	\label{fig:GalexView}
+\end{figure}
+
 Através do {\em GalexView} é possível fazer buscas, visualizar e obter imagens e
 catálogos dos campos do \galex. As buscas podem ser feitas de forma bastante
 versátil, tanto pelo nome do objeto quanto pelas coordenadas do céu. O formato
@@ -256,13 +263,6 @@ permitindo filtrar pelos valores das colunas dos catálogos. Os objetos
 selecionados na busca aparecem marcados na visualização da imagem. Utilizando um
 sistema do tipo ``carrinho de compras'', pode-se selecionar campos e objetos de
 interesse, para ao final do uso do sistema baixar toda a seleção de uma vez.
-
-\begin{figure}
-	\includegraphics[width=0.7\columnwidth]{figuras/galexview.eps}
-	\caption[Tela do programa{\em GalexView}.]
-	{Tela do programa {\em GalexView}, com a visualização da galáxia M101.}
-	\label{fig:GalexView}
-\end{figure}
 
 Tanto o {\em GalexView} quanto outras ferramentas de busca do MAST, como o
 \galex {\em Search Form} e o \galex {\em Tilelist}, são construídos sobre um

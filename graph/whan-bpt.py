@@ -95,21 +95,21 @@ pylab.figure()
 pylab.subplot(211)
 bounds = (0.2,0.9,0.0,1.1)
 pylab.axis(bounds)
-range = (bounds[0], bounds[1])
-bins = 50
-h, e = pylab.histogram(g_r[starforming], bins, range)
+plot_range = (bounds[0], bounds[1])
+bins = 30
+h, e = pylab.histogram(g_r[starforming], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'b-', label='SF')
 
-h, e = pylab.histogram(g_r[sAGN], bins, range)
+h, e = pylab.histogram(g_r[sAGN], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='lightgreen', label='sAGN')
 
-h, e = pylab.histogram(g_r[wAGN], bins, range)
+h, e = pylab.histogram(g_r[wAGN], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='darkgreen', label='wAGN')
 
-h, e = pylab.histogram(g_r[retired], bins, range)
+h, e = pylab.histogram(g_r[retired], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
 
-h, e = pylab.histogram(g_r[passive], bins, range)
+h, e = pylab.histogram(g_r[passive], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'r-', label='PG')
 
 pylab.legend(loc='upper left')
@@ -119,25 +119,25 @@ pylab.xlabel('$g - r$')
 pylab.subplot(212)
 bounds = (1.0,6.5,0.0,1.1)
 pylab.axis(bounds)
-range = (bounds[0], bounds[1])
-bins = 50
-h, e = pylab.histogram(NUV_r[starforming], bins, range)
+plot_range = (bounds[0], bounds[1])
+bins = 30
+h, e = pylab.histogram(NUV_r[starforming], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'b-', label='SF')
 print('SF: %d' % len(NUV_r[starforming]))
 
-h, e = pylab.histogram(NUV_r[sAGN], bins, range)
+h, e = pylab.histogram(NUV_r[sAGN], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='lightgreen', label='sAGN')
 print('sAGN: %d' % len(NUV_r[sAGN]))
 
-h, e = pylab.histogram(NUV_r[wAGN], bins, range)
+h, e = pylab.histogram(NUV_r[wAGN], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='darkgreen', label='wAGN')
 print('wAGN: %d' % len(NUV_r[wAGN]))
 
-h, e = pylab.histogram(NUV_r[retired], bins, range)
+h, e = pylab.histogram(NUV_r[retired], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'k-', label='RG')
 print('RG: %d' % len(NUV_r[retired]))
 
-h, e = pylab.histogram(NUV_r[passive], bins, range)
+h, e = pylab.histogram(NUV_r[passive], bins, plot_range)
 pylab.plot(e[:-1], h*1.0/np.max(h), 'r-', label='PG')
 print('PG: %d' % len(NUV_r[passive]))
 
@@ -147,6 +147,82 @@ if debug:
     pylab.show()
 else:
     pylab.savefig('../doc/figuras/histo_galtype_color.' + outformat, format=outformat)
+
+
+# Color histogram for WHa
+set_eps_output_1()
+pylab.figure()
+WHa_ranges = np.linspace(0.5, 6, 5)
+passive_filter = (WHa < 0.5) & (WHa > 0.0) | (WHa == -999)
+
+color = ['orange', 'g', 'b', 'purple']
+
+# Optical
+pylab.subplot(211)
+bounds = (0.2,0.9,0.0,1.1)
+pylab.axis(bounds)
+plot_range = (bounds[0], bounds[1])
+bins = 30
+
+h, e = pylab.histogram(g_r[passive_filter], bins, plot_range)
+pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='r', label='PG')
+
+for i in range(0, len(WHa_ranges)-1):
+    wha1 = WHa_ranges[i]
+    wha2 = WHa_ranges[i+1]
+    filter = (WHa > wha1) & (WHa < wha2) & (logN2Ha > -0.4)
+    h, e = pylab.histogram(g_r[filter], bins, plot_range)
+#    label = locale.format('%5.1f - %5.1f', (wha1, wha2))
+    label = '$%5.1f - %5.1f\\,\\mathrm{\\AA}$' % (wha1, wha2)
+    pylab.plot(e[:-1], h*1.0/np.max(h), '-', color=color[i], label=label)
+
+pylab.xlabel('$g - r$')
+pylab.legend(loc='upper left')
+
+# UV
+pylab.subplot(212)
+bounds = (1.0,6.5,0.0,1.1)
+pylab.axis(bounds)
+plot_range = (bounds[0], bounds[1])
+bins = 30
+
+h, e = pylab.histogram(NUV_r[passive_filter], bins, plot_range)
+pylab.plot(e[:-1], h*1.0/np.max(h), '-', color='r')
+
+for i in range(0, len(WHa_ranges)-1):
+    wha1 = WHa_ranges[i]
+    wha2 = WHa_ranges[i+1]
+    filter = (WHa > wha1) & (WHa < wha2) & (logN2Ha > -0.4)
+    h, e = pylab.histogram(NUV_r[filter], bins, plot_range)
+    pylab.plot(e[:-1], h*1.0/np.max(h), '-', color=color[i])
+
+pylab.xlabel('$\\mathrm{NUV} - r$')
+if debug:
+    pylab.show()
+else:
+    pylab.savefig('../doc/figuras/histo_wha_color.' + outformat, format=outformat)
+
+
+# NUV-r versus WHa
+set_eps_output_1()
+pylab.figure()
+bounds = [0.5, 6.0, 0.5, 7.0]
+pylab.axis(bounds)
+filter = (WHa > 0.5) & (WHa < 6.0) & (logN2Ha > -0.4)
+h, ex, ey = np.histogram2d(WHa[filter], t.NUV[filter]-t.r[filter], bins=25,
+                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
+#pylab.scatter(WHa[filter], t.NUV[filter] - t.r[filter], c='orange', marker='o', 
+#              edgecolor='None', s=1)
+pylab.hexbin(WHa[filter], t.NUV[filter] - t.r[filter], extent=bounds,# bins='log',
+             gridsize=30, cmap=cm.OrRd)
+pylab.contour(h.T, extent=bounds, colors='black', linewidths=0.5)
+pylab.axvline(3.0, color='k', linestyle='--')
+pylab.xlabel('$W_{\\mathrm{H}\\alpha}$ [\\AA]')
+pylab.ylabel('$\\mathrm{NUV} - r$')
+if debug:
+    pylab.show()
+else:
+    pylab.savefig('../doc/figuras/wha_nuv.' + outformat, format=outformat)
 
 
 # WHaN plot
@@ -277,7 +353,7 @@ cb = pylab.colorbar()
 cb.set_label('$\\mathrm{NUV} - r$')
 
 #h, ex, ey = np.histogram2d(logN2Ha[clean], logWHa[clean], bins=20 ,
-#                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
+#                           plot_range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 # Hack so log(h) does not blow in my face.
 #h = h + 1
 
@@ -292,8 +368,8 @@ else:
 bounds = [-1.0,0.5, -1.5,1.3]
 pylab.figure()
 pylab.axis(bounds)
-pylab.xlabel('$\log([\\mathrm{N}\\,\\textsc{ii}] / \\mathrm{H}\\alpha)$')
-pylab.ylabel('$\log([\\mathrm{O}\\,\\textsc{iii}] / \\mathrm{H}\\beta)$')
+pylab.xlabel('$\\log([\\mathrm{N}\\,\\textsc{ii}] / \\mathrm{H}\\alpha)$')
+pylab.ylabel('$\\log([\\mathrm{O}\\,\\textsc{iii}] / \\mathrm{H}\\beta)$')
 
 clean = (t.nii_6584_flux[sample] > 0.0) & (t.halpha_flux[sample] > 0.0)
 clean &= (t.oiii_5007_flux[sample] > 0.0) & (t.hbeta_flux[sample] > 0.0)
@@ -331,7 +407,7 @@ cb = pylab.colorbar()
 cb.set_label('$\\mathrm{NUV} - r$')
 
 #h, ex, ey = np.histogram2d(logN2Ha[clean], logO3Hb[clean], bins=20 ,
-#                           range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
+#                           plot_range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 
 #pylab.contour(h.T, extent=bounds, colors='black')
 

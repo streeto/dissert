@@ -204,7 +204,6 @@ Esta figura é de certo modo uma versão resumida da Figura \ref{fig:ColorClass}
 Mesmo havendo uma sobreposição considerável ente as classes, a sequência está
 bem definida.
 
-% FIXME: pode ser devido a amostra não ser limitada em volume.
 É interessante notar que a separação entre as classes é mais pronunciada em UV.
 As classes RG e PG mal se distinguem no óptico, enquanto que em UV as RG se
 mostram consistentemente mais azuis\footnote{O conceito de ``mais azul'' não
@@ -214,6 +213,65 @@ inferir, ainda que qualitativamente, que as distribuições em UV são
 significativamente assimétricas em comparação com as distribuições no óptico.
 Isto pode ser indício de uma contaminação entre as classes, evidenciada agora
 pelos novos dados em UV.
+
+O mesmo pode ser dito sobre as distribuições de galáxias RG e wAGN, cuja
+diferença no óptico é magnificada em $\mathrm{NUV}-r$, embora, como no caso das
+RG e PG, persista uma grande superposição. Isto não é surpreendente, já que as
+classes são definidas de modo completamente independente das cores ópticas e UV.
+Além disso, qualquer linha divisória entre uma classe e outra é inevitavelmente
+difusa, devido a erros observacionais e ao próprio fato de que os fenômenos que
+representam duas classes podem coexistir. Nada impede, por exemplo, que uma
+galáxias seja aposentada, no sentido de não formar mais estrelas, e possua um
+núcleo ativo fraco alimentando-se de tão pouco gás que não seja suficiente para
+formar estrelas.
+
+\begin{figure}
+	\includegraphics{figuras/histo_wha_color.eps}
+	\caption[Histogramas de cores em função de \WHa.]
+	{Histogramas normalizados das cores óptica ($g-r$) e ultravioleta
+	($\mathrm{NUV}-r$) para várias faixas de \WHa. Para comparação, é mostrado (em
+	vermelho) também o histograma para as PG. Foram selecionadas galáxias com
+	$\log(\nII/\Halpha) < -0,4$ e $0,5\,\text{\AA} < \WHa < 6\,\text{\AA}$, ou
+	seja, todas as galáxias wAGN e RG.}
+	\label{fig:HistogramaCorWHa}
+\end{figure}
+
+\begin{figure}
+	\includegraphics{figuras/wha_nuv.eps}
+	\caption[Cor UV em função de \WHa.]
+	{Frequência de galáxias em função da cor UV e de \WHa para as mesmas
+	galáxias da figura \ref{fig:HistogramaCorWHa}, ou seja, $\log(\nII/\Halpha) <
+	-0,4$ e $0,5\,\text{\AA} < \WHa < 6\,\text{\AA}$. A linha tracejada indica a
+	fronteira entre RG ($\WHa < 3\,\text{\AA}$) e wAGN ($\WHa > 3\,\text{\AA}$)}
+	\label{fig:ColorWha}
+\end{figure}
+
+Para apreciar com um pouco mais de detalhe a diferença em UV entre as galáxias
+das classes wAGN, RG e PG, a Figura \ref{fig:HistogramaCorWHa} repete os
+histogramas da Figura \ref{fig:HistogramaCorClasse}, mas desta vez limitada a
+objetos com $\log(\nII/\Halpha) > -0.4$ e $\WHa < 6\,\text{\AA}$, excluindo,
+portanto, galáxias SF e sAGN. As diferentes cores representam faixas em \WHa,
+com uma quantidade de subdivisões suficiente para mostrar a tendência sem
+comprometer a clareza. O que se observa na figura é uma progressão gradual e
+unívoca na direção de cores mais vermelhas a medida em que \WHa diminui. As
+galáxias RG mais azuis são aquelas que têm os maiores valores de \WHa permitidos
+para esta classe ($\WHa < 3\,\text{\AA}$). De modo similar, as galáxias wAGN que
+têm \WHa próximo à fronteira entre wAGN e RG são aqueles com cores mais
+vermelhas. Esses resultados também podem ser vistos na Figura
+\ref{fig:ColorWha}, onde as mesmas galáxias são apresentadas em um diagrama
+$\mathrm{NUV}-r$ contra \WHa.
+
+Estas figuras corroboram a suspeita levantada acima de que superposição em
+$\mathrm{NUV}-r$ entre classes espectrais definidas com base em \WHa é, em
+grande medida, devida ao conflito entre uma descrição discreta e uma realidade
+contínua. Neste caso limites rígidos de classificação têm apenas um sentido
+estatístico. Ao mesmo tempo, na medida em que revelam uma correlação entre \WHa
+e $\mathrm{NUV}-r$, as Figuras \ref{fig:HistogramaCorWHa} e \ref{fig:ColorWha}
+reforçam o uso de \WHa como uma propriedade observacional útil para
+classificação. Como salientado por \citet{CidFernandes2011}, o uso de uma
+largura equivalente vai contra a história da classificação espectral baseada em
+linhas de emissão (baseada exclusivamente em razões de fluxos), mas é a única
+maneira de separar AGNs verdadeiros de falsos.
 
 
 %***************************************************************%
@@ -281,7 +339,6 @@ têm populações estelares velhas.
 	\label{fig:AMMassColor}
 \end{figure}
 
-% FIXME: am_mass é melhor do que am_flux.
 A metalicidade estelar, ponderada em fluxo, das PG, RG e wAGN é em média
 superior à metalicidade solar e são virtualmente indistinguíveis, conforme os
 painéis (d), (e) e (f) da Figura \ref{fig:AMFluxColor}. As SF e sAGN,

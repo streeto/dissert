@@ -470,17 +470,17 @@ aparente, sem qualquer correção a não ser por fatores instrumentais. Para que
 galáxias possam ser analisadas de forma adequada, algumas correções precisam ser
 feitas.
 
-A luz proveniente de outras galáxias sofre extinção causada por poeira dentro da
-nossa própria Galáxia. Esta extinção depende da direção de onde vem a luz, e a
-sua influência depende do comprimento de onda. O efeito final, em geral, é o
+A luz proveniente de outras galáxias sofre atenuação causada por poeira dentro
+da nossa própria Galáxia. Esta atenuação depende da direção de onde vem a luz, e
+a sua influência depende do comprimento de onda. O efeito final, em geral, é o
 avermelhamento do espectro. O excesso de cor $E(B-V)$ representa
 quantitativamente este avermelhamento.
 
 O catálogo do \galex provê os valores de excesso de cor $E(B-V)$ das galáxias
-com base nos mapas de extinção interestelar de \citet{Schlegel1998}. A correção
-é feita usando o modelo de extinção CCM \citep*[equações 4a e 4b]{Cardelli1989}.
-Para um comprimento de onda $\lambda$ qualquer, a extinção absoluta (em
-magnitudes) é dada por
+com base nos mapas de atenuação interestelar de \citet{Schlegel1998}. A correção
+é feita usando o modelo de atenuação CCM \citep*[equações 4a e
+4b]{Cardelli1989}. Para um comprimento de onda $\lambda$ qualquer, a atenuação
+absoluta (em magnitudes) é dada por
 \begin{eqnarray*}
 	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
 	x &=& \frac{10000\text{\AA}}{\lambda}.
@@ -500,7 +500,7 @@ com os coeficientes $a(x)$ e $b(x)$ dados por
 	F_a(x_{NUV}) &=& -0,04473(x_{NUV}-5,9)^2 - 0,09779(x_{NUV}-5,9)^3 \\
 	F_b(x_{NUV}) &=& 0,2130(x_{NUV}-5,9)^2 + 0,1207(x_{NUV}-5,9)^3.
 \end{eqnarray*}
-Usando $R_V=3,1$, a extinção nas bandas FUV e NUV em função do excesso de cor
+Usando $R_V=3,1$, a atenuação nas bandas FUV e NUV em função do excesso de cor
 $E(B-V)$ é dada por
 \begin{eqnarray*}
 	A_{FUV} &=& 8,15\,E(B-V) \\
@@ -508,9 +508,9 @@ $E(B-V)$ é dada por
 \end{eqnarray*}
 Esta correção é então aplicada às magnitudes do catálogo. Vale notar que, para
 um mesmo objeto, $A_{FUV} < A_{NUV}$. Ou seja, ao contrário do que ocorre para
-outros filtros (por exemplo, $B$ e $V$), a extinção causa um azulamento do
+outros filtros (por exemplo, $B$ e $V$), a atenuação causa um azulamento do
 espectro na faixa do UV observado pelo \galex. Isto ocorre devido à banda de
-$2100\,\text{\AA}$ na curva de extinção da nossa Galáxia.
+$2100\,\text{\AA}$ na curva de atenuação da nossa Galáxia.
 
 Quando se observa, através de um determinado filtro, galáxias em {\em redshifts}
 diferentes, é preciso levar em conta que a ``janela'' observada do espectro
@@ -562,7 +562,7 @@ a largura equivalente e o fluxo das linhas de emissão \Halpha, \Hbeta, \OIII e
 		Metalicidade estelar média [$Z_{\odot}$] ponderada em massa
 		\\
 		\texttt{AV} &
-		Extinção causada por poeira [magnitude]
+		Atenuação causada por poeira [magnitude]
 		\\
 	\end{tabular}
 	\label{tab:ParamFisicos}

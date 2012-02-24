@@ -29,14 +29,14 @@
 \label{sec:Galex:Objetivos}
 
 O {\em Galaxy Evolution Explorer} (\galex) é um telescópio espacial de pequeno
-porte da NASA\footnote{{\em NASA Small Explorer} ({\em SMEX}) -
-\url{http://explorers.gsfc.nasa.gov/missions.html}}, lançado em 28 de abril de
-2003 para conduzir um {\em survey} de todo o céu numa faixa espectral do UV,
-entre $1350$ e $2750\,\text{\AA}$. O objetivo principal do \galex é estudar a
-evolução da taxa de formação estelar em galáxias \citep{Martin2005}. Os dados
-coletados pela missão são publicados em {\em Data Releases} periódicos,
-denominados {\em General Releases}. Este trabalho foi realizado sobre os dados
-do sexto {\em General Release}, GR6.
+porte (espelho primário com $50\,\mathrm{cm}$) da NASA\footnote{{\em NASA Small
+Explorer} ({\em SMEX}) - \url{http://explorers.gsfc.nasa.gov/missions.html}},
+lançado em 28 de abril de 2003 para conduzir um {\em survey} de todo o céu numa
+faixa espectral do UV, entre $1350$ e $2750\,\text{\AA}$. O objetivo principal
+do \galex é estudar a evolução da taxa de formação estelar em galáxias
+\citep{Martin2005}. Os dados coletados pela missão são publicados em {\em Data
+Releases} periódicos, denominados {\em General Releases}. Este trabalho foi
+realizado sobre os dados do sexto {\em General Release}, GR6.
 
 A missão consiste em uma série de {\em surveys} fotométricos e espectroscópicos
 (ver tabela \ref{tab:GalexSurveys}). Destes, os principais {\em surveys} são o
@@ -47,9 +47,9 @@ bandas espectrais: ultravioleta distante ({\em far ultraviolet}, FUV), de $1350$
 a $1750\,\text{\AA}$, e ultravioleta próximo ({\em near ultraviolet}, NUV), de
 $1750$ a $2750\,\text{\AA}$. As curvas de transmissão dos filtros utilizados
 nessas bandas podem ser vistos na Figura \ref{fig:GalexFilters}. A
-espectroscopia é feita inserindo-se no caminho ótico um {\em grism}, que
-consiste num prisma combinado com uma rede de difração. Obtém-se deste modo um
-espectro de baixa resolução para cada objeto na imagem, conforme descrito por
+espectroscopia é feita inserindo-se no caminho ótico um grisma, que consiste num
+prisma combinado com uma rede de difração. Obtém-se deste modo um espectro de
+baixa resolução para cada objeto na imagem, conforme descrito por
 \citet{Morrissey2007}.
 
 \begin{table}
@@ -76,11 +76,12 @@ espectro de baixa resolução para cada objeto na imagem, conforme descrito por
 \begin{figure}
 	\includegraphics{figuras/galex-filters.eps}
 	\caption[Curvas de transmissão dos filtros do \galex.]
-	{Curvas de transmissão dos filtros do \galex (linhas sólidas), medidas em
-	laboratório \citep{Morrissey2005}. Os comprimentos de onda efetivos dos
-	filtros são $\lambda_{FUV}=1528\text{\AA}$ e $\lambda_{NUV}=2271\text{\AA}$.
-	Para comparação são mostradas as curvas para os filtros do \SDSS (linhas
-	tracejadas). Dados retirados do {\em website} mantido por Peter Capak:
+	{Curvas de transmissão dos filtros do \galex, medidas em
+	laboratório, representadas por linhas sólidas \citep{Morrissey2005}. Os
+	comprimentos de onda efetivos dos filtros são $\lambda_{FUV}=1528\text{\AA}$ e
+	$\lambda_{NUV}=2271\text{\AA}$. Para comparação é mostrada a curva eficiência
+	para os filtros do \SDSS (linhas tracejadas). Dados retirados do {\em
+	website} mantido por Peter Capak:
 	\url{http://www.astro.caltech.edu/~capak/cosmos/filters/}}
 	\label{fig:GalexFilters}
 \end{figure}
@@ -113,11 +114,10 @@ comprimentos de onda tem um papel fundamental no cumprimento deste objetivo.
 \section{Histórico do estudo do céu no UV}
 \label{sec:Galex:CeuUV}
 
-A camada de ozônio, tão desejável pela proteção que oferece aos seres vivos,
-cobra a sua taxa na astronomia. Observações na banda UV precisam ser feitas fora
-da atmosfera terrestre, portanto não é de se estranhar que o trabalho nesta
-faixa espectral tenha progredido menos do que na faixa do óptico e do
-infravermelho.
+Devido à alta absorção da luz na banda UV causada pela camada de ozônio,
+observações do céu na banda UV precisam ser feitas fora da atmosfera terrestre.
+Não é de se estranhar, portanto,  que o trabalho nesta faixa espectral tenha
+progredido menos do que na faixa do óptico e do infravermelho.
 
 O primeiro trabalho sistemático de observação em UV foi feito pelo {\em Orbiting
 Astronomical Observatory 2} \citep{Code1970}, obtendo fotometria e
@@ -167,14 +167,15 @@ cada objeto \SDSS até um limite de $4$ segundos de arco.
 	\label{fig:WyderCMD}
 \end{figure}
 
-O diagrama cor--magnitude elaborado por \citeauthor{Wyder2007} mostra a
-separação das galáxias nas sequências azul e vermelha (Figura
-\ref{fig:WyderCMD}). Esta distribuição bimodal é um resultado bem conhecido na
-astronomia \citep{Baldry2004}. Porém, diferente do diagrama cor--magnitude para
-a faixa espectral do óptico, a distribuição de cores em UV não pode ser ajustada
-somente pela soma de duas gaussianas, há um excesso de objetos nas cores
-intermediárias entre os picos azul e vermelho. A boa separação entre as
-sequências é atribuída a uma maior sensibilidade à formação estelar recente.
+O diagrama cor--magnitude ($\mathrm{NUV}-r$ contra $M_r$) elaborado por
+\citeauthor{Wyder2007} mostra a separação das galáxias nas sequências azul e
+vermelha (Figura \ref{fig:WyderCMD}). Esta distribuição bimodal é um resultado
+bem conhecido na astronomia \citep{Baldry2004}. Porém, diferente do diagrama
+cor--magnitude para a faixa espectral do óptico, a distribuição de cores em UV
+não pode ser ajustada somente pela soma de duas gaussianas, há um excesso de
+objetos nas cores intermediárias entre os picos azul e vermelho. A boa separação
+entre as sequências é atribuída a uma maior sensibilidade à formação estelar
+recente.
 
 \citet{Martin2007} investigaram as propriedades das galáxias entre as sequências
 vermelha e azul para a mesma amostra citada acima. As galáxias nesta região
@@ -187,7 +188,7 @@ entre a morfologia das galáxias e a sua posição no CMD. A função de luminos
 UV do universo local é medida -- pela primeira vez, segundo os autores -- com
 relação aos parâmetros estruturais e à inclinação das galáxias.
 
-A missão do \galex se encerra em 31 de dezembro de 2011. Dados coletados após o
+A missão do \galex se encerrou em 31 de dezembro de 2011. Dados coletados após o
 GR6, como as observações no mesmo campo utilizado na missão {\em Kepler},
 observações de M31 e da Nuvem de Magalhães, entre outros, serão liberados num
 último {\em data release}, GR7. Os dados obtidos pelo \galex permanecerão
@@ -260,7 +261,7 @@ buscas, separando por {\em surveys}. Há também uma ferramenta de histograma,
 permitindo filtrar pelos valores das colunas dos catálogos. Os objetos
 selecionados na busca aparecem marcados na visualização da imagem. Utilizando um
 sistema do tipo ``carrinho de compras'', pode-se selecionar campos e objetos de
-interesse, para ao final do uso do sistema baixar toda a seleção de uma vez.
+interesse, para, ao final do uso do sistema, baixar toda a seleção de uma vez.
 
 Tanto o {\em GalexView} quanto outras ferramentas de busca do MAST, como o
 \galex {\em Search Form} e o \galex {\em Tilelist}, são construídos sobre um

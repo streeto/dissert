@@ -206,14 +206,14 @@ else:
 # NUV-r versus WHa
 set_eps_output_1()
 pylab.figure()
-bounds = [0.5, 6.0, 0.5, 7.0]
+bounds = [0.5, 6.0, 2.5, 6.5]
 pylab.axis(bounds)
 filter = (WHa > 0.5) & (WHa < 6.0) & (logN2Ha > -0.4)
-h, ex, ey = np.histogram2d(WHa[filter], t.NUV[filter]-t.r[filter], bins=25,
+h, ex, ey = np.histogram2d(WHa[filter], NUV_r[filter], bins=25,
                            range=[[bounds[0], bounds[1]],[bounds[2], bounds[3]]])
 #pylab.scatter(WHa[filter], t.NUV[filter] - t.r[filter], c='orange', marker='o', 
 #              edgecolor='None', s=1)
-pylab.hexbin(WHa[filter], t.NUV[filter] - t.r[filter], extent=bounds,# bins='log',
+pylab.hexbin(WHa[filter], NUV_r[filter], extent=bounds,# bins='log',
              gridsize=30, cmap=cm.OrRd)
 pylab.contour(h.T, extent=bounds, colors='black', linewidths=0.5)
 pylab.axvline(3.0, color='k', linestyle='--')

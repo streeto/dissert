@@ -50,7 +50,7 @@ pylab.rcParams.update(params)
 pylab.figure(1)
 pylab.axis([1100, 10000, 0, 0.7])
 pylab.xlabel('Comprimento de onda [\AA]')
-pylab.ylabel('Transmit\^ancia')
+pylab.ylabel('Efici\^encia')
 for f in filters:
     t = Table('filters/' + table_names[f], type='ascii')
     pylab.plot(t.col1, t.col2, filter_line[f], label=f)
@@ -58,5 +58,5 @@ for f in filters:
 pylab.legend()
 #pylab.show()
 #exit()
-pylab.savefig('../doc/figuras/galex-filters.pdf', format='pdf')
+pylab.savefig('../doc/figuras/galex-filters.eps', format='eps')
 

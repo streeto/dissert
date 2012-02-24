@@ -33,10 +33,10 @@ na astronomia é o projeto {\em Sloan Digital Sky Survey} (\SDSS). Inicialmente 
 objetos} \citep[{\em Object Oriented Database Management System},
 OODBMS;][]{Maier1986}. Após pouco mais de um ano a abordagem se mostrou
 inadequada: entre os principais problemas, uma linguagem de {\em query}
-inadequada e performance fraca. O motivo, segundo \citet{Thakar2004}, foi a
-incapacidade da empresa desenvolvedora do OODBMS em prover novas funcionalidades
-requisitadas pelo projeto e correção de {\em bugs}, bem como em acompanhar o
-crescimento da performance do {\em hardware}.
+inadequada e {\em performance} fraca. O motivo, segundo \citet{Thakar2004}, foi
+a incapacidade da empresa desenvolvedora do OODBMS em prover novas
+funcionalidades requisitadas pelo projeto e correção de {\em bugs}, bem como em
+acompanhar o crescimento da performance do {\em hardware}.
 
 \subsection{Migração de OODBMS para RDBMS}
 \label{sec:CrossMatch:SDSS:MigracaoRDBMS}
@@ -46,7 +46,7 @@ de banco de dados relacional} \citep[Relational Database Management System,
 RDBMS;][]{Codd1970} num esforço guiado por \citeauthor{Thakar2004}. RDBMS pode
 ser considerado o padrão da indústria, praticamente todas as linguagens de
 programação têm bibliotecas de interface às implementações de RDBMS comerciais
-mais comuns (Oracle, IBM e Microsoft, Postgres). Há uma diversidade de
+mais comuns (Oracle, IBM, Microsoft e Postgres). Há uma diversidade de
 ferramentas para desenvolvimento e gerenciamento de RDBMS. E talvez o maior
 benefício de todos, o acesso aos dados é feito utilizando uma linguagem
 padronizada: {\em Simple Query Language}, ou simplesmente SQL
@@ -60,9 +60,9 @@ A comparação entre OODBMS e RDBMS no caso particular do \SDSS não implica
 necessariamente na superioridade do segundo em relação ao primeiro. Tanto a
 abordagem orientada a objetos quanto a abordagem relacional têm suas vantagens e
 desvantagens. O estudo de caso do \SDSS é apenas uma evidência anedótica em
-favor do uso de bancos de dados relacionais. No entanto, para aplicações
-semelhantes ao \SDSS -- {\em surveys} astronômicos com volumes imensos de dados
--- vale a pena apostar no sucesso dos RDBMS.
+favor do uso de bancos de dados relacionais. Dado que o \SDSS obteve êxito com o
+uso de um RDBMS, é esperado que outros {\em surveys} astronômicos com grandes
+volumes de dados sigam o seu exemplo.
 
 \subsection{{\em SkyServer}}
 \label{sec:CrossMatch:SDSS:SkyServer}
@@ -151,7 +151,7 @@ como um arquivo texto. Ele usa uma biblioteca de espectros SSPs com diferentes
 idades e metalicidades como uma base do espaço de espectros galáticos possíveis.
 De forma simplificada, o que o \starlight faz é encontrar as frações de massa e
 luz correspondentes a cada elemento da base, ou seja, cada SSP. Analisando as
-relações entre as componentes determinados pela síntese, o programa determina
+relações entre as componentes determinadas pela síntese, o programa determina
 diversas propriedades físicas da galáxia, como massa estelar total, idade
 estelar média, metalicidade estelar média, atenuação causada por poeira e
 dispersão de velocidades, para citar apenas algumas. Quase um milhão de
@@ -172,8 +172,8 @@ trabalhar com esta quantidade de dados num computador atual\footnote{Quando esta
 dissertação foi escrita, era bastante comum comprar um computador pessoal novo
 com 4 gigabytes de memória RAM ou mais.}. A transferência de arquivos com
 tamanho da ordem de gigabytes pela {\em internet} também é lugar-comum
-atualmente. Poderia-se argumentar que distribuir os dados neste formato seja a
-forma mais adequada.
+atualmente. Poder-se-ia argumentar que distribuir os dados neste formato seja
+a forma mais adequada.
 
 Entretanto, deve-se admitir que uma das maiores razões para o sucesso do {\em
 CasJobs} em prover acesso aos dados do \SDSS não é o tamanho da base de dados, e
@@ -386,11 +386,11 @@ ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} 
 		\\
 		\texttt{MultipleMatchCount} &
 		Um número inteiro indicando quantos objetos \SDSS foram encontrados para o
-		objeto \galex dentro do raio de busca.
+		objeto \galex dentro do raio de busca ($5$ segundos de arco).
 		\\
 		\texttt{ReverseMultipleMatchCount} &
 		Um número inteiro indicando quantos objetos \galex foram encontrados para o
-		objeto \SDSS dentro do raio de busca.
+		objeto \SDSS dentro do raio de busca ($5$ segundos de arco).
 		\\
 	\end{tabular}
 	\label{tab:CamposXSDSSDR7}
@@ -402,8 +402,8 @@ A amostra do \starlight descrita na Seção \ref{sec:Crossmatch:AmostraStarlight
 contém o identificador do catálogo de fotometria do \SDSS. Este identificador é
 o mesmo utilizado na tabela \texttt{xSDSSDR7}. A {\em query} da Figura
 \ref{fig:QueryMatchAIS} preenche a tabela chamada \texttt{galex\_ais} com todos
-os objetos da amostra do \starlight, junto com suas respectivas magnitudes NUV
-(\texttt{FUV\_mag}) e FUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
+os objetos da amostra do \starlight, junto com suas respectivas magnitudes FUV
+(\texttt{FUV\_mag}) e NUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
 ({\tt FUV\_magErr} e \texttt{NUV\_magErr}), o tempo de exposição em cada filtro
 ({\tt fexptime} e \texttt{nexptime}), o excesso de cor $E(B-V)$ (\texttt{e\_bv},
 ver Seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
@@ -471,8 +471,8 @@ galáxias possam ser analisadas de forma adequada, algumas correções precisam 
 feitas.
 
 A luz proveniente de outras galáxias sofre atenuação causada por poeira dentro
-da nossa própria Galáxia. Esta atenuação depende da direção de onde vem a luz, e
-a sua influência depende do comprimento de onda. O efeito final, em geral, é o
+da nossa Galáxia. Esta atenuação depende da direção de onde vem a luz, e a sua
+influência depende do comprimento de onda. O efeito final, em geral, é o
 avermelhamento do espectro. O excesso de cor $E(B-V)$ representa
 quantitativamente este avermelhamento.
 

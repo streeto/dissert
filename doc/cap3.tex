@@ -246,9 +246,9 @@ chamado \texttt{SpecObjID}.
 Além de espectros, o banco de dados do \SDSS contém fotometria de $1/4$ do céu.
 Cada objeto do catálogo de fotometria tem um identificador único,
 \texttt{ObjID}. Existe uma coluna na tabela de espectros chamada
-\texttt{BestObjID}, que aponta para o registro de fotometria (tabela {\tt
-PhotoObjAll}) mais provável para cada espectro. É importante salientar que nem
-todo espectro tem um \texttt{BestObjID} definido.
+\texttt{BestObjID}, que aponta para o registro de fotometria (tabela
+\texttt{PhotoObjAll}) mais provável para cada espectro. É importante salientar
+que nem todo espectro tem um \texttt{BestObjID} definido.
 
 A tabela de índices da amostra de galáxias do \starlight contém inicialmente os
 tripletos [\texttt{MJD}, \texttt{Plate}, \texttt{FiberID}]. Esta tabela é
@@ -351,13 +351,13 @@ Como comentado na Seção \ref{sec:Crossmatch:SDSSGalex}, no banco de dados do
 correspondentes ópticos no catálogo do \SDSS, chamada \texttt{xSDSSDR7}. A
 descrição completa dos campos pode ser vista na tabela \ref{tab:CamposXSDSSDR7}.
 Dado que a identificação não é necessariamente unívoca, existem informações
-extras nesta tabela a fim de facilitar a seleção dos melhores candidatos: {\tt
-DistanceRank} e \texttt{MultipleMatchCount}.
+extras nesta tabela a fim de facilitar a seleção dos melhores candidatos:
+\texttt{DistanceRank} e \texttt{MultipleMatchCount}.
 
 A identificação cruzada também é feita na direção oposta. Dado um objeto do
-\SDSS, foram encontrados os objetos do \galex candidatos. Para um par [{\tt
-ObjID}, \texttt{SDSSObjID}], há também os campos \texttt{ReverseDistanceRank} e
-{\tt ReverseMultipleMatchCount}.
+\SDSS, foram encontrados os objetos do \galex candidatos. Para um par
+[\texttt{ObjID}, \texttt{SDSSObjID}], há também os campos
+\texttt{ReverseDistanceRank} e \texttt{ReverseMultipleMatchCount}.
 
 \begin{table}
 	\caption[Descrição dos campos da tabela \texttt{xSDSSDR7}.]
@@ -404,18 +404,18 @@ o mesmo utilizado na tabela \texttt{xSDSSDR7}. A {\em query} da Figura
 \ref{fig:QueryMatchAIS} preenche a tabela chamada \texttt{galex\_ais} com todos
 os objetos da amostra do \starlight, junto com suas respectivas magnitudes FUV
 (\texttt{FUV\_mag}) e NUV (\texttt{NUV\_mag}), o erro na medida das magnitudes
-({\tt FUV\_magErr} e \texttt{NUV\_magErr}), o tempo de exposição em cada filtro
-({\tt fexptime} e \texttt{nexptime}), o excesso de cor $E(B-V)$ (\texttt{e\_bv},
-ver Seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a distância entre a
-detecção do objeto no \galex e no \SDSS (\texttt{distance}). Esta tabela é
-esparsamente populada, com um registro para cada objeto do \starlight, e os
-dados UV preenchidos somente para os objetos com identificação positiva. Caso o
-objeto não tenha um correspondente \galex, os valores serão nulos\footnote{Numa
-tabela, quando um campo de um registro não possui valor definido, seu valor é
-dito ``nulo''. Em SQL, a palavra-chave que representa um valor nulo é ``{\em
-null}''.}. De forma similar, os dados UV para o {\em survey} MIS foram
-armazenados na tabela \texttt{galex\_mis}. Estas tabelas podem ser vistas no
-contexto do banco de dados do \starlight na Seção
+(\texttt{FUV\_magErr} e \texttt{NUV\_magErr}), o tempo de exposição em cada
+filtro (\texttt{fexptime} e \texttt{nexptime}), o excesso de cor $E(B-V)$
+(\texttt{e\_bv}, ver Seção \ref{sec:Crossmatch:DefAmostras:Correcoes}) e a
+distância entre a detecção do objeto no \galex e no \SDSS (\texttt{distance}).
+Esta tabela é esparsamente populada, com um registro para cada objeto do
+\starlight, e os dados UV preenchidos somente para os objetos com identificação
+positiva. Caso o objeto não tenha um correspondente \galex, os valores serão
+nulos\footnote{Numa tabela, quando um campo de um registro não possui valor
+definido, seu valor é dito ``nulo''. Em SQL, a palavra-chave que representa um
+valor nulo é ``{\em null}''.}. De forma similar, os dados UV para o {\em survey}
+MIS foram armazenados na tabela \texttt{galex\_mis}. Estas tabelas podem ser
+vistas no contexto do banco de dados do \starlight na Seção
 \ref{sec:Crossmatch:EstruturaBDStarlight}.
 
 Foram escolhidas somente identificações cruzadas do tipo um-para-um, ou seja,
@@ -483,10 +483,10 @@ com base nos mapas de atenuação interestelar de \citet{Schlegel1998}. A corre�
 absoluta (em magnitudes) é dada por
 \begin{eqnarray*}
 	A_\lambda &=& R_V\,E(B-V)\,a(x) + E(B-V)\,b(x), \\
-	x &=& \frac{10000\text{\AA}}{\lambda}.
+	x &=& \frac{10000\mathrm{\AA}}{\lambda}.
 \end{eqnarray*}
-No caso das bandas FUV ($\lambda_{eff}=2271\,\text{\AA}$) e NUV
-($\lambda_{eff}=1528\,\text{\AA}$),
+No caso das bandas FUV ($\lambda_{eff}=2271\,\mathrm{\AA}$) e NUV
+($\lambda_{eff}=1528\,\mathrm{\AA}$),
 \begin{eqnarray*}
 	x_{FUV} &=& 6,54\\
 	x_{NUV} &=& 4,40
@@ -510,7 +510,7 @@ Esta correção é então aplicada às magnitudes do catálogo. Vale notar que, 
 um mesmo objeto, $A_{FUV} < A_{NUV}$. Ou seja, ao contrário do que ocorre para
 outros filtros (por exemplo, $B$ e $V$), a atenuação causa um azulamento do
 espectro na faixa do UV observado pelo \galex. Isto ocorre devido à banda de
-$2100\,\text{\AA}$ na curva de atenuação da nossa Galáxia.
+$2100\,\mathrm{\AA}$ na curva de atenuação da nossa Galáxia.
 
 Quando se observa, através de um determinado filtro, galáxias em {\em redshifts}
 diferentes, é preciso levar em conta que a ``janela'' observada do espectro

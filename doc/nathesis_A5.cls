@@ -5,7 +5,7 @@
 \ProvidesClass{nathesis}
 
 % Standard printing
-\LoadClass[a4paper, 12pt]{memoir}
+\LoadClass[a5paper, 10pt]{memoir}
 % **************************************************************** %
 
 
@@ -79,9 +79,6 @@
 % Bibtex
 \usepackage{natbib}
 \citestyle{aa}
-% count number of references:
-%\usepackage[super]{natbib}
-%%\citestyle{aa} (comment this line)
 
 % Journal abreviations
 \usepackage{aas_macros}
@@ -126,11 +123,11 @@
 % ** Sizes, sizes
 
 % Margins - new UFSC rules
-\setlrmarginsandblock{36mm}{21mm}{*}
-\setulmarginsandblock{39mm}{31mm}{*}
-\setheadfoot{10mm}{10mm}
+\setlrmarginsandblock{25mm}{15mm}{*}
+\setulmarginsandblock{27mm}{22mm}{*}
+\setheadfoot{7mm}{7mm}
 \checkandfixthelayout
-\parindent 14mm
+\parindent 10mm
 
 % Size of epigraphs
 \epigraphwidth 0.7\textwidth
@@ -177,7 +174,7 @@
   \renewcommand*{\printchaptername}{%
     \chapnamefont\centering\@chapapp}
   \renewcommand*{\printchapternum}{\chapnumfont \thechapter}
-  \renewcommand*{\chaptitlefont}{\normalfont\Huge\sffamily}
+  \renewcommand*{\chaptitlefont}{\normalfont\Huge\sffamily}%\bfseries}
 %  \renewcommand*{\chaptitlefont}{\normalfont\normalsize\bfseries\scshape}
   \renewcommand*{\printchaptertitle}[1]{%
     \hrule\vskip\onelineskip \centering \chaptitlefont{##1}\par}
@@ -195,7 +192,7 @@
 % ** Dedicatoria
 \newcommand{\dedication}[1]{%
   \thispagestyle{empty}%
-  {\clearpage\mbox{}\vfill\hfill{\Large\fzapfit #1} \par\vspace*{4em}\clearpage}%
+  {\clearpage\mbox{}\vfill\hfill{\Large\fzapfit #1} \par\vspace*{4cm}\clearpage}%
 }
 % **************************************************************** %
 
@@ -211,39 +208,32 @@
 \newcommand{\comments}[1]{\def\comments{#1}}
 \newcommand{\place}[1]{\def\place{#1}}
 \newcommand{\thesisdate}[1]{\def\thesisdate{#1}}
-\newcommand{\jury}[1]{\def\jury{#1}}
 
 \newcommand{\titlepage}{{%
-    \fontfamily{pnc}\selectfont
-%    \newcommand*{\titlefont}{\HUGE\sffamily}
-    \newcommand*{\titlefont}{\fontsize{35}{42}\selectfont\sffamily}
+    \newcommand*{\titlefont}{\normalfont\HUGE\sffamily}%\bfseries}
     \thispagestyle{empty}
     \centering
-    %\sffamily
-    %\vspace{-5em}
+    \sffamily
     \institution \\
     \vspace*{1.5em}
     \institutionSDW \\
-    \vspace*{6em}
-    %\vfill
+    \vspace*{4em}
     \hrule\vskip\onelineskip
     {\titlefont
       \thesistitle \\
     }
     \vskip\onelineskip\hrule
     \vspace*{3em}
-    {%\Large
+    {\Large
       \thesisauthor \\
     }
-    \vspace*{1em}
-    \vfill
+    \vspace*{5em}
     \supervisor \\
+    \cosupervisor \\
     \vspace*{1em}
     \vfill
-    \cosupervisor \\
-    \vspace*{9em}
     \begin{minipage}[t]{0.9\textwidth}
-      {%\small
+      {\small
         \comments
       }
     \end{minipage}
@@ -252,53 +242,6 @@
     \place, \thesisdate
     \normalfont
     \clearpage}}
-
-% ** Page de titre - ObsPM
-\newcommand{\pagedetitre}{{%
-    \fontfamily{pnc}\selectfont
-    \newcommand*{\titlefont}{\fontsize{35}{42}\selectfont\sffamily}
-    \thispagestyle{empty}
-    \centering
-    \institution \\
-    \vspace*{1.5em}
-    \institutionSDW \\
-    \vspace*{5em}
-    %\vfill
-    {%\Large
-      \thesisauthor \\
-    }
-    \vspace*{2em}
-    \hrule\vskip\onelineskip
-    {\titlefont
-      \thesistitle \\
-    }
-    \vskip\onelineskip\hrule
-    \vspace*{2em}
-    \supervisor \\
-    \vspace*{2em}
-    \thesisdate \\
-    \vfill
-    \vspace*{1em}
-    \flushleft
-    {\bfseries Jury :}
-    \jury
-    \normalfont
-    \clearpage}}
-
-% List environment for jury in French version
-\newenvironment{xlist}[1][\rule{0.75cm}{0cm}]{%
-  \begin{list}{}{%
-    \settowidth{\labelwidth}{#1:}
-    \setlength{\labelsep}{0.5cm}
-    \setlength{\leftmargin}{\labelwidth}
-    \addtolength{\leftmargin}{\labelsep}
-    \setlength{\rightmargin}{0pt}
-    \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
-    \setlength{\itemsep}{0 ex plus 0.2ex}
-    \renewcommand{\makelabel}[1]{##1\hfil}
-    }
-  }
-{\end{list}}
 % **************************************************************** %
 
 
@@ -307,19 +250,17 @@
 \setlength{\absleftindent}{0em}
 \setlength{\absrightindent}{0em}
 \renewcommand{\abstractnamefont}{\normalfont\sffamily}%\bfseries}
-%\renewcommand{\abstracttextfont}{\normalfont}
+\renewcommand{\abstracttextfont}{\normalfont}
 \renewenvironment{abstract}[1][\abstractname]{%
   \setup@bstract
   \if@bsrunin\else
     \ifnumber@bs \num@bs \else
-      \begin{\absnamepos}
-      \abstractnamefont#1
-      \end{\absnamepos}
-      \vspace{\abstitleskip}
+      \begin{\absnamepos}\abstractnamefont#1\end\absnamepos%
+      \vspace{\abstitleskip}%
     \fi
   \fi
   \put@bsintoc%
-  \begin{@bstr@ctlist}\if@bsrunin\@bsrunintitle\fi}%\abstracttextfont}%
+  \begin{@bstr@ctlist}\if@bsrunin\@bsrunintitle\fi\abstracttextfont}%
   {\par\end{@bstr@ctlist}}
 % **************************************************************** %
 
